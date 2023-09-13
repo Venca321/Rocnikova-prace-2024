@@ -14,7 +14,9 @@ class HandRecognition:
         imageRGB = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         results = self.hands.process(imageRGB)
         self.image = image
-        return results
+
+        if results.multi_hand_landmarks: return results.multi_hand_landmarks
+        else: return []
 
     def drawHandLandmarks(self, handLms):
         mpDraw = mp.solutions.drawing_utils
