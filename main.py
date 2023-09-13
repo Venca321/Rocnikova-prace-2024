@@ -13,7 +13,11 @@ while True:
     for handMap in results:
         hand_processor = HandProcessor(handMap, Hand_recognition.image)
         gesture = hand_processor.process()
-        print(gesture)
+
+        if gesture == 1: print("Kámen")
+        elif gesture == 2: print("Papír")
+        elif gesture == 3: print("Nůžky")
+        else: print("Neznámý gesto")
 
         """for point_number, hand_point in enumerate(handMap.landmark):
             img_h, img_w, img_c = Hand_recognition.image.shape

@@ -5,6 +5,7 @@ class HandProcessor:
     """
     def __init__(self, handMap, Hand_recognition_image):
         self.handMap = handMap
+        self.handData = {}
         self.hand_recognition_image = Hand_recognition_image
 
     def process(self) -> int:
@@ -21,6 +22,8 @@ class HandProcessor:
             point_x, point_y = int(hand_point.x * img_w), int(hand_point.y * img_h)
             data[point_number] = [point_x, point_y, hand_point.z]
 
+        self.handData = data
+
         if self.isHandRock(): return 1
         if self.isHandPaper(): return 2
         if self.isHandScissors(): return 3
@@ -31,16 +34,64 @@ class HandProcessor:
         """
         Returns True if the gesture is rock
         """
-        raise NotImplementedError
+        distance_from_finger_tip_to_wrist = (abs(self.handData[8][0] - self.handData[0][0]) + abs(self.handData[8][1] - self.handData[0][0])) ** 0.5
+        distance_from_finger_to_wrist = (abs(self.handData[6][0] - self.handData[0][0]) + abs(self.handData[6][1] - self.handData[0][0])) ** 0.5
+        if distance_from_finger_tip_to_wrist > distance_from_finger_to_wrist: return False
+
+        distance_from_finger_tip_to_wrist = (abs(self.handData[12][0] - self.handData[0][0]) + abs(self.handData[12][1] - self.handData[0][0])) ** 0.5
+        distance_from_finger_to_wrist = (abs(self.handData[10][0] - self.handData[0][0]) + abs(self.handData[10][1] - self.handData[0][0])) ** 0.5
+        if distance_from_finger_tip_to_wrist > distance_from_finger_to_wrist: return False
+
+        distance_from_finger_tip_to_wrist = (abs(self.handData[16][0] - self.handData[0][0]) + abs(self.handData[16][1] - self.handData[0][0])) ** 0.5
+        distance_from_finger_to_wrist = (abs(self.handData[14][0] - self.handData[0][0]) + abs(self.handData[14][1] - self.handData[0][0])) ** 0.5
+        if distance_from_finger_tip_to_wrist > distance_from_finger_to_wrist: return False
+
+        distance_from_finger_tip_to_wrist = (abs(self.handData[20][0] - self.handData[0][0]) + abs(self.handData[20][1] - self.handData[0][0])) ** 0.5
+        distance_from_finger_to_wrist = (abs(self.handData[18][0] - self.handData[0][0]) + abs(self.handData[18][1] - self.handData[0][0])) ** 0.5
+        if distance_from_finger_tip_to_wrist > distance_from_finger_to_wrist: return False
+
+        return True
 
     def isHandPaper(self) -> bool:
         """
         Returns True if the gesture is paper
         """
-        raise NotImplementedError
+        distance_from_finger_tip_to_wrist = (abs(self.handData[8][0] - self.handData[0][0]) + abs(self.handData[8][1] - self.handData[0][0])) ** 0.5
+        distance_from_finger_to_wrist = (abs(self.handData[6][0] - self.handData[0][0]) + abs(self.handData[6][1] - self.handData[0][0])) ** 0.5
+        if distance_from_finger_tip_to_wrist < distance_from_finger_to_wrist: return False
+
+        distance_from_finger_tip_to_wrist = (abs(self.handData[12][0] - self.handData[0][0]) + abs(self.handData[12][1] - self.handData[0][0])) ** 0.5
+        distance_from_finger_to_wrist = (abs(self.handData[10][0] - self.handData[0][0]) + abs(self.handData[10][1] - self.handData[0][0])) ** 0.5
+        if distance_from_finger_tip_to_wrist < distance_from_finger_to_wrist: return False
+
+        distance_from_finger_tip_to_wrist = (abs(self.handData[16][0] - self.handData[0][0]) + abs(self.handData[16][1] - self.handData[0][0])) ** 0.5
+        distance_from_finger_to_wrist = (abs(self.handData[14][0] - self.handData[0][0]) + abs(self.handData[14][1] - self.handData[0][0])) ** 0.5
+        if distance_from_finger_tip_to_wrist < distance_from_finger_to_wrist: return False
+
+        distance_from_finger_tip_to_wrist = (abs(self.handData[20][0] - self.handData[0][0]) + abs(self.handData[20][1] - self.handData[0][0])) ** 0.5
+        distance_from_finger_to_wrist = (abs(self.handData[18][0] - self.handData[0][0]) + abs(self.handData[18][1] - self.handData[0][0])) ** 0.5
+        if distance_from_finger_tip_to_wrist < distance_from_finger_to_wrist: return False
+
+        return True
 
     def isHandScissors(self) -> bool:
         """
         Returns True if the gesture is scissors
         """
-        raise NotImplementedError
+        distance_from_finger_tip_to_wrist = (abs(self.handData[8][0] - self.handData[0][0]) + abs(self.handData[8][1] - self.handData[0][0])) ** 0.5
+        distance_from_finger_to_wrist = (abs(self.handData[6][0] - self.handData[0][0]) + abs(self.handData[6][1] - self.handData[0][0])) ** 0.5
+        if distance_from_finger_tip_to_wrist < distance_from_finger_to_wrist: return False
+
+        distance_from_finger_tip_to_wrist = (abs(self.handData[12][0] - self.handData[0][0]) + abs(self.handData[12][1] - self.handData[0][0])) ** 0.5
+        distance_from_finger_to_wrist = (abs(self.handData[10][0] - self.handData[0][0]) + abs(self.handData[10][1] - self.handData[0][0])) ** 0.5
+        if distance_from_finger_tip_to_wrist < distance_from_finger_to_wrist: return False
+
+        distance_from_finger_tip_to_wrist = (abs(self.handData[16][0] - self.handData[0][0]) + abs(self.handData[16][1] - self.handData[0][0])) ** 0.5
+        distance_from_finger_to_wrist = (abs(self.handData[14][0] - self.handData[0][0]) + abs(self.handData[14][1] - self.handData[0][0])) ** 0.5
+        if distance_from_finger_tip_to_wrist > distance_from_finger_to_wrist: return False
+
+        distance_from_finger_tip_to_wrist = (abs(self.handData[20][0] - self.handData[0][0]) + abs(self.handData[20][1] - self.handData[0][0])) ** 0.5
+        distance_from_finger_to_wrist = (abs(self.handData[18][0] - self.handData[0][0]) + abs(self.handData[18][1] - self.handData[0][0])) ** 0.5
+        if distance_from_finger_tip_to_wrist > distance_from_finger_to_wrist: return False
+
+        return True
