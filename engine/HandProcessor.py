@@ -34,21 +34,32 @@ class HandProcessor:
         """
         Returns True if the gesture is rock
         """
-        distance_from_finger_tip_to_wrist = (abs(self.handData[8][0] - self.handData[0][0]) + abs(self.handData[8][1] - self.handData[0][0])) ** 0.5
-        distance_from_finger_to_wrist = (abs(self.handData[6][0] - self.handData[0][0]) + abs(self.handData[6][1] - self.handData[0][0])) ** 0.5
-        if distance_from_finger_tip_to_wrist > distance_from_finger_to_wrist: return False
+        #ukazovacek
+        finger_tip_to_wrist = (abs(self.handData[8][0] - self.handData[0][0]) + abs(self.handData[8][1] - self.handData[0][1]))
+        finger_center_to_wrist = (abs(self.handData[6][0] - self.handData[0][0]) + abs(self.handData[6][1] - self.handData[0][1])) * 1.1
+        if finger_tip_to_wrist > finger_center_to_wrist: return False
 
-        distance_from_finger_tip_to_wrist = (abs(self.handData[12][0] - self.handData[0][0]) + abs(self.handData[12][1] - self.handData[0][0])) ** 0.5
-        distance_from_finger_to_wrist = (abs(self.handData[10][0] - self.handData[0][0]) + abs(self.handData[10][1] - self.handData[0][0])) ** 0.5
-        if distance_from_finger_tip_to_wrist > distance_from_finger_to_wrist: return False
+        #prostrednicek
+        finger_tip_to_wrist = (abs(self.handData[12][0] - self.handData[0][0]) + abs(self.handData[12][1] - self.handData[0][1]))
+        finger_center_to_wrist = (abs(self.handData[10][0] - self.handData[0][0]) + abs(self.handData[10][1] - self.handData[0][1])) * 1.1
+        if finger_tip_to_wrist > finger_center_to_wrist: return False
 
-        distance_from_finger_tip_to_wrist = (abs(self.handData[16][0] - self.handData[0][0]) + abs(self.handData[16][1] - self.handData[0][0])) ** 0.5
-        distance_from_finger_to_wrist = (abs(self.handData[14][0] - self.handData[0][0]) + abs(self.handData[14][1] - self.handData[0][0])) ** 0.5
-        if distance_from_finger_tip_to_wrist > distance_from_finger_to_wrist: return False
+        #prstenicek
+        finger_tip_to_wrist = (abs(self.handData[16][0] - self.handData[0][0]) + abs(self.handData[16][1] - self.handData[0][1]))
+        finger_center_to_wrist = (abs(self.handData[14][0] - self.handData[0][0]) + abs(self.handData[14][1] - self.handData[0][1])) * 1.1
+        if finger_tip_to_wrist > finger_center_to_wrist: return False
 
-        distance_from_finger_tip_to_wrist = (abs(self.handData[20][0] - self.handData[0][0]) + abs(self.handData[20][1] - self.handData[0][0])) ** 0.5
-        distance_from_finger_to_wrist = (abs(self.handData[18][0] - self.handData[0][0]) + abs(self.handData[18][1] - self.handData[0][0])) ** 0.5
-        if distance_from_finger_tip_to_wrist > distance_from_finger_to_wrist: return False
+        #malicek
+        finger_tip_to_wrist = (abs(self.handData[20][0] - self.handData[0][0]) + abs(self.handData[20][1] - self.handData[0][1]))
+        finger_center_to_wrist = (abs(self.handData[18][0] - self.handData[0][0]) + abs(self.handData[18][1] - self.handData[0][1])) * 1.1
+        if finger_tip_to_wrist > finger_center_to_wrist: return False
+
+        #palec
+        finger_lenght = (abs(self.handData[4][0] - self.handData[3][0]) + abs(self.handData[4][1] - self.handData[3][1])) ** 0.5
+        finger_lenght += (abs(self.handData[3][0] - self.handData[2][0]) + abs(self.handData[3][1] - self.handData[2][1])) ** 0.5
+        finger_lenght += (abs(self.handData[2][0] - self.handData[1][0]) + abs(self.handData[2][1] - self.handData[1][1])) ** 0.5
+        thumb_index_finger_distance = (abs(self.handData[6][0] - self.handData[3][0]) + abs(self.handData[6][1] - self.handData[3][1])) ** 0.5
+        if thumb_index_finger_distance > finger_lenght / 2.5: return False
 
         return True
 
@@ -56,21 +67,21 @@ class HandProcessor:
         """
         Returns True if the gesture is paper
         """
-        distance_from_finger_tip_to_wrist = (abs(self.handData[8][0] - self.handData[0][0]) + abs(self.handData[8][1] - self.handData[0][0])) ** 0.5
-        distance_from_finger_to_wrist = (abs(self.handData[6][0] - self.handData[0][0]) + abs(self.handData[6][1] - self.handData[0][0])) ** 0.5
-        if distance_from_finger_tip_to_wrist < distance_from_finger_to_wrist: return False
+        finger_tip_to_wrist = (abs(self.handData[8][0] - self.handData[0][0]) + abs(self.handData[8][1] - self.handData[0][1]))
+        finger_center_to_wrist = (abs(self.handData[6][0] - self.handData[0][0]) + abs(self.handData[6][1] - self.handData[0][1])) * 1.1
+        if finger_tip_to_wrist < finger_center_to_wrist: return False
 
-        distance_from_finger_tip_to_wrist = (abs(self.handData[12][0] - self.handData[0][0]) + abs(self.handData[12][1] - self.handData[0][0])) ** 0.5
-        distance_from_finger_to_wrist = (abs(self.handData[10][0] - self.handData[0][0]) + abs(self.handData[10][1] - self.handData[0][0])) ** 0.5
-        if distance_from_finger_tip_to_wrist < distance_from_finger_to_wrist: return False
+        finger_tip_to_wrist = (abs(self.handData[12][0] - self.handData[0][0]) + abs(self.handData[12][1] - self.handData[0][1]))
+        finger_center_to_wrist = (abs(self.handData[10][0] - self.handData[0][0]) + abs(self.handData[10][1] - self.handData[0][1])) * 1.1
+        if finger_tip_to_wrist < finger_center_to_wrist: return False
 
-        distance_from_finger_tip_to_wrist = (abs(self.handData[16][0] - self.handData[0][0]) + abs(self.handData[16][1] - self.handData[0][0])) ** 0.5
-        distance_from_finger_to_wrist = (abs(self.handData[14][0] - self.handData[0][0]) + abs(self.handData[14][1] - self.handData[0][0])) ** 0.5
-        if distance_from_finger_tip_to_wrist < distance_from_finger_to_wrist: return False
+        finger_tip_to_wrist = (abs(self.handData[16][0] - self.handData[0][0]) + abs(self.handData[16][1] - self.handData[0][1]))
+        finger_center_to_wrist = (abs(self.handData[14][0] - self.handData[0][0]) + abs(self.handData[14][1] - self.handData[0][1])) * 1.1
+        if finger_tip_to_wrist < finger_center_to_wrist: return False
 
-        distance_from_finger_tip_to_wrist = (abs(self.handData[20][0] - self.handData[0][0]) + abs(self.handData[20][1] - self.handData[0][0])) ** 0.5
-        distance_from_finger_to_wrist = (abs(self.handData[18][0] - self.handData[0][0]) + abs(self.handData[18][1] - self.handData[0][0])) ** 0.5
-        if distance_from_finger_tip_to_wrist < distance_from_finger_to_wrist: return False
+        finger_tip_to_wrist = (abs(self.handData[20][0] - self.handData[0][0]) + abs(self.handData[20][1] - self.handData[0][1]))
+        finger_center_to_wrist = (abs(self.handData[18][0] - self.handData[0][0]) + abs(self.handData[18][1] - self.handData[0][1])) * 1.1
+        if finger_tip_to_wrist < finger_center_to_wrist: return False
 
         return True
 
@@ -78,20 +89,27 @@ class HandProcessor:
         """
         Returns True if the gesture is scissors
         """
-        distance_from_finger_tip_to_wrist = (abs(self.handData[8][0] - self.handData[0][0]) + abs(self.handData[8][1] - self.handData[0][0])) ** 0.5
-        distance_from_finger_to_wrist = (abs(self.handData[6][0] - self.handData[0][0]) + abs(self.handData[6][1] - self.handData[0][0])) ** 0.5
-        if distance_from_finger_tip_to_wrist < distance_from_finger_to_wrist: return False
+        finger_tip_to_wrist = (abs(self.handData[8][0] - self.handData[0][0]) + abs(self.handData[8][1] - self.handData[0][1]))
+        finger_center_to_wrist = (abs(self.handData[6][0] - self.handData[0][0]) + abs(self.handData[6][1] - self.handData[0][1])) * 1.1
+        if finger_tip_to_wrist < finger_center_to_wrist: return False
 
-        distance_from_finger_tip_to_wrist = (abs(self.handData[12][0] - self.handData[0][0]) + abs(self.handData[12][1] - self.handData[0][0])) ** 0.5
-        distance_from_finger_to_wrist = (abs(self.handData[10][0] - self.handData[0][0]) + abs(self.handData[10][1] - self.handData[0][0])) ** 0.5
-        if distance_from_finger_tip_to_wrist < distance_from_finger_to_wrist: return False
+        finger_tip_to_wrist = (abs(self.handData[12][0] - self.handData[0][0]) + abs(self.handData[12][1] - self.handData[0][1]))
+        finger_center_to_wrist = (abs(self.handData[10][0] - self.handData[0][0]) + abs(self.handData[10][1] - self.handData[0][1])) * 1.1
+        if finger_tip_to_wrist < finger_center_to_wrist: return False
 
-        distance_from_finger_tip_to_wrist = (abs(self.handData[16][0] - self.handData[0][0]) + abs(self.handData[16][1] - self.handData[0][0])) ** 0.5
-        distance_from_finger_to_wrist = (abs(self.handData[14][0] - self.handData[0][0]) + abs(self.handData[14][1] - self.handData[0][0])) ** 0.5
-        if distance_from_finger_tip_to_wrist > distance_from_finger_to_wrist: return False
+        finger_tip_to_wrist = (abs(self.handData[16][0] - self.handData[0][0]) + abs(self.handData[16][1] - self.handData[0][1]))
+        finger_center_to_wrist = (abs(self.handData[14][0] - self.handData[0][0]) + abs(self.handData[14][1] - self.handData[0][1])) * 1.1
+        if finger_tip_to_wrist > finger_center_to_wrist: return False
 
-        distance_from_finger_tip_to_wrist = (abs(self.handData[20][0] - self.handData[0][0]) + abs(self.handData[20][1] - self.handData[0][0])) ** 0.5
-        distance_from_finger_to_wrist = (abs(self.handData[18][0] - self.handData[0][0]) + abs(self.handData[18][1] - self.handData[0][0])) ** 0.5
-        if distance_from_finger_tip_to_wrist > distance_from_finger_to_wrist: return False
+        finger_tip_to_wrist = (abs(self.handData[20][0] - self.handData[0][0]) + abs(self.handData[20][1] - self.handData[0][1]))
+        finger_center_to_wrist = (abs(self.handData[18][0] - self.handData[0][0]) + abs(self.handData[18][1] - self.handData[0][1])) * 1.1
+        if finger_tip_to_wrist > finger_center_to_wrist: return False
+
+        #palec
+        finger_lenght = (abs(self.handData[4][0] - self.handData[3][0]) + abs(self.handData[4][1] - self.handData[3][1])) ** 0.5
+        finger_lenght += (abs(self.handData[3][0] - self.handData[2][0]) + abs(self.handData[3][1] - self.handData[2][1])) ** 0.5
+        finger_lenght += (abs(self.handData[2][0] - self.handData[1][0]) + abs(self.handData[2][1] - self.handData[1][1])) ** 0.5
+        thumb_index_finger_distance = (abs(self.handData[6][0] - self.handData[3][0]) + abs(self.handData[6][1] - self.handData[3][1])) ** 0.5
+        if thumb_index_finger_distance > finger_lenght / 2: return False
 
         return True
