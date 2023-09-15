@@ -105,11 +105,4 @@ class HandProcessor:
         finger_center_to_wrist = (abs(self.handData[18][0] - self.handData[0][0]) + abs(self.handData[18][1] - self.handData[0][1])) * 1.1
         if finger_tip_to_wrist > finger_center_to_wrist: return False
 
-        #palec
-        finger_lenght = (abs(self.handData[4][0] - self.handData[3][0]) + abs(self.handData[4][1] - self.handData[3][1])) ** 0.5
-        finger_lenght += (abs(self.handData[3][0] - self.handData[2][0]) + abs(self.handData[3][1] - self.handData[2][1])) ** 0.5
-        finger_lenght += (abs(self.handData[2][0] - self.handData[1][0]) + abs(self.handData[2][1] - self.handData[1][1])) ** 0.5
-        thumb_index_finger_distance = (abs(self.handData[6][0] - self.handData[3][0]) + abs(self.handData[6][1] - self.handData[3][1])) ** 0.5
-        if thumb_index_finger_distance > finger_lenght / 2: return False
-
         return True
