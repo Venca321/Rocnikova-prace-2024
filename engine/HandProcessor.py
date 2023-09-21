@@ -60,9 +60,7 @@ class HandProcessor:
         finger_lenght += (abs(self.handData[3][0] - self.handData[2][0]) + abs(self.handData[3][1] - self.handData[2][1])) ** 0.5
         finger_lenght += (abs(self.handData[2][0] - self.handData[1][0]) + abs(self.handData[2][1] - self.handData[1][1])) ** 0.5
         thumb_index_finger_distance = (abs(self.handData[6][0] - self.handData[3][0]) + abs(self.handData[6][1] - self.handData[3][1])) ** 0.5
-        if thumb_index_finger_distance > finger_lenght / 2.5: return False
-
-        return True
+        return thumb_index_finger_distance <= finger_lenght / 2.5
 
     def isHandPaper(self) -> bool:
         """

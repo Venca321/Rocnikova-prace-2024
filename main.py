@@ -55,11 +55,11 @@ while True:
         
         if DEBUG_MODE: Hand_recognition.drawHandLandmarks(handMap, Hand_recognition.image1)
 
-    if not player0_ready and not game_running:
-        if detected_gesture0 == 4: player0_ready = True
+    if not player0_ready and not game_running and detected_gesture0 == 4:
+        player0_ready = True
 
-    if not player1_ready and not game_running:
-        if detected_gesture1 == 4: player1_ready = True
+    if not player1_ready and not game_running and detected_gesture1 == 4:
+        player1_ready = True
     
     if player0_ready and player1_ready: 
         game_running = True

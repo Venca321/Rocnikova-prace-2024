@@ -6,7 +6,10 @@ class HandRecognition:
     """
     Code for recognizing hands on image
     """
-    def __init__(self, mode=False, maxHands=1, modelComplex=1, detectionCon=0.5, trackCon=0.5): 
+    def __init__(self, mode:bool=False, maxHands:float=1, modelComplex:float=1, detectionCon:float=0.5, trackCon:float=0.5): 
+        """
+        Initialize HandRecognition class
+        """
         self.video = cv2.VideoCapture(0)
         self.image = None
         self.image1 = None
@@ -27,7 +30,6 @@ class HandRecognition:
         results0 = self.hands.process(imageRGB0).multi_hand_landmarks
         imageRGB1 = cv2.cvtColor(self.image1, cv2.COLOR_BGR2RGB)
         results1 = self.hands.process(imageRGB1).multi_hand_landmarks
-
 
         if not results0: results0 = []
         if not results1: results1 = []
