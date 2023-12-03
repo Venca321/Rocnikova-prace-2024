@@ -12,8 +12,8 @@ class HandRecognition:
         """
         self.video = cv2.VideoCapture(0)
         self.image = None
-        self.image1 = None
-        self.image2 = None
+        self.imageRight = None
+        self.imageLeft = None
         self.mpHands = mp.solutions.hands
         self.hands = self.mpHands.Hands(mode, maxHands, modelComplex, detectionCon, trackCon)
 
@@ -23,17 +23,17 @@ class HandRecognition:
         """
         _, image = self.video.read()
         self.image = image
-        self.image0 = image[0:image.shape[0], 0:int(image.shape[1]/2)]
-        self.image1 = image[0:image.shape[0], int(image.shape[1]/2):image.shape[1]]
+        self.imageLeft = image[0:image.shape[0], 0:int(image.shape[1]/2)]
+        self.imageRight = image[0:image.shape[0], int(image.shape[1]/2):image.shape[1]]
         
-        imageRGB0 = cv2.cvtColor(self.image0, cv2.COLOR_BGR2RGB)
-        results0 = self.hands.process(imageRGB0).multi_hand_landmarks
-        imageRGB1 = cv2.cvtColor(self.image1, cv2.COLOR_BGR2RGB)
-        results1 = self.hands.process(imageRGB1).multi_hand_landmarks
+        imageRgbLeft = cv2.cvtColor(self.imageLeft, cv2.COLOR_BGR2RGB)
+        resultsLeft = self.hands.process(imageRgbLeft).multi_hand_landmarks
+        imageRgbRight = cv2.cvtColor(self.imageRight, cv2.COLOR_BGR2RGB)
+        resultsRight = self.hands.process(imageRgbRight).multi_hand_landmarks
 
-        if not results0: results0 = []
-        if not results1: results1 = []
-        return [results0, results1]
+        if not resultsLeft: resultsLeft= []
+        if not resultsRight: resultsRight = []
+        return [resultsLeft, resultsRight]
 
     def drawHandLandmarks(self, handMaps, image):
         """
