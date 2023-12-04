@@ -1,7 +1,5 @@
 
-from enum import Enum
-
-class HandEnums(Enum):
+class HandEnums:
     NONE = 0
     ROCK = 1
     PAPER = 2
@@ -41,11 +39,11 @@ class HandProcessor:
             point_x, point_y = int(hand_point.x * image_width), int(hand_point.y * image_height)
             self.handData[point_index] = [point_x, point_y, hand_point.z]
 
-        if self.isHandRock(): return HandEnums.ROCK.value
-        if self.isHandPaper(): return HandEnums.PAPER.value
-        if self.isHandScissors(): return HandEnums.SCISSORS.value
-        if self.isHandLike(): return HandEnums.LIKE.value
-        return HandEnums.NONE.value
+        if self.isHandRock(): return HandEnums.ROCK
+        if self.isHandPaper(): return HandEnums.PAPER
+        if self.isHandScissors(): return HandEnums.SCISSORS
+        if self.isHandLike(): return HandEnums.LIKE
+        return HandEnums.NONE
 
     def isHandRock(self) -> bool:
         fingerTipToWristDistance, fingerCenterToWristDistance = self.__calculateWristToFingerTipDistance(self.__FINGER_INDEX)

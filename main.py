@@ -2,65 +2,85 @@
 from engine.engine import *
 import cv2
 
+
 DEBUG_MODE = True
-LIMIT = 3
 
-handRecognition = HandRecognition()
+class GameUI:
+    def checkIfTerminated(handRecognition):
+        if cv2.waitKey(1) == ord('q'): #if "q" is pressed
+            handRecognition.stop()
+            exit()
 
-gameRunning = False
-playerLeftReady = False
-playerRightReady = False
+    def __getGestureSreenText(gesture):
+        if gesture == 1: return "Kamen"
+        elif gesture == 2: return "Papir"
+        elif gesture == 3: return "Nuzky"
+        elif gesture == 4: return "Like"
+        else: return "-----"
 
-while True:
-    results = handRecognition.processImage()
-
-    if results[0] == []: gestureLeft = 0
-    if results[1] == []: gestureRight = 0
-
-    for handMap in results[0]:
-        hand_processor = Hands.HandProcessor(handMap, handRecognition.imageLeft)
-        gestureLeft = hand_processor.process()
+    def showUiScreen(gestureLeft, gestureRight, image):
+        detectedGestureLeftText = GameUI.__getGestureSreenText(gestureLeft)
+        image = cv2.putText(image, detectedGestureLeftText, (10, 25), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 2, cv2.LINE_AA)
         
-        if DEBUG_MODE: handRecognition.drawHandLandmarks(handMap, handRecognition.imageLeft)
+        detectedGestureRightText = GameUI.__getGestureSreenText(gestureRight)
+        image = cv2.putText(image, detectedGestureRightText, (int(image.shape[1]/2)+10, 25), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 2, cv2.LINE_AA)
+        
+        cv2.line(image, (int(image.shape[1]/2), 0), (int(image.shape[1]/2), image.shape[0]), (0, 0, 255), 2) #draw center line
+        cv2.imshow("Output", image)
 
-    for handMap in results[1]:
-        hand_processor = Hands.HandProcessor(handMap, handRecognition.imageRight)
-        gestureRight = hand_processor.process()
 
-        if DEBUG_MODE: handRecognition.drawHandLandmarks(handMap, handRecognition.imageRight)
+class __GameStates:
+    def __init__(self, handRecognition):
+        self.handRecognition = handRecognition
+        self.playerLeftReady = False
+        self.playerRightReady = False
 
-    if not playerLeftReady and not gameRunning and gestureLeft == 4:
-        playerLeftReady = True
+    def __processHandMapToGesture(self, results, handRecognition, image):
+        for handMap in results:
+            handProcessor = Hands.HandProcessor(handMap, image)
+            gesture = handProcessor.process()
+            if DEBUG_MODE: handRecognition.drawHandLandmarks(handMap, image)
+            return gesture
 
-    if not playerRightReady and not gameRunning and gestureRight == 4:
-        playerRightReady = True
-    
-    if playerLeftReady and playerRightReady: 
-        gameRunning = True
-        playerLeftReady = False
-        playerRightReady = False
+    def __getGestures(self):
+        results = handRecognition.processImage()
+        gestureLeft = self.__processHandMapToGesture(results[0], handRecognition, handRecognition.imageLeft)
+        gestureRight = self.__processHandMapToGesture(results[1], handRecognition, handRecognition.imageRight)
+        return gestureLeft, gestureRight
 
-    if gameRunning:
+    def notRuning(self):
+        gestureLeft, gestureRight = self.__getGestures()
+
+        if not self.playerLeftReady and gestureLeft == Hands.HandEnums.LIKE:
+            self.playerLeftReady = True
+
+        if not self.playerRightReady and gestureRight == Hands.HandEnums.LIKE:
+            self.playerRightReady = True
+
+        GameUI.showUiScreen(gestureLeft, gestureRight, self.handRecognition.image)
+        GameUI.checkIfTerminated(self.handRecognition)
+        
+        if self.playerLeftReady and self.playerRightReady: return True
+        return False
+
+    def runing(self):
+        gestureLeft, gestureRight = self.__getGestures()
+
         print("Running...")
-        gameRunning = False
 
-    if gestureLeft == 1: detectedGestureLeftText = "Kamen"
-    elif gestureLeft == 2: detectedGestureLeftText = "Papir"
-    elif gestureLeft == 3: detectedGestureLeftText = "Nuzky"
-    elif gestureLeft == 4: detectedGestureLeftText = "Like"
-    else: detectedGestureLeftText = "-----"
-    handRecognition.image = cv2.putText(handRecognition.image, detectedGestureLeftText, (10, 25), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 2, cv2.LINE_AA)
-    
-    if gestureRight == 1: detectedGestureRightText = "Kamen"
-    elif gestureRight == 2: detectedGestureRightText = "Papir"
-    elif gestureRight == 3: detectedGestureRightText = "Nuzky"
-    elif gestureRight == 4: detectedGestureRightText = "Like"
-    else: detectedGestureRightText = "-----"
-    handRecognition.image = cv2.putText(handRecognition.image, detectedGestureRightText, (int(handRecognition.image.shape[1]/2)+10, 25), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 2, cv2.LINE_AA)
-    
-    cv2.line(handRecognition.image, (int(handRecognition.image.shape[1]/2), 0), (int(handRecognition.image.shape[1]/2), handRecognition.image.shape[0]), (0, 0, 255), 2)
+        GameUI.showUiScreen(gestureLeft, gestureRight, self.handRecognition.image)
+        GameUI.checkIfTerminated(self.handRecognition)
+        return True
 
-    cv2.imshow("Output", handRecognition.image)
-    if cv2.waitKey(1) == ord('q'): break
+if __name__ == "__main__":
+    handRecognition = HandRecognition()
 
-handRecognition.stop()
+    while True:
+        gameState = __GameStates(handRecognition)
+        gameRuning = False
+
+        while not gameRuning:
+            gameRuning = gameState.notRuning()
+
+        while gameRuning:
+            gameRuning = gameState.runing()
