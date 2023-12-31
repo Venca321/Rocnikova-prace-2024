@@ -1,6 +1,6 @@
 
 from engine.engine import HandRecognition, GestureRecognition, Gesture, GameEngine
-import cv2
+import cv2, time
 
 
 DEBUG_MODE = True
@@ -40,6 +40,7 @@ if __name__ == "__main__":
     hand_recognizer = HandRecognition()
     gesture_recognizer = GestureRecognition()
     game_state = GameState.LOADING
+    last_timer_update = time.time()
 
     while True:
         while game_state == GameState.LOADING:
@@ -63,10 +64,18 @@ if __name__ == "__main__":
             game_ui.showUiScreen(gesture_text_left, gesture_text_right, hand_recognizer.image)
 
         while game_state == GameState.RUNNING:
+            landmarks = hand_recognizer.getLandmarks(DEBUG_MODE)
+            left_gesture = gesture_recognizer.detectGesture(landmarks.left_landmark)
+            right_gesture = gesture_recognizer.detectGesture(landmarks.right_landmark)
 
-            
+            if game_engine.seconds_to_start > 0 and (time.time() - last_timer_update) >= 1:
+                print(game_engine.seconds_to_start)
+                game_engine.seconds_to_start -= 1
+                last_timer_update = time.time()
+            elif game_engine.seconds_to_start <= 0:
+                print("NOW!")
+                game_state = GameState.RESULTS_SCREEN
 
-            #game_state = GameState.RESULTS_SCREEN
             game_ui.showUiScreen("...", "...", hand_recognizer.image)
 
         while game_state == GameState.RESULTS_SCREEN:
