@@ -3,7 +3,7 @@ import mediapipe as mp
 import cv2
 
 
-class Gesture:
+class GestureEnums:
     NONE = 0
     ROCK = 1
     PAPER = 2
@@ -85,7 +85,7 @@ class GestureRecognition:
     def __calculatePointsDistance(self, point1:list, point2:list) -> float:
         return ((point1[0] - point2[0])**2 + (point1[1] - point2[1])**2)**0.5
     
-    def __calculateThumbLenght(self, thumb:ThumbLandmark) -> float:
+    def __calculateThumbLength(self, thumb:ThumbLandmark) -> float:
         return self.__calculatePointsDistance(thumb.finger_cmc, thumb.finger_mcp) + self.__calculatePointsDistance(thumb.finger_mcp, thumb.finger_ip) + self.__calculatePointsDistance(thumb.finger_ip, thumb.finger_tip)
 
     def __isTipToWristLongerThanPipToWrist(self, finger:FingerLandmark, wrist) -> bool:
@@ -93,16 +93,16 @@ class GestureRecognition:
 
     def __isThumbToIndexFingerDistanceShorterThanThumbLenght(self, thumb:ThumbLandmark, index_finger:FingerLandmark) -> bool:
         __THUMB_DISTANCE_TO_INDEX_FINGER_RATIO = 2
-        return self.__calculatePointsDistance(thumb.finger_ip, index_finger.finger_pip) < self.__calculateThumbLenght(thumb) / __THUMB_DISTANCE_TO_INDEX_FINGER_RATIO
+        return self.__calculatePointsDistance(thumb.finger_ip, index_finger.finger_pip) < self.__calculateThumbLength(thumb) / __THUMB_DISTANCE_TO_INDEX_FINGER_RATIO
 
     def detectGesture(self, hand_landmark:HandLandmark):
         try:
-            if self.isHandRock(hand_landmark): return Gesture.ROCK
-            if self.isHandPaper(hand_landmark): return Gesture.PAPER
-            if self.isHandScissors(hand_landmark): return Gesture.SCISSORS
-            if self.isHandLike(hand_landmark): return Gesture.LIKE
+            if self.isHandRock(hand_landmark): return GestureEnums.ROCK
+            if self.isHandPaper(hand_landmark): return GestureEnums.PAPER
+            if self.isHandScissors(hand_landmark): return GestureEnums.SCISSORS
+            if self.isHandLike(hand_landmark): return GestureEnums.LIKE
         except Exception: None
-        return Gesture.NONE
+        return GestureEnums.NONE
 
     def isHandRock(self, hand_landmark:HandLandmark) -> bool:
         if self.__isTipToWristLongerThanPipToWrist(hand_landmark.index_finger, hand_landmark.wrist): return False
