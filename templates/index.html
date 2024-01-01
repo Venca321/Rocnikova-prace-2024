@@ -46,7 +46,7 @@
 </style>
 
 <script type="text/javascript">
-    var socket = io.connect('http://' + document.domain + ':' + location.port);
+    var socket = io.connect('wss://' + document.domain + ':' + location.port);
 
     socket.on('response', function(data) {
         document.getElementById('responseMessage').innerText = data.message;
@@ -74,7 +74,7 @@
                 video.srcObject = stream;
                 video.onloadedmetadata = function(e) {
                     video.play();
-                    setInterval(captureImage, 50); // Snímek každých 50 ms
+                    setInterval(captureImage, 40); // Snímek každých 40 ms
                 };
             })
             .catch(function(err) {
