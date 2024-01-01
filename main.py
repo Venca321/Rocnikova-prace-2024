@@ -2,6 +2,7 @@
 from engine.engine import HandRecognition, GestureRecognition, Gesture
 from flask import Flask, render_template
 from flask_socketio import SocketIO, emit
+
 import numpy as np
 import cv2, base64
 
@@ -41,6 +42,6 @@ def handle_image(data):
 
 if __name__ == '__main__':
     #serve(app, host="0.0.0.0", port=5000)
-    socketio.run(app)
+    socketio.run(app, host="0.0.0.0")
 
 
