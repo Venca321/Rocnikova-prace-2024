@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Kámen, nůžky, papír</title>
+</head>
+<body>
+
+<div>
+    <video id="video" width="640" height="480" autoplay></video>
+    <button id="startButton">Start Camera</button>
+    <div id="responseMessage"></div>
+</div>
+
+<script>
+    var video = document.getElementById('video');
+
+    // Požadavek na přístup ke kameře
+    document.getElementById('startButton').addEventListener('click', function() {
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
+                video.srcObject = stream;
+                video.play();
+            });
+        }
+    });
+
+    // Odeslání snímků na server
+    video.addEventListener('play', function() {
+        var canvas = document.createElement('canvas');
+        var context = canvas.getContext('2d');
+
+        function sendImage() {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+            
+            canvas.toBlob(function(blob) {
+                var data = new FormData();
+                data.append('frame', blob);
+
+                fetch('/upload', {
+                    method: 'POST',
+                    body: data
+                })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('responseMessage').innerText = data.message;
+                })
+                .catch(error => {
+                    console.error('Chyba:', error);
+                    document.getElementById('responseMessage').innerText = 'Došlo k chybě při nahrávání obrazu.';
+                });
+            }, 'image/jpeg');
+        }
+
+        // Odesílání snímků každých 100 ms
+        setInterval(sendImage, 250);
+    });
+</script>
+
+</body>
+</html>

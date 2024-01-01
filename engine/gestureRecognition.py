@@ -33,19 +33,13 @@ class HandLandmark:
         self.ring_finger = FingerLandmark(raw_landmark[13], raw_landmark[14], raw_landmark[15], raw_landmark[16])
         self.pinky = FingerLandmark(raw_landmark[17], raw_landmark[18], raw_landmark[19], raw_landmark[20])
 
-class HandLandmarks:
-    def __init__(self, right_landmark:HandLandmark, left_landmark:HandLandmark):
-        self.left_landmark = left_landmark
-        self.right_landmark = right_landmark
-
 class HandRecognition:
     def __init__(self):
-        self.video = cv2.VideoCapture(0)
-        self.image = self.video.read()
+        self.image = None
         self.mpHands = mp.solutions.hands
         self.hands = self.mpHands.Hands(False, 1, 1, 0.5, 0.5) #mode, maxHands, modelComplex, detectionCon, trackCon
 
-    def __getLandmark(self, image, draw_landmarks:bool=False) -> HandLandmark | None:
+    def getLandmark(self, image, draw_landmarks:bool=False) -> HandLandmark | None:
         image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         results = self.hands.process(image_rgb).multi_hand_landmarks
 
@@ -63,19 +57,6 @@ class HandRecognition:
             hand_landmarks.append([point_x, point_y, hand_point.z])
 
         return HandLandmark(hand_landmarks)
-
-    def getLandmarks(self, draw_landmarks:bool=False) -> HandLandmarks:
-        _, image = self.video.read()
-        self.image = image
-
-        # split image to left and right side
-        self.imageLeft = image[0:image.shape[0], 0:int(image.shape[1]/2)]
-        self.imageRight = image[0:image.shape[0], int(image.shape[1]/2):image.shape[1]]
-
-        resultsLeft = self.__getLandmark(self.imageLeft, draw_landmarks)
-        resultsRight = self.__getLandmark(self.imageRight, draw_landmarks)
-
-        return HandLandmarks(resultsRight, resultsLeft)
 
     def stop(self):
         self.video.release()

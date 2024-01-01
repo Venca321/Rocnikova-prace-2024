@@ -1,5 +1,5 @@
 
-from engine.gestureRecognition import Gesture, ThumbLandmark, FingerLandmark, HandLandmark, HandLandmarks, HandRecognition, GestureRecognition
+from engine.gestureRecognition import Gesture, ThumbLandmark, FingerLandmark, HandLandmark, HandRecognition, GestureRecognition
 
 class GameEngine:
     def __init__(self):
