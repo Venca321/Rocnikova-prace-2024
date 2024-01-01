@@ -1,49 +1,84 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>WebSocket Camera Stream</title>
-    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
-    <script type="text/javascript">
-        var socket = io.connect('wss://' + document.domain + ':' + location.port);
-
-        socket.on('response', function(data) {
-            document.getElementById('responseMessage').innerText = data.message;
-        });
-
-        function sendImage(imageData) {
-            socket.emit('image', imageData);
-        }
-
-        function captureImage() {
-            var video = document.querySelector('video');
-            var canvas = document.createElement('canvas');
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            var context = canvas.getContext('2d');
-            context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
-            var data = canvas.toDataURL('image/jpeg');
-            sendImage(data);
-        }
-
-        function startCamera() {
-            navigator.mediaDevices.getUserMedia({ video: true })
-                .then(function(stream) {
-                    var video = document.querySelector('video');
-                    video.srcObject = stream;
-                    video.onloadedmetadata = function(e) {
-                        video.play();
-                        setInterval(captureImage, 100); // Snímek každých 100 ms
-                    };
-                })
-                .catch(function(err) {
-                    console.log("An error occurred: " + err);
-                });
-        }
-    </script>
-</head>
-<body>
-    <button onclick="startCamera()">Start Camera</button>
-    <video autoplay></video>
-    <div id="responseMessage"></div>
-</body>
+    <head>
+        <title>Kámen, nůžky, papír</title>
+        <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    </head>
+    <body>
+        <video autoplay></video>
+        <p id="responseMessage">-----</p>
+    </body>
 </html>
+
+<style>
+    html {
+        background-color: #383838;
+    }
+
+    body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+    }
+
+    p {
+        margin-top: 48px;
+        color: white;
+        font-size: 36px;
+        width: fit-content;
+    }
+
+    video {
+        margin-top: 5%;
+        width: 60vw;
+        background-color: black;
+    }
+
+    @media only screen and (max-width: 600px) {
+        video {
+            width: 90vw;
+            height: 75vh;
+        }
+    }
+</style>
+
+<script type="text/javascript">
+    var socket = io.connect('wss://' + document.domain + ':' + location.port);
+
+    socket.on('response', function(data) {
+        document.getElementById('responseMessage').innerText = data.message;
+    });
+
+    function sendImage(imageData) {
+        socket.emit('image', imageData);
+    }
+
+    function captureImage() {
+        var video = document.querySelector('video');
+        var canvas = document.createElement('canvas');
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        var context = canvas.getContext('2d');
+        context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+        var data = canvas.toDataURL('image/jpeg');
+        sendImage(data);
+    }
+
+    function startCamera() {
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(function(stream) {
+                var video = document.querySelector('video');
+                video.srcObject = stream;
+                video.onloadedmetadata = function(e) {
+                    video.play();
+                    setInterval(captureImage, 100); // Snímek každých 100 ms
+                };
+            })
+            .catch(function(err) {
+                console.log("An error occurred: " + err);
+            });
+    }
+
+    startCamera();
+</script>

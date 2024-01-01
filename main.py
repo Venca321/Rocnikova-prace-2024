@@ -15,10 +15,10 @@ hand_recognizer = HandRecognition()
 gesture_recognizer = GestureRecognition()
 
 def getGestureSreenText(gesture) -> str:
-    if gesture == GestureEnums.ROCK: return "Kámen"
-    elif gesture == GestureEnums.PAPER: return "Papír"
-    elif gesture == GestureEnums.SCISSORS: return "Nůžky"
-    elif gesture == GestureEnums.LIKE: return "Like"
+    if gesture == GestureEnums.ROCK: return "Kámen 🪨"
+    elif gesture == GestureEnums.PAPER: return "Papír 📜"
+    elif gesture == GestureEnums.SCISSORS: return "Nůžky ✂️"
+    elif gesture == GestureEnums.LIKE: return "Like 👍"
     else: return "-----"
 
 @app.route('/')
