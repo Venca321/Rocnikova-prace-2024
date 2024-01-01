@@ -46,7 +46,7 @@
 </style>
 
 <script type="text/javascript">
-    var socket = io.connect('wss://' + document.domain + ':' + location.port);
+    var socket = io.connect('http://' + document.domain + ':' + location.port);
 
     socket.on('response', function(data) {
         document.getElementById('responseMessage').innerText = data.message;
@@ -82,5 +82,7 @@
             });
     }
 
-    startCamera();
+    window.addEventListener("load", (event) => {
+        startCamera();
+    });
 </script>
