@@ -13,6 +13,7 @@
 <style>
     html {
         background-color: #383838;
+        overflow: hidden;
     }
 
     body {
@@ -73,7 +74,7 @@
                 video.srcObject = stream;
                 video.onloadedmetadata = function(e) {
                     video.play();
-                    setInterval(captureImage, 100); // Snímek každých 100 ms
+                    setInterval(captureImage, 50); // Snímek každých 50 ms
                 };
             })
             .catch(function(err) {
