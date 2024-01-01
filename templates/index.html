@@ -1,62 +1,49 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Kámen, nůžky, papír</title>
-</head>
-<body>
+    <title>WebSocket Camera Stream</title>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script type="text/javascript">
+        var socket = io.connect('http://' + document.domain + ':' + location.port);
 
-<div>
-    <video id="video" width="640" height="480" autoplay></video>
-    <button id="startButton">Start Camera</button>
-    <div id="responseMessage"></div>
-</div>
+        socket.on('response', function(data) {
+            document.getElementById('responseMessage').innerText = data.message;
+        });
 
-<script>
-    var video = document.getElementById('video');
-
-    // Požadavek na přístup ke kameře
-    document.getElementById('startButton').addEventListener('click', function() {
-        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-            navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
-                video.srcObject = stream;
-                video.play();
-            });
+        function sendImage(imageData) {
+            socket.emit('image', imageData);
         }
-    });
 
-    // Odeslání snímků na server
-    video.addEventListener('play', function() {
-        var canvas = document.createElement('canvas');
-        var context = canvas.getContext('2d');
-
-        function sendImage() {
+        function captureImage() {
+            var video = document.querySelector('video');
+            var canvas = document.createElement('canvas');
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
+            var context = canvas.getContext('2d');
             context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
-            
-            canvas.toBlob(function(blob) {
-                var data = new FormData();
-                data.append('frame', blob);
-
-                fetch('/upload', {
-                    method: 'POST',
-                    body: data
-                })
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('responseMessage').innerText = data.message;
-                })
-                .catch(error => {
-                    console.error('Chyba:', error);
-                    document.getElementById('responseMessage').innerText = 'Došlo k chybě při nahrávání obrazu.';
-                });
-            }, 'image/jpeg');
+            var data = canvas.toDataURL('image/jpeg');
+            sendImage(data);
         }
 
-        // Odesílání snímků každých 100 ms
-        setInterval(sendImage, 250);
-    });
-</script>
-
+        function startCamera() {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(function(stream) {
+                    var video = document.querySelector('video');
+                    video.srcObject = stream;
+                    video.onloadedmetadata = function(e) {
+                        video.play();
+                        setInterval(captureImage, 100); // Snímek každých 100 ms
+                    };
+                })
+                .catch(function(err) {
+                    console.log("An error occurred: " + err);
+                });
+        }
+    </script>
+</head>
+<body>
+    <button onclick="startCamera()">Start Camera</button>
+    <video autoplay></video>
+    <div id="responseMessage"></div>
 </body>
 </html>

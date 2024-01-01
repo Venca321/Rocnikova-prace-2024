@@ -1,12 +1,14 @@
 
 from engine.engine import HandRecognition, GestureRecognition, Gesture
-from flask import Flask, render_template, request, Response, jsonify
-from waitress import serve
+from flask import Flask, render_template
+from flask_socketio import SocketIO, emit
 import numpy as np
-import cv2
+import cv2, base64
 
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'secret!'
+socketio = SocketIO(app)
 
 hand_recognizer = HandRecognition()
 gesture_recognizer = GestureRecognition()
@@ -22,13 +24,10 @@ def getGestureSreenText(gesture) -> str:
 def index():
     return render_template('index.html')
 
-@app.route('/upload', methods=['POST'])
-def upload():
-    if 'frame' not in request.files: return Response(status=400)
-    
-    file = request.files['frame']
-    file_str = file.read()
-    nparr = np.frombuffer(file_str, np.uint8)
+@socketio.on('image')
+def handle_image(data):
+    img_data = base64.b64decode(data.split(',')[1])
+    nparr = np.frombuffer(img_data, np.uint8)
     img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
     try:
@@ -38,8 +37,10 @@ def upload():
         gesture = 0
 
     print(gesture)
-
-    return jsonify({"message": getGestureSreenText(gesture)})
+    emit('response', {"message": getGestureSreenText(gesture)})
 
 if __name__ == '__main__':
-    serve(app, host="0.0.0.0", port=5000)
+    #serve(app, host="0.0.0.0", port=5000)
+    socketio.run(app)
+
+
