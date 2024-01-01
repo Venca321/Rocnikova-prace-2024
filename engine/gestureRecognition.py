@@ -45,7 +45,7 @@ class HandRecognition:
         self.mpHands = mp.solutions.hands
         self.hands = self.mpHands.Hands(False, 1, 1, 0.5, 0.5) #mode, maxHands, modelComplex, detectionCon, trackCon
 
-    def __getLandmark(self, image, draw_landmarks:bool=False) -> HandLandmark | None:
+    def getLandmark(self, image, draw_landmarks:bool=False) -> HandLandmark | None:
         image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         results = self.hands.process(image_rgb).multi_hand_landmarks
 
@@ -72,8 +72,8 @@ class HandRecognition:
         self.imageLeft = image[0:image.shape[0], 0:int(image.shape[1]/2)]
         self.imageRight = image[0:image.shape[0], int(image.shape[1]/2):image.shape[1]]
 
-        resultsLeft = self.__getLandmark(self.imageLeft, draw_landmarks)
-        resultsRight = self.__getLandmark(self.imageRight, draw_landmarks)
+        resultsLeft = self.getLandmark(self.imageLeft, draw_landmarks)
+        resultsRight = self.getLandmark(self.imageRight, draw_landmarks)
 
         return HandLandmarks(resultsRight, resultsLeft)
 
