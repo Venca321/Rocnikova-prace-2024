@@ -74,10 +74,15 @@ if __name__ == "__main__":
                 last_timer_update = time.time()
             elif game_engine.seconds_to_start <= 0:
                 print("NOW!")
+                submited_left_gesture = left_gesture
+                submited_right_gesture = right_gesture
                 game_state = GameState.RESULTS_SCREEN
 
             game_ui.showUiScreen("...", "...", hand_recognizer.image)
 
         while game_state == GameState.RESULTS_SCREEN:
             game_state = GameState.LOADING
+            print("Results")
+            print(f"Player left: {submited_left_gesture}")
+            print(f"Player right: {submited_right_gesture}")
             game_ui.showUiScreen("...", "...", hand_recognizer.image)
