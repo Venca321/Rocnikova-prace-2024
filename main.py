@@ -1,5 +1,5 @@
 
-from engine.engine import HandRecognition, GestureRecognition, Gesture
+from engine.engine import HandRecognition, GestureRecognition, GestureEnums
 from flask import Flask, render_template
 from flask_socketio import SocketIO, emit
 
@@ -15,10 +15,10 @@ hand_recognizer = HandRecognition()
 gesture_recognizer = GestureRecognition()
 
 def getGestureSreenText(gesture) -> str:
-    if gesture == Gesture.ROCK: return "Kámen"
-    elif gesture == Gesture.PAPER: return "Papír"
-    elif gesture == Gesture.SCISSORS: return "Nůžky"
-    elif gesture == Gesture.LIKE: return "Like"
+    if gesture == GestureEnums.ROCK: return "Kámen"
+    elif gesture == GestureEnums.PAPER: return "Papír"
+    elif gesture == GestureEnums.SCISSORS: return "Nůžky"
+    elif gesture == GestureEnums.LIKE: return "Like"
     else: return "-----"
 
 @app.route('/')

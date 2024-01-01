@@ -3,7 +3,7 @@ import mediapipe as mp
 import cv2
 
 
-class Gesture:
+class GestureEnums:
     NONE = 0
     ROCK = 1
     PAPER = 2
@@ -33,13 +33,19 @@ class HandLandmark:
         self.ring_finger = FingerLandmark(raw_landmark[13], raw_landmark[14], raw_landmark[15], raw_landmark[16])
         self.pinky = FingerLandmark(raw_landmark[17], raw_landmark[18], raw_landmark[19], raw_landmark[20])
 
+class HandLandmarks:
+    def __init__(self, right_landmark:HandLandmark, left_landmark:HandLandmark):
+        self.left_landmark = left_landmark
+        self.right_landmark = right_landmark
+
 class HandRecognition:
     def __init__(self):
-        self.image = None
+        self.video = cv2.VideoCapture(0)
+        self.image = self.video.read()
         self.mpHands = mp.solutions.hands
         self.hands = self.mpHands.Hands(False, 1, 1, 0.5, 0.5) #mode, maxHands, modelComplex, detectionCon, trackCon
 
-    def getLandmark(self, image, draw_landmarks:bool=False) -> HandLandmark | None:
+    def __getLandmark(self, image, draw_landmarks:bool=False) -> HandLandmark | None:
         image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         results = self.hands.process(image_rgb).multi_hand_landmarks
 
@@ -58,6 +64,19 @@ class HandRecognition:
 
         return HandLandmark(hand_landmarks)
 
+    def getLandmarks(self, draw_landmarks:bool=False) -> HandLandmarks:
+        _, image = self.video.read()
+        self.image = image
+
+        # split image to left and right side
+        self.imageLeft = image[0:image.shape[0], 0:int(image.shape[1]/2)]
+        self.imageRight = image[0:image.shape[0], int(image.shape[1]/2):image.shape[1]]
+
+        resultsLeft = self.__getLandmark(self.imageLeft, draw_landmarks)
+        resultsRight = self.__getLandmark(self.imageRight, draw_landmarks)
+
+        return HandLandmarks(resultsRight, resultsLeft)
+
     def stop(self):
         self.video.release()
         cv2.destroyAllWindows()
@@ -66,7 +85,7 @@ class GestureRecognition:
     def __calculatePointsDistance(self, point1:list, point2:list) -> float:
         return ((point1[0] - point2[0])**2 + (point1[1] - point2[1])**2)**0.5
     
-    def __calculateThumbLenght(self, thumb:ThumbLandmark) -> float:
+    def __calculateThumbLength(self, thumb:ThumbLandmark) -> float:
         return self.__calculatePointsDistance(thumb.finger_cmc, thumb.finger_mcp) + self.__calculatePointsDistance(thumb.finger_mcp, thumb.finger_ip) + self.__calculatePointsDistance(thumb.finger_ip, thumb.finger_tip)
 
     def __isTipToWristLongerThanPipToWrist(self, finger:FingerLandmark, wrist) -> bool:
@@ -74,42 +93,44 @@ class GestureRecognition:
 
     def __isThumbToIndexFingerDistanceShorterThanThumbLenght(self, thumb:ThumbLandmark, index_finger:FingerLandmark) -> bool:
         __THUMB_DISTANCE_TO_INDEX_FINGER_RATIO = 2
-        return self.__calculatePointsDistance(thumb.finger_ip, index_finger.finger_pip) < self.__calculateThumbLenght(thumb) / __THUMB_DISTANCE_TO_INDEX_FINGER_RATIO
+        return self.__calculatePointsDistance(thumb.finger_ip, index_finger.finger_pip) < self.__calculateThumbLength(thumb) / __THUMB_DISTANCE_TO_INDEX_FINGER_RATIO
 
     def detectGesture(self, hand_landmark:HandLandmark):
         try:
-            if self.isHandRock(hand_landmark): return Gesture.ROCK
-            if self.isHandPaper(hand_landmark): return Gesture.PAPER
-            if self.isHandScissors(hand_landmark): return Gesture.SCISSORS
-            if self.isHandLike(hand_landmark): return Gesture.LIKE
+            index_finger_up = self.__isTipToWristLongerThanPipToWrist(hand_landmark.index_finger, hand_landmark.wrist)
+            middle_finger_up = self.__isTipToWristLongerThanPipToWrist(hand_landmark.middle_finger, hand_landmark.wrist)
+            ring_finger_up = self.__isTipToWristLongerThanPipToWrist(hand_landmark.ring_finger, hand_landmark.wrist)
+            pinky_finger_up = self.__isTipToWristLongerThanPipToWrist(hand_landmark.pinky, hand_landmark.wrist)
+            thumb_near_palm = self.__isThumbToIndexFingerDistanceShorterThanThumbLenght(hand_landmark.thumb, hand_landmark.index_finger)
+
+            if self.isHandRock(index_finger_up, middle_finger_up, ring_finger_up, pinky_finger_up, thumb_near_palm): return GestureEnums.ROCK
+            if self.isHandPaper(index_finger_up, middle_finger_up, ring_finger_up, pinky_finger_up): return GestureEnums.PAPER
+            if self.isHandScissors(index_finger_up, middle_finger_up, ring_finger_up, pinky_finger_up): return GestureEnums.SCISSORS
+            if self.isHandLike(index_finger_up, middle_finger_up, ring_finger_up, pinky_finger_up, thumb_near_palm): return GestureEnums.LIKE
         except Exception: None
-        return Gesture.NONE
+        return GestureEnums.NONE
 
-    def isHandRock(self, hand_landmark:HandLandmark) -> bool:
-        if self.__isTipToWristLongerThanPipToWrist(hand_landmark.index_finger, hand_landmark.wrist): return False
-        if self.__isTipToWristLongerThanPipToWrist(hand_landmark.middle_finger, hand_landmark.wrist): return False
-        if self.__isTipToWristLongerThanPipToWrist(hand_landmark.ring_finger, hand_landmark.wrist): return False
-        if self.__isTipToWristLongerThanPipToWrist(hand_landmark.pinky, hand_landmark.wrist): return False
-        return self.__isThumbToIndexFingerDistanceShorterThanThumbLenght(hand_landmark.thumb, hand_landmark.index_finger)
+    def isHandRock(self, index_finger_up, middle_finger_up, ring_finger_up, pinky_finger_up, thumb_near_palm) -> bool:
+        if index_finger_up: return False
+        if middle_finger_up: return False
+        if ring_finger_up: return False
+        return False if pinky_finger_up else thumb_near_palm
 
-    def isHandPaper(self, hand_landmark:HandLandmark) -> bool:
-        if not self.__isTipToWristLongerThanPipToWrist(hand_landmark.index_finger, hand_landmark.wrist): return False
-        if not self.__isTipToWristLongerThanPipToWrist(hand_landmark.middle_finger, hand_landmark.wrist): return False
-        if not self.__isTipToWristLongerThanPipToWrist(hand_landmark.ring_finger, hand_landmark.wrist): return False
-        return self.__isTipToWristLongerThanPipToWrist(hand_landmark.pinky, hand_landmark.wrist)
+    def isHandPaper(self, index_finger_up, middle_finger_up, ring_finger_up, pinky_finger_up) -> bool:
+        if not index_finger_up: return False
+        if not middle_finger_up: return False
+        return pinky_finger_up if ring_finger_up else False
 
-    def isHandScissors(self, hand_landmark:HandLandmark) -> bool:
-        if not self.__isTipToWristLongerThanPipToWrist(hand_landmark.index_finger, hand_landmark.wrist): return False
-        if not self.__isTipToWristLongerThanPipToWrist(hand_landmark.middle_finger, hand_landmark.wrist): return False
-        if self.__isTipToWristLongerThanPipToWrist(hand_landmark.ring_finger, hand_landmark.wrist): return False
-        return not self.__isTipToWristLongerThanPipToWrist(hand_landmark.pinky, hand_landmark.wrist)
+    def isHandScissors(self, index_finger_up, middle_finger_up, ring_finger_up, pinky_finger_up) -> bool:
+        if not index_finger_up: return False
+        if not middle_finger_up: return False
+        return False if ring_finger_up else not pinky_finger_up
 
-    def isHandLike(self, hand_landmark:HandLandmark) -> bool:
-        if self.__isTipToWristLongerThanPipToWrist(hand_landmark.index_finger, hand_landmark.wrist): return False
-        if  self.__isTipToWristLongerThanPipToWrist(hand_landmark.middle_finger, hand_landmark.wrist): return False
-        if  self.__isTipToWristLongerThanPipToWrist(hand_landmark.ring_finger, hand_landmark.wrist): return False
-        if  self.__isTipToWristLongerThanPipToWrist(hand_landmark.pinky, hand_landmark.wrist): return False
-        return not self.__isThumbToIndexFingerDistanceShorterThanThumbLenght(hand_landmark.thumb, hand_landmark.index_finger)
+    def isHandLike(self, index_finger_up, middle_finger_up, ring_finger_up, pinky_finger_up, thumb_near_palm) -> bool:
+        if index_finger_up: return False
+        if middle_finger_up: return False
+        if ring_finger_up: return False
+        return False if pinky_finger_up else not thumb_near_palm
 
 if __name__ == "__main__":
     hand_recognizer = HandRecognition()
