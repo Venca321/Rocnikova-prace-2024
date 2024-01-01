@@ -32,7 +32,7 @@ def handle_image(data):
     img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
     try:
-        landmark = hand_recognizer.getLandmark(img)
+        landmark = hand_recognizer.__getLandmark(img)
         gesture = gesture_recognizer.detectGesture(landmark)
     except Exception:
         gesture = 0
