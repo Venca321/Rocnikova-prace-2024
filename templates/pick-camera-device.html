@@ -34,6 +34,8 @@
                 throw new Error('Žádná kamera nenalezena.');
             }
 
+            const urlParams = new URLSearchParams(window.location.search);
+            const name = urlParams.get("name");
             if (videoDevices.length > 1){
                 var deviceList = document.getElementById("deviceList");
 
@@ -42,13 +44,13 @@
                     var listItem = document.createElement("li");
                     listItem.textContent = "Zařízení " + index;
                     listItem.onclick = function() {
-                        location.href="/?camera="+index;
+                        location.href=`/game?name=${name}&camera=${index}`;
                     };
                     deviceList.appendChild(listItem);
                 });
             }
             else {
-                location.href = '/?camera=0';
+                location.href = `/game?name=${name}&camera=0`;
             }
         });
     });

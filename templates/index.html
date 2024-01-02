@@ -5,7 +5,6 @@
         <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
     </head>
     <body>
-        <video autoplay></video>
         <p id="responseMessage">-----</p>
     </body>
 </html>
@@ -22,93 +21,10 @@
         justify-content: center;
         flex-direction: column;
     }
-
-    p {
-        margin-top: 48px;
-        color: white;
-        font-size: 36px;
-        width: fit-content;
-    }
-
-    video {
-        margin-top: 5%;
-        width: 60vw;
-        max-height: 75vh;
-        background-color: black;
-    }
-
-    @media only screen and (max-device-width: 480px) {
-        video {
-            width: 90vw;
-            height: 75vh;
-        }
-    }
 </style>
 
 <script type="text/javascript">
-    var socket = io.connect('wss://' + document.domain + ':' + location.port);
-
-    socket.on('response', function(data) {
-        document.getElementById('responseMessage').innerText = data.message;
-    });
-
-    function sendImage(imageData) {
-        socket.emit('image', imageData);
-    }
-
-    function captureImage() {
-        var video = document.querySelector('video');
-        var canvas = document.createElement('canvas');
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        var context = canvas.getContext('2d');
-        context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
-        var data = canvas.toDataURL('image/jpeg');
-        sendImage(data);
-    }
-
-    function startCamera() {
-        navigator.mediaDevices.enumerateDevices()
-            .then(function(devices) {
-                videoDevices = devices.filter(function(device) {
-                    return device.kind === 'videoinput';
-                });
-
-                if (videoDevices.length <= 0){
-                    throw new Error('Žádná kamera nenalezena.');
-                }
-
-                const urlParams = new URLSearchParams(window.location.search);
-                if (urlParams.has('camera')){
-                    const cameraIDParam = urlParams.get('camera');
-                    const cameraID = Number(cameraIDParam);
-
-                    var chosenCamera = videoDevices[cameraID];
-                    return navigator.mediaDevices.getUserMedia({ video: { deviceId: chosenCamera.deviceId } });
-                }
-                else {
-                    if (videoDevices.length > 1){
-                        location.href = '/pick-camera-device';
-                    }
-                    else {
-                        location.href = '?camera=0';
-                    }
-                }
-            })
-            .then(function(stream) {
-                var video = document.querySelector('video');
-                video.srcObject = stream;
-                video.onloadedmetadata = function(e) {
-                    video.play();
-                    setInterval(captureImage, 200); // Snímek každých 200 ms
-                };
-            })
-            .catch(function(err) {
-                console.log(err);
-            });
-    }
-
     window.addEventListener("load", (event) => {
-        startCamera();
+        location.href = "/game?name=Test"
     });
 </script>
