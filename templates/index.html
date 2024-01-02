@@ -5,7 +5,12 @@
         <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
     </head>
     <body>
-        <p id="responseMessage">-----</p>
+        <h1>Kámen, nůžky, papír</h1>
+        <div>
+            <p>Zvolte si jméno:</p>
+            <input id="nameInput" />
+        </div>
+        <button id="submitButton">Potvrdit</button>
     </body>
 </html>
 
@@ -21,10 +26,57 @@
         justify-content: center;
         flex-direction: column;
     }
+
+    h1 {
+        color: white;
+        margin-top: 30vh;
+        font-size: 64px;
+    }
+
+    div {
+        margin-top: 5vh;
+    }
+
+    p {
+        color: white;
+        margin-bottom: 10px;
+    }
+
+    input {
+        width: 300px;
+        background-color: #00000000;
+        border: 2px solid #808080;
+        border-radius: 5px;
+        color: white;
+        font-size: 16px;
+    }
+
+    input:focus {
+        outline: none;
+    }
+
+    button {
+        margin-top: 15px;
+        border-radius: 5px;
+        width: 80px;
+    }
 </style>
 
 <script type="text/javascript">
+    function submitName(){
+        const name = document.getElementById("nameInput").value;
+        location.href = `/game?name=${name}`
+    }
+
     window.addEventListener("load", (event) => {
-        location.href = "/game?name=Test"
+        document.getElementById("nameInput").addEventListener("keyup", function(event) {
+            if (event.keyCode === 13) {
+                submitName();
+            }
+        });
+
+        document.getElementById("submitButton").addEventListener("click", function() {
+            submitName();
+        });
     });
 </script>
