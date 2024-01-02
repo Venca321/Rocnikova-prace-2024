@@ -4,7 +4,7 @@
         <title>Kámen, nůžky, papír</title>
     </head>
     <body>
-        
+        <ul id="deviceList"></ul>
     </body>
 </html>
 
@@ -35,10 +35,20 @@
             }
 
             if (videoDevices.length > 1){
-                console.log(videoDevices);
+                var deviceList = document.getElementById("deviceList");
+
+                mediaDevices.forEach(function(device, index) {
+                    console.log(device);
+                    var listItem = document.createElement("li");
+                    listItem.textContent = "Zařízení " + index;
+                    listItem.onclick = function() {
+                        location.href="?camera="+index;
+                    };
+                    deviceList.appendChild(listItem);
+                });
             }
             else {
-                location.href = '&camera=0';
+                location.href = '?camera=0';
             }
         });
     });
