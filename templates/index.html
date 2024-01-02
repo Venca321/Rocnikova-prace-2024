@@ -7,6 +7,7 @@
     <body>
         <video autoplay></video>
         <p id="responseMessage">-----</p>
+        <button onclick="switchCamera()">Kamera test</button>
     </body>
 </html>
 
@@ -47,10 +48,15 @@
 
 <script type="text/javascript">
     var socket = io.connect('wss://' + document.domain + ':' + location.port);
+    var cameraID = 0;
 
     socket.on('response', function(data) {
         document.getElementById('responseMessage').innerText = data.message;
     });
+
+    function switchCamera() {
+        cameraID += 1;
+    }
 
     function sendImage(imageData) {
         socket.emit('image', imageData);
@@ -75,8 +81,8 @@
                 });
 
                 if (videoDevices.length > 0) {
-                    console.log(videoDevices)
-                    var chosenCamera = videoDevices[1]; // Defaultně vybere první kameru, ale můžete přidat výběr pro uživatele
+                    console.log(videoDevices.length())
+                    var chosenCamera = videoDevices[cameraID]; // Defaultně vybere první kameru, ale můžete přidat výběr pro uživatele
                     return navigator.mediaDevices.getUserMedia({ video: { deviceId: chosenCamera.deviceId } });
                 } else {
                     throw new Error('Žádná kamera nenalezena.');
