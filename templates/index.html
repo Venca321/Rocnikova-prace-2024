@@ -48,6 +48,7 @@
 
 <script type="text/javascript">
     var socket = io.connect('wss://' + document.domain + ':' + location.port);
+    var videoDevices = [];
     var cameraID = 0;
 
     socket.on('response', function(data) {
@@ -55,7 +56,12 @@
     });
 
     document.getElementById("cameraSwitch").addEventListener("click", function() {
-        cameraID += 1;
+        if (videoDevices.length >= cameraID){
+            cameraID = 0;
+        }
+        else {
+            cameraID += 1;
+        }
         startCamera();
     });
 
