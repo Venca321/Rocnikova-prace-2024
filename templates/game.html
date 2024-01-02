@@ -46,7 +46,7 @@
 </style>
 
 <script type="text/javascript">
-    var socket = io.connect('wss://' + document.domain + ':' + location.port);
+    const socket = io.connect('wss://' + document.domain + ':' + location.port);
 
     socket.on('response', function(data) {
         document.getElementById('responseMessage').innerText = data.message;
@@ -57,14 +57,12 @@
     }
 
     function captureImage() {
-        var video = document.querySelector('video');
-        var canvas = document.createElement('canvas');
+        const video = document.querySelector('video');
+        let canvas = document.createElement('canvas');
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
-        var context = canvas.getContext('2d');
-        context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
-        var data = canvas.toDataURL('image/jpeg');
-        sendImage(data);
+        canvas.getContext('2d').drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+        sendImage(canvas.toDataURL('image/jpeg'));
     }
 
     function startCamera() {
@@ -97,11 +95,11 @@
                 }
             })
             .then(function(stream) {
-                var video = document.querySelector('video');
+                const video = document.querySelector('video');
                 video.srcObject = stream;
                 video.onloadedmetadata = function(e) {
                     video.play();
-                    setInterval(captureImage, 200); // Snímek každých 200 ms
+                    setInterval(captureImage, 250); // Snímek každých 250 ms
                 };
             })
             .catch(function(err) {
