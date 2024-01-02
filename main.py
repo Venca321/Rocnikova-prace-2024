@@ -25,6 +25,10 @@ def getGestureSreenText(gesture) -> str:
 def index():
     return render_template('index.html')
 
+@app.route('/game')
+def index():
+    return render_template('game.html')
+
 @app.route('/pick-camera-device')
 def pick_camera_device():
     return render_template('pick-camera-device.html')
