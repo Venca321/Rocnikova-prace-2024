@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Kámen, nůžky, papír</title>
-        <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+        <title>Vyberte si jméno - Kámen, nůžky, papír</title>
     </head>
     <body>
         <h1>Kámen, nůžky, papír</h1>
-        <div>
-            <p>Zvolte si jméno:</p>
-            <input id="nameInput" />
-        </div>
-        <button id="submitButton">Potvrdit</button>
+        <form action="/game" method="GET">
+            <div>
+                <p>Zvolte si jméno:</p>
+                <input type="text" name="name" autocomplete="off" required />
+            </div>
+            <button type="submit" id="submitButton">Potvrdit</button>
+        </form>
     </body>
 </html>
 
@@ -31,6 +32,13 @@
         color: white;
         margin-top: 25vh;
         font-size: 64px;
+    }
+
+    form {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
     }
 
     div {
@@ -57,7 +65,7 @@
         outline: none;
     }
 
-    button {
+    #submitButton {
         margin-top: 15px;
         border-radius: 5px;
         width: 100px;
@@ -75,7 +83,7 @@
             border-radius: 10px;
         }
 
-        button {
+        #submitButton {
             margin-top: 32px;
             width: 25vw;
             height: calc(25vw/4);
@@ -84,22 +92,3 @@
         }
     }
 </style>
-
-<script type="text/javascript">
-    function submitName(){
-        const name = document.getElementById("nameInput").value;
-        location.href = `/game?name=${name}`
-    }
-
-    window.addEventListener("load", (event) => {
-        document.getElementById("nameInput").addEventListener("keyup", function(event) {
-            if (event.keyCode === 13) {
-                submitName();
-            }
-        });
-
-        document.getElementById("submitButton").addEventListener("click", function() {
-            submitName();
-        });
-    });
-</script>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Kámen, nůžky, papír</title>
+        <title>Vyberte kameru - Kámen, nůžky, papír</title>
     </head>
     <body>
         <h1>Kámen, nůžky, papír</h1>
@@ -66,38 +66,29 @@
 </style>
 
 <script type="text/javascript">
-    window.addEventListener("load", (event) => {
-        navigator.mediaDevices.getUserMedia({ video: true }) //get permission
-        .then(function(stream) {
-            navigator.mediaDevices.enumerateDevices()
-                .then(function(devices) {
-                videoDevices = devices.filter(function(device) {
-                    return device.kind === 'videoinput';
-                });
+    window.addEventListener("load", () => {
+        navigator.mediaDevices.getUserMedia({ video: true }) // get permission
+        .then(() => navigator.mediaDevices.enumerateDevices())
+        .then(devices => {
+            const videoDevices = devices.filter(device => device.kind === 'videoinput');
 
-                if (videoDevices.length <= 0){
-                    throw new Error('Žádná kamera nenalezena.');
-                }
+            if (videoDevices.length === 0) {
+                throw new Error('Žádná kamera nenalezena.');
+            }
 
-                const urlParams = new URLSearchParams(window.location.search);
-                const name = urlParams.get("name");
-                if (videoDevices.length > 1){
-                    const deviceList = document.getElementById("deviceList");
+            const urlParams = new URLSearchParams(window.location.search);
+            const name = urlParams.get("name");
+            const deviceList = document.getElementById("deviceList");
 
-                    videoDevices.forEach(function(device, index) {
-                        console.log(device);
-                        let listItem = document.createElement("li");
-                        listItem.textContent = device.label;
-                        listItem.onclick = function() {
-                            location.href=`/game?name=${name}&camera=${index}`;
-                        };
-                        deviceList.appendChild(listItem);
-                    });
-                }
-                else {
-                    location.href = `/game?name=${name}&camera=0`;
-                }
+            videoDevices.forEach((device, index) => {
+                let listItem = document.createElement("li");
+                listItem.textContent = device.label || `Kamera ${index + 1}`;
+                listItem.onclick = () => location.href = `/game?name=${name}&camera=${index}`;
+                deviceList.appendChild(listItem);
             });
+        })
+        .catch(error => {
+            console.error(error.message);
         });
     });
 </script>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Kámen, nůžky, papír</title>
+        <title>Hra - Kámen, nůžky, papír</title>
         <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
     </head>
     <body>
@@ -52,17 +52,13 @@
         document.getElementById('responseMessage').innerText = data.message;
     });
 
-    function sendImage(imageData) {
-        socket.emit('image', imageData);
-    }
-
-    function captureImage() {
+    function captureAndSendImage() {
         const video = document.querySelector('video');
-        let canvas = document.createElement('canvas');
+        const canvas = document.createElement('canvas');
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
         canvas.getContext('2d').drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
-        sendImage(canvas.toDataURL('image/jpeg'));
+        socket.emit('image', canvas.toDataURL('image/jpeg'));
     }
 
     function startCamera() {
@@ -99,7 +95,7 @@
                 video.srcObject = stream;
                 video.onloadedmetadata = function(e) {
                     video.play();
-                    setInterval(captureImage, 250); // Snímek každých 250 ms
+                    setInterval(captureAndSendImage, 250); // Snímek každých 250 ms
                 };
             })
             .catch(function(err) {
