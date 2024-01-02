@@ -74,7 +74,7 @@
                     return device.kind === 'videoinput';
                 });
 
-                if (videoDevices.length >= 0){
+                if (videoDevices.length <= 0){
                     throw new Error('Žádná kamera nenalezena.');
                 }
 
