@@ -83,12 +83,12 @@
     function startCamera() {
         navigator.mediaDevices.enumerateDevices()
             .then(function(devices) {
-                var videoDevices = devices.filter(function(device) {
+                videoDevices = devices.filter(function(device) {
                     return device.kind === 'videoinput';
                 });
 
                 if (videoDevices.length > 0) {
-                    console.log(videoDevices.length)
+                    console.log(videoDevices)
                     var chosenCamera = videoDevices[cameraID]; // Defaultně vybere první kameru, ale můžete přidat výběr pro uživatele
                     return navigator.mediaDevices.getUserMedia({ video: { deviceId: chosenCamera.deviceId } });
                 } else {
