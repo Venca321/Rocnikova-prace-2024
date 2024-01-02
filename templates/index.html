@@ -7,7 +7,7 @@
     <body>
         <video autoplay></video>
         <p id="responseMessage">-----</p>
-        <button onclick="switchCamera()">Kamera test</button>
+        <button id="cameraSwitch">Kamera test</button>
     </body>
 </html>
 
@@ -54,9 +54,9 @@
         document.getElementById('responseMessage').innerText = data.message;
     });
 
-    function switchCamera() {
+    document.getElementById("cameraSwitch").addEventListener("click", function() {
         cameraID += 1;
-    }
+    });
 
     function sendImage(imageData) {
         socket.emit('image', imageData);
