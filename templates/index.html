@@ -78,22 +78,22 @@
                     throw new Error('Žádná kamera nenalezena.');
                 }
 
-                if (videoDevices.length > 1){
-                    const urlParams = new URLSearchParams(window.location.search);
-                    if (urlParams.has('camera')){
-                        const cameraIDParam = urlParams.get('camera');
-                        const cameraID = Number(cameraIDParam);
-                    }
-                    else {
-                        location.href = '/pick-camera-device';
-                    }
+                const urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.has('camera')){
+                    const cameraIDParam = urlParams.get('camera');
+                    const cameraID = Number(cameraIDParam);
+
+                    var chosenCamera = videoDevices[cameraID];
+                    return navigator.mediaDevices.getUserMedia({ video: { deviceId: chosenCamera.deviceId } });
                 }
                 else {
-                    const cameraID = 0;
+                    if (videoDevices.length > 1){
+                        location.href = '/pick-camera-device';
+                    }
+                    else {
+                        location.href = '?camera=0';
+                    }
                 }
-
-                var chosenCamera = videoDevices[cameraID];
-                return navigator.mediaDevices.getUserMedia({ video: { deviceId: chosenCamera.deviceId } });
             })
             .then(function(stream) {
                 var video = document.querySelector('video');
@@ -104,7 +104,7 @@
                 };
             })
             .catch(function(err) {
-                console.log("Došlo k chybě: " + err);
+                console.log(err);
             });
     }
 
