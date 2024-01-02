@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Kámen, nůžky, papír</title>
+        <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    </head>
+    <body>
+        <video autoplay></video>
+        <p id="responseMessage">-----</p>
+    </body>
+</html>
+
+<style>
+    html {
+        background-color: #383838;
+        overflow: hidden;
+    }
+
+    body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+    }
+
+    p {
+        margin-top: 48px;
+        color: white;
+        font-size: 36px;
+        width: fit-content;
+    }
+
+    video {
+        margin-top: 5%;
+        width: 60vw;
+        max-height: 75vh;
+        background-color: black;
+    }
+
+    @media only screen and (max-device-width: 480px) {
+        video {
+            width: 90vw;
+            height: 75vh;
+        }
+    }
+</style>
+
+<script type="text/javascript">
+    window.addEventListener("load", (event) => {
+        videoDevices = devices.filter(function(device) {
+            return device.kind === 'videoinput';
+        });
+
+        if (videoDevices.length <= 0){
+            throw new Error('Žádná kamera nenalezena.');
+        }
+
+        if (videoDevices.length > 1){
+            console.log(videoDevices);
+        }
+        else {
+            location.href = '&camera=0';
+        }
+
+        var chosenCamera = videoDevices[cameraID];
+        return navigator.mediaDevices.getUserMedia({ video: { deviceId: chosenCamera.deviceId } });
+    });
+</script>

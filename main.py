@@ -25,6 +25,10 @@ def getGestureSreenText(gesture) -> str:
 def index():
     return render_template('index.html')
 
+@app.route('/')
+def pick_camera_device():
+    return render_template('pick-camera-device.html')
+
 @socketio.on('image')
 def handle_image(data):
     img_data = base64.b64decode(data.split(',')[1])

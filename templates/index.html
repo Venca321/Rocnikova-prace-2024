@@ -79,7 +79,14 @@
                 }
 
                 if (videoDevices.length > 1){
-                    location.href = '/pick-camera-device';
+                    const urlParams = new URLSearchParams(queryString);
+                    if (urlParams.has('camera')){
+                        const cameraIDParam = urlParams.get('camera')
+                        const cameraID = Number(cameraIDParam)
+                    }
+                    else {
+                        location.href = '/pick-camera-device';
+                    }
                 }
                 else {
                     var cameraID = 0;
