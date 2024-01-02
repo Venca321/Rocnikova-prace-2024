@@ -37,7 +37,7 @@
             if (videoDevices.length > 1){
                 var deviceList = document.getElementById("deviceList");
 
-                mediaDevices.forEach(function(device, index) {
+                videoDevices.forEach(function(device, index) {
                     console.log(device);
                     var listItem = document.createElement("li");
                     listItem.textContent = "Zařízení " + index;
