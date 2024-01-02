@@ -42,13 +42,13 @@
                     var listItem = document.createElement("li");
                     listItem.textContent = "Zařízení " + index;
                     listItem.onclick = function() {
-                        location.href="?camera="+index;
+                        location.href="/?camera="+index;
                     };
                     deviceList.appendChild(listItem);
                 });
             }
             else {
-                location.href = '?camera=0';
+                location.href = '/?camera=0';
             }
         });
     });
