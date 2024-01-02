@@ -76,7 +76,7 @@
 
                 if (videoDevices.length > 0) {
                     console.log(videoDevices)
-                    var chosenCamera = videoDevices[0]; // Defaultně vybere první kameru, ale můžete přidat výběr pro uživatele
+                    var chosenCamera = videoDevices[1]; // Defaultně vybere první kameru, ale můžete přidat výběr pro uživatele
                     return navigator.mediaDevices.getUserMedia({ video: { deviceId: chosenCamera.deviceId } });
                 } else {
                     throw new Error('Žádná kamera nenalezena.');
