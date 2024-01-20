@@ -7,7 +7,7 @@
         <link href='https://fonts.googleapis.com/css?family=Inter' rel='stylesheet'>
     </head>
     <body>
-        <a id="back_button" href="/">Zpět</a>
+        <a id="back_button" href="/">Domů</a>
         <div>
             <h1>Kámen, nůžky, papír</h1>
             <p>Pomocí počítačového vidění</p>
@@ -20,6 +20,8 @@
             <p id="gesture_name">Hrajete: Neznámé</p>
         </div>
     </body>
+    <button id="camera_pick" onclick="pickCamera();"><?xml version="1.0" ?><svg height="512" viewBox="0 0 512 512" width="512" xmlns="http://www.w3.org/2000/svg"><title/><path d="M262.29,192.31a64,64,0,1,0,57.4,57.4A64.13,64.13,0,0,0,262.29,192.31ZM416.39,256a154.34,154.34,0,0,1-1.53,20.79l45.21,35.46A10.81,10.81,0,0,1,462.52,326l-42.77,74a10.81,10.81,0,0,1-13.14,4.59l-44.9-18.08a16.11,16.11,0,0,0-15.17,1.75A164.48,164.48,0,0,1,325,400.8a15.94,15.94,0,0,0-8.82,12.14l-6.73,47.89A11.08,11.08,0,0,1,298.77,470H213.23a11.11,11.11,0,0,1-10.69-8.87l-6.72-47.82a16.07,16.07,0,0,0-9-12.22,155.3,155.3,0,0,1-21.46-12.57,16,16,0,0,0-15.11-1.71l-44.89,18.07a10.81,10.81,0,0,1-13.14-4.58l-42.77-74a10.8,10.8,0,0,1,2.45-13.75l38.21-30a16.05,16.05,0,0,0,6-14.08c-.36-4.17-.58-8.33-.58-12.5s.21-8.27.58-12.35a16,16,0,0,0-6.07-13.94l-38.19-30A10.81,10.81,0,0,1,49.48,186l42.77-74a10.81,10.81,0,0,1,13.14-4.59l44.9,18.08a16.11,16.11,0,0,0,15.17-1.75A164.48,164.48,0,0,1,187,111.2a15.94,15.94,0,0,0,8.82-12.14l6.73-47.89A11.08,11.08,0,0,1,213.23,42h85.54a11.11,11.11,0,0,1,10.69,8.87l6.72,47.82a16.07,16.07,0,0,0,9,12.22,155.3,155.3,0,0,1,21.46,12.57,16,16,0,0,0,15.11,1.71l44.89-18.07a10.81,10.81,0,0,1,13.14,4.58l42.77,74a10.8,10.8,0,0,1-2.45,13.75l-38.21,30a16.05,16.05,0,0,0-6.05,14.08C416.17,247.67,416.39,251.83,416.39,256Z" style="fill:none;stroke:#ffffff;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/></svg></button>
+    <button id="info_button"><?xml version="1.0" ?><svg class="bi bi-info-circle" fill="currentColor" height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/><path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/></svg></button>
 </html>
 
 <style>
@@ -84,6 +86,20 @@
         color: rgba(255, 255, 255, 1);
     }
 
+    #camera_pick {
+        position: fixed;
+        bottom: 2vw;
+        right: 2vw;
+        background: none;
+        border: none;
+        cursor: pointer;
+    }
+    
+    #camera_pick svg {
+        width: 32px;
+        height: 32px;
+    }
+
     @media only screen and (max-device-width: 480px) {
         body {
             flex-direction: column;
@@ -106,7 +122,7 @@
             width: 80vw;
             margin-top: 0vh;
             margin-left: 0vw;
-            margin-bottom: 3vh;
+            margin-bottom: 2vh;
         }
 
         #players {
@@ -131,6 +147,11 @@
 <script type="text/javascript">
     const socket = io.connect('wss://' + document.domain + ':' + location.port);
     const urlParams = new URLSearchParams(window.location.search);
+
+    function pickCamera() {
+        const name = urlParams.get("name");
+        location.href = `/pick-camera-device?name=${name}`;
+    }
 
     socket.on('response', function(data) {
         document.getElementById('players').innerText = `${urlParams.get('name')} vs ${data.opponent}`;
@@ -168,12 +189,7 @@
                 }
                 else {
                     const name = urlParams.get("name");
-                    if (videoDevices.length > 1){
-                        location.href = `/pick-camera-device?name=${name}`;
-                    }
-                    else {
-                        location.href = `/game?name=${name}&camera=0`;
-                    }
+                    location.href = `/game?name=${name}&camera=0`;
                 }
             })
             .then(function(stream) {
