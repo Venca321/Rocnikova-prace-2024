@@ -12,7 +12,7 @@ input:focus{
     outline: none;
 }
 
-#back_button {
+#home_button {
     position: fixed;
     top: 32px;
     left: 32px;
@@ -42,9 +42,9 @@ input:focus{
 }
 
 @media only screen and (max-device-width: 480px) {
-    #back_button {
+    #home_button {
         top: 3vh;
         left: 5vw;
-        font-size: 48px;
+        font-size: 18px;
     }
 }

@@ -3,10 +3,11 @@
     <head>
         <title>Kámen, nůžky, papír - Registrace</title>
         <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
-        <link href='https://fonts.googleapis.com/css?family=Inter' rel='stylesheet'>
+        <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Inter'>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
     </head>
     <body>
-        <a id="back_button" href="/">Domů</a>
+        <a id="home_button" href="/">Domů</a>
         <h1>Registrace</h1>
         <p>Kámen, nůžky, papír</p>
         <form action="/game" method="GET" style="display: flex; flex-direction: column; align-items: center;">
@@ -84,34 +85,35 @@
 
     @media only screen and (max-device-width: 480px) {
         h1 {
-            font-size: 81px;
+            font-size: 32px;
         }
 
         p {
-            font-size: 56px;
+            font-size: 18px;
         }
 
         form {
-            width: 80vw;
+            width: 70vw;
         }
 
         form label {
-            margin-bottom: 36px;
-            font-size: 48px;
-            width: 75vw;
+            margin-bottom: 12px;
+            margin-top: 20px;
+            font-size: 16px;
+            width: 65vw;
         }
 
         form input {
-            font-size: 46px;
-            width: 75vw;
+            font-size: 16px;
+            width: 65vw;
         }
 
         form button {
-            width: 75vw;
-            padding: 20px 0px 20px 0px;
-            font-size: 48px;
-            margin-bottom: 64px;
-            margin-top: 100px;
+            width: 65vw;
+            padding: 10px 0px 10px 0px;
+            font-size: 18px;
+            margin-bottom: 12px;
+            margin-top: 48px;
         }
     }
 </style>
