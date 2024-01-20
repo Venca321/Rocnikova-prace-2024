@@ -1,94 +1,85 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Vyberte si jméno - Kámen, nůžky, papír</title>
+        <title>Kámen, nůžky, papír</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+        <link href='https://fonts.googleapis.com/css?family=Inter' rel='stylesheet'>
     </head>
     <body>
         <h1>Kámen, nůžky, papír</h1>
-        <form action="/game" method="GET">
-            <div>
-                <p>Zvolte si jméno:</p>
-                <input type="text" name="name" autocomplete="off" required />
-            </div>
-            <button type="submit" id="submitButton">Potvrdit</button>
-        </form>
+        <p>Pomocí počítačového vidění</p>
+        <div>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias iste quos aperiam? Soluta voluptas ipsum doloribus, libero, ab itaque sed aut debitis, fuga aliquid eaque! Corrupti iure quidem aspernatur eligendi?</p>
+        </div>
+        <div style="display: flex; justify-content: center;">
+            <a href="/register">Hrát</a>
+        </div>
     </body>
 </html>
 
 <style>
-    html {
-        background-color: #383838;
-        overflow: hidden;
-    }
-
-    body {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
-    }
-
     h1 {
-        color: white;
-        margin-top: 25vh;
+        font-weight: 700;
         font-size: 64px;
-    }
-
-    form {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
-    }
-
-    div {
-        margin-top: 2vh;
+        color: rgba(255, 255, 255, 1);
     }
 
     p {
-        color: white;
-        margin-bottom: 10px;
+        margin-top: -20px;
+        font-weight: 400;
+        font-size: 32px;
+        color: rgba(255, 255, 255, 0.9);
+    }
+
+    div {
+        width: 50vw;
+        margin-top: 10vh;
+        margin-bottom: 10vh;
+    }
+
+    div p {
+        font-weight: 400;
         font-size: 20px;
     }
 
-    input {
-        width: 300px;
-        background-color: #00000000;
-        border: 2px solid #808080;
-        border-radius: 5px;
-        color: white;
-        font-size: 16px;
-        padding: 5px;
+    div a {
+        width: 240px;
+        padding: 10px;
+        text-align: center;
+        font-weight: 600;
+        font-size: 26px;
+        color: #000000;
+        background: #ffffff;
+        border-radius: 15px;
+        text-decoration: none;
+        transition: 0.25s;
     }
 
-    input:focus {
-        outline: none;
-    }
-
-    #submitButton {
-        margin-top: 15px;
-        border-radius: 5px;
-        width: 100px;
-        height: 25px;
+    div a:hover {
+        background: #2bdda2;
+        text-decoration: underline;
     }
 
     @media only screen and (max-device-width: 480px) {
+        h1 {
+            font-size: 72px;
+        }
+
         p {
-            font-size: 42px;
+            font-size: 46px;
         }
 
-        input {
-            width: 70vw;
-            font-size: 36px;
-            border-radius: 10px;
+        div {
+            width: 80vw;
         }
 
-        #submitButton {
-            margin-top: 32px;
-            width: 25vw;
-            height: calc(25vw/4);
-            border-radius: 10px;
+        div p {
             font-size: 36px;
+        }
+
+        div a {
+            font-size: 32px;
+            width: 75vw;
         }
     }
 </style>

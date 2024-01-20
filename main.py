@@ -13,24 +13,30 @@ socketio = SocketIO(app)
 hand_recognizer = HandRecognition()
 gesture_recognizer = GestureRecognition()
 
-def getGestureSreenText(gesture) -> str:
-    if gesture == GestureEnums.ROCK: return "Kámen 🪨"
-    elif gesture == GestureEnums.PAPER: return "Papír 📜"
-    elif gesture == GestureEnums.SCISSORS: return "Nůžky ✂️"
-    elif gesture == GestureEnums.LIKE: return "Like 👍"
-    else: return "-----"
+def get_gesture_screen_info(gesture) -> (str, str):
+    if gesture == GestureEnums.ROCK: return "Kámen", "🪨"
+    elif gesture == GestureEnums.PAPER: return "Papír", "📜"
+    elif gesture == GestureEnums.SCISSORS: return "Nůžky", "✂️"
+    elif gesture == GestureEnums.LIKE: return "Like", "👍"
+    else: return "Neznámé", "❓"
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
+@app.route('/register')
+def register():
+    return render_template('register.html')
+
 @app.route('/game')
 def game():
     return render_template('game.html')
 
+"""
 @app.route('/pick-camera-device')
 def pick_camera_device():
     return render_template('pick-camera-device.html')
+"""
 
 @socketio.on('image')
 def handle_image(data):
@@ -42,9 +48,10 @@ def handle_image(data):
         landmark = hand_recognizer.getLandmark(img)
         gesture = gesture_recognizer.detectGesture(landmark)
     except Exception:
-        gesture = 0
+        gesture = GestureEnums.NONE
 
-    emit('response', {"message": getGestureSreenText(gesture)})
+    gesture_name, gesture_image = get_gesture_screen_info(gesture)
+    emit('response', {"opponent": "", "status": "Not implemented...", "gesture_image": gesture_image, "gesture_name": gesture_name})
 
 if __name__ == '__main__':
     #serve(app, host="0.0.0.0", port=5000)

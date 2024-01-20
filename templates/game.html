@@ -1,55 +1,99 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Hra - Kámen, nůžky, papír</title>
+        <title>Kámen, nůžky, papír</title>
         <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+        <link href='https://fonts.googleapis.com/css?family=Inter' rel='stylesheet'>
     </head>
     <body>
-        <video autoplay></video>
-        <p id="responseMessage">-----</p>
+        <a id="back_button" href="/">Zpět</a>
+        <div>
+            <h1>Kámen, nůžky, papír</h1>
+            <p>Pomocí počítačového vidění</p>
+            <video autoplay></video>
+        </div>
+        <div id="status_screen">
+            <p id="players">Neznámé vs Neznámé</p>
+            <p id="game_status">Načítání...</p>
+            <p id="gesture_image">❓</p>
+            <p id="gesture_name">Hrajete: Neznámé</p>
+        </div>
     </body>
 </html>
 
 <style>
-    html {
-        background-color: #383838;
-        overflow: hidden;
-    }
-
     body {
         display: flex;
         align-items: center;
         justify-content: center;
-        flex-direction: column;
+    }
+
+    h1 {
+        font-weight: 700;
+        font-size: 64px;
+        color: rgba(255, 255, 255, 1);
     }
 
     p {
-        margin-top: 48px;
-        color: white;
-        font-size: 36px;
-        width: fit-content;
+        margin-top: -20px;
+        font-weight: 400;
+        font-size: 32px;
+        color: rgba(255, 255, 255, 0.9);
     }
 
     video {
-        margin-top: 2vh;
-        width: 60vw;
-        max-height: 75vh;
-        background-color: black;
+        width: 50vw;
+        margin-bottom: 5vh;
+        height: calc(50vw * 0.5);
+        background: black;
+        border-radius: 10px;
     }
 
-    @media only screen and (max-device-width: 480px) {
-        video {
-            width: 90vw;
-            height: 75vh;
-        }
+    #status_screen {
+        margin-top: 22vh;
+        margin-left: 7.5vw;
+        width: 20vw;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #players {
+        font-weight: 700;
+        font-size: 32px;
+        color: rgba(255, 255, 255, 1);
+    }
+
+    #game_status {
+        margin-top: -20px;
+        font-weight: 400;
+        font-size: 24px;
+        color: rgba(255, 255, 255, 0.9);
+    }
+
+    #gesture_image {
+        font-size: 256px;
+        color: rgba(255, 255, 255, 1);
+    }
+
+    #gesture_name {
+        margin-top: -256px;
+        font-size: 26px;
+        color: rgba(255, 255, 255, 1);
     }
 </style>
 
 <script type="text/javascript">
     const socket = io.connect('wss://' + document.domain + ':' + location.port);
+    const urlParams = new URLSearchParams(window.location.search);
 
     socket.on('response', function(data) {
-        document.getElementById('responseMessage').innerText = data.message;
+        document.getElementById('players').innerText = `${urlParams.get('name')} vs. ${data.opponent}`;
+        document.getElementById('game_status').innerText = data.status;
+        document.getElementById('gesture_image').innerText = data.gesture_image;
+        document.getElementById('gesture_name').innerText = `Hrajete: ${data.gesture_name}`;
     });
 
     function captureAndSendImage() {
@@ -71,8 +115,7 @@
                 if (videoDevices.length <= 0){
                     throw new Error('Žádná kamera nenalezena.');
                 }
-
-                const urlParams = new URLSearchParams(window.location.search);
+                
                 if (urlParams.has('camera')){
                     const cameraIDParam = urlParams.get('camera');
                     const cameraID = Number(cameraIDParam);
