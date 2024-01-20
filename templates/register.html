@@ -53,6 +53,7 @@
 
     form input {
         width: 90%;
+        padding: 4px;
         background: none;
         font-size: 28px;
         border-radius: 12px;
@@ -62,7 +63,7 @@
 
     form button {
         width: 90%;
-        padding: 10px;
+        padding: 12px 0px 12px 0px;
         margin-top: 48px;
         margin-bottom: 16px;
         background: #50BF9E;
@@ -78,5 +79,38 @@
     form button:hover {
         background: #4AAE8C;
         text-decoration: underline;
+    }
+
+    @media only screen and (max-device-width: 480px) {
+        h1 {
+            font-size: 81px;
+        }
+
+        p {
+            font-size: 56px;
+        }
+
+        form {
+            width: 80vw;
+        }
+
+        form label {
+            margin-bottom: 36px;
+            font-size: 48px;
+            width: 75vw;
+        }
+
+        form input {
+            font-size: 46px;
+            width: 75vw;
+        }
+
+        form button {
+            width: 75vw;
+            padding: 20px 0px 20px 0px;
+            font-size: 48px;
+            margin-bottom: 32px;
+            margin-top: 128px;
+        }
     }
 </style>

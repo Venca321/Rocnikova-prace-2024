@@ -25,3 +25,11 @@ input:focus{
 #back_button:hover {
     text-decoration: underline;
 }
+
+@media only screen and (max-device-width: 480px) {
+    #back_button {
+        top: 50px;
+        left: 50px;
+        font-size: 48px;
+    }
+}
