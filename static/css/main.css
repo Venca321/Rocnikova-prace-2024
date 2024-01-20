@@ -30,6 +30,6 @@ input:focus{
     #back_button {
         top: 3vh;
         left: 5vw;
-        font-size: 64px;
+        font-size: 48px;
     }
 }
