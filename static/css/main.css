@@ -28,8 +28,8 @@ input:focus{
 
 @media only screen and (max-device-width: 480px) {
     #back_button {
-        top: 64px;
-        left: 64px;
-        font-size: 56px;
+        top: 3vh;
+        left: 5vw;
+        font-size: 64px;
     }
 }
