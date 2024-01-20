@@ -90,7 +90,7 @@
     const urlParams = new URLSearchParams(window.location.search);
 
     socket.on('response', function(data) {
-        document.getElementById('players').innerText = `${urlParams.get('name')} vs. ${data.opponent}`;
+        document.getElementById('players').innerText = `${urlParams.get('name')} vs ${data.opponent}`;
         document.getElementById('game_status').innerText = data.status;
         document.getElementById('gesture_image').innerText = data.gesture_image;
         document.getElementById('gesture_name').innerText = `Hrajete: ${data.gesture_name}`;
