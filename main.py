@@ -2,7 +2,6 @@
 from engine.engine import HandRecognition, GestureRecognition, GestureEnums
 from flask import Flask, render_template
 from flask_socketio import SocketIO, emit
-
 import numpy as np
 import cv2, base64
 
