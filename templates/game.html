@@ -83,6 +83,48 @@
         font-size: 26px;
         color: rgba(255, 255, 255, 1);
     }
+
+    @media only screen and (max-device-width: 480px) {
+        body {
+            flex-direction: column;
+        }
+
+        h1 {
+            font-size: 72px;
+        }
+
+        p {
+            font-size: 46px;
+        }
+
+        video {
+            width: 80vw;
+            height: calc(80vw * 0.75);
+        }
+
+        #status_screen {
+            width: 80vw;
+            margin-top: 3vh;
+            margin-left: 0vw;
+        }
+
+        #players {
+            font-size: 56px;
+        }
+
+        #game_status {
+            font-size: 42px;
+        }
+
+        #gesture_image {
+            margin-top: 32px;
+        }
+
+        #gesture_name {
+            font-size: 48px;
+            margin-top: -180px;
+        }
+    }
 </style>
 
 <script type="text/javascript">
