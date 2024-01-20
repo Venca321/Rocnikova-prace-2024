@@ -49,7 +49,7 @@ def handle_image(data):
         gesture = GestureEnums.NONE
 
     gesture_name, gesture_image = get_gesture_screen_info(gesture)
-    emit('response', {"opponent": "", "status": "Not implemented...", "gesture_image": gesture_image, "gesture_name": gesture_name})
+    emit('response', {"opponent": "Bot1", "status": "Not implemented...", "gesture_image": gesture_image, "gesture_name": gesture_name})
 
 if __name__ == '__main__':
     #serve(app, host="0.0.0.0", port=5000)
