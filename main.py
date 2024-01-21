@@ -32,6 +32,8 @@ def register():
 
 @app.route('/register', methods=['POST'])
 def register_post():
+    db.remove_old_users()
+    db.remove_old_sessions()
     user = db.create_user(request.json['username'], GestureEnums.NONE)
     return jsonify({"user_id": user.id})
 
@@ -87,7 +89,6 @@ def handle_image(data):
         gesture = GestureEnums.NONE
     
     db.update_user(user, gesture)
-    db.remove_old_users()
 
     gesture_name, gesture_image = get_gesture_screen_info(gesture)
     emit('response', {"opponent": "Bot1", "status": "Not implemented...", "gesture_image": gesture_image, "gesture_name": gesture_name, "id_status": "Correct"})

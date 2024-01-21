@@ -141,20 +141,30 @@ class Database:
         except Exception as e:
             session_id = self.create_session(user.id, "None").id
 
-        return self.get_session(session_id)
-
-    def get_session(self, session_id:str) -> Session:
-        """
-        Get session from id
-        """
         self.cursor.execute("select * from sessions where id=:id", {"id": session_id})
         session = self.cursor.fetchone()
         return Session(session[0], session[1], session[2], session[3], session[4])
 
-    def update_session(self, session:Session, user1_status:int, user2_status:int) -> Session:
+    def get_session(self, user_id:str) -> Session:
+        """
+        Get session from id
+        """
+        self.cursor.execute("select * from sessions where user1_id=:id or user2_id=:id", {"id": user_id})
+        session = self.cursor.fetchone()
+        return Session(session[0], session[1], session[2], session[3], session[4])
+
+    def update_session(self, user_id:str, user_status:int) -> Session:
         """
         Update session
         """
+        session = self.get_session(user_id)
+        if session.user1_id == user_id:
+            user1_status = user_status
+            user2_status = session.user2_status
+        elif session.user2_id == user_id:
+            user1_status = session.user1_status
+            user2_status = user_status
+
         self.cursor.execute("update sessions set user1_status=:user1_status, user2_status=:user2_status where id=:id", {"user1_status": user1_status, "user2_status": user2_status, "id": session.id})
         self.connection.commit()
         return Session(session.id, session.user1_id, user1_status, session.user2_id, user2_status)

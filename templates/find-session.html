@@ -102,9 +102,8 @@
         const user_id = await register(name);
 
         console.log(user_id);
-        
         console.log(await connect_session(user_id));
 
-        //location.href = `/game?name=${name}&user_id=${user_id}`;
+        location.href = `/game?name=${name}&user_id=${user_id}`;
     }
 </script>
