@@ -94,14 +94,14 @@ def handle_image(data):
     img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
     banned_status = [UserStatusEnums.SUBMITED, UserStatusEnums.WINNER, UserStatusEnums.LOSER, UserStatusEnums.TIED]
-    if session.user1_status not in banned_status or session.user2_status not in banned_status:
+    if (user_id == session.user1_id and session.user1_status not in banned_status) or (user_id == session.user2_id and session.user2_status not in banned_status):
         try:
             landmark = hand_recognizer.getLandmark(img)
             gesture = gesture_recognizer.detectGesture(landmark)
         except Exception:
             gesture = GestureEnums.NONE
 
-    if gesture != GestureEnums.NONE: db.update_user(user, gesture)
+        if gesture != GestureEnums.NONE: db.update_user(user, gesture)
 
     session, user_status, opponent = GameEngine.process(db, session, user)
     gesture_name, gesture_image = get_gesture_screen_info(gesture)
