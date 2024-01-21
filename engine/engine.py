@@ -40,6 +40,12 @@ class GameEngine:
                 db.update_session(opponent.id, opponent_status)
 
         if user_status == UserStatusEnums.SUBMITED and opponent_status == UserStatusEnums.SUBMITED:
+            if user.gesture == GestureEnums.NONE:
+                user_status = UserStatusEnums.LOSER
+                opponent_status = UserStatusEnums.WINNER
+            if opponent.gesture == GestureEnums.NONE:
+                user_status = UserStatusEnums.WINNER
+                opponent_status = UserStatusEnums.LOSER
             if user.gesture == GestureEnums.ROCK and opponent.gesture == GestureEnums.PAPER:
                 user_status = UserStatusEnums.LOSER
                 opponent_status = UserStatusEnums.WINNER
