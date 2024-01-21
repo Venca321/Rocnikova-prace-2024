@@ -43,10 +43,9 @@ def find_session():
 def find_session_post():
     user = db.get_user(request.json['user_id'])
     session_id = request.json['session_id']
-    host = request.json['host']
 
     if session_id == "None":
-        if host == "true":
+        if request.json['host'] == "true":
             session = db.create_session(user.id, "Not yet")
         else:
             session = db.connect_session(user.id)

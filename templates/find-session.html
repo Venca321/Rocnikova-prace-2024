@@ -76,11 +76,11 @@
 </style>
 
 <script>
-    async function register(){
+    async function register(name){
         response = await fetch("https://" + document.domain + ':' + location.port + "/register", {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({username: urlParams.get('name')})
+            body: JSON.stringify({username: name})
         });
         data = await response.json();
         return data.user_id;
@@ -99,7 +99,7 @@
     async function joinRandom() {
         const urlParams = new URLSearchParams(window.location.search);
         const name = urlParams.get('name');
-        const user_id = await register();
+        const user_id = await register(name);
         
         console.log(await connect_session(user_id));
 
