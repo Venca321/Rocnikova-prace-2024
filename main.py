@@ -1,6 +1,6 @@
 
 from engine.engine import HandRecognition, GestureRecognition, GestureEnums
-from engine.database import Database
+from engine.database import Database, UserStatusEnums
 from flask import Flask, render_template, request, jsonify
 from flask_socketio import SocketIO, emit
 import numpy as np
@@ -21,6 +21,15 @@ def get_gesture_screen_info(gesture) -> (str, str):
     elif gesture == GestureEnums.SCISSORS: return "Nůžky", "✂️"
     elif gesture == GestureEnums.LIKE: return "Like", "👍"
     else: return "Neznámé", "❓"
+
+def get_user_status_screen_info(user_status) -> str:
+    if user_status == UserStatusEnums.WAITING: return "Čekání na protihráče"
+    elif user_status == UserStatusEnums.READY: return "Připraven"
+    elif user_status == UserStatusEnums.PLAYING: return "Probíhá hra"
+    elif user_status == UserStatusEnums.WINNER: return "Vítěz"
+    elif user_status == UserStatusEnums.LOSER: return "Poražený"
+    elif user_status == UserStatusEnums.TIED: return "Remíza"
+    else: return "Error"
 
 @app.route('/')
 def index():
@@ -89,9 +98,20 @@ def handle_image(data):
         gesture = GestureEnums.NONE
     
     db.update_user(user, gesture)
+    
+    #Engine code
+
+    session = db.get_session(user.id)
+    if session.user1_id == user.id:
+        user_status = session.user1_status
+        opponent = db.get_user(session.user2_id)
+    else:
+        user_status = session.user2_status
+        opponent = db.get_user(session.user1_id)
 
     gesture_name, gesture_image = get_gesture_screen_info(gesture)
-    emit('response', {"opponent": "Bot1", "status": "Not implemented...", "gesture_image": gesture_image, "gesture_name": gesture_name, "id_status": "Correct"})
+    user_status_text = get_user_status_screen_info(user_status)
+    emit('response', {"opponent": opponent.username, "status": user_status_text, "gesture_image": gesture_image, "gesture_name": gesture_name, "id_status": "Correct"})
 
 if __name__ == '__main__':
     #serve(app, host="0.0.0.0", port=5000)
