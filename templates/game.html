@@ -151,15 +151,12 @@
     const urlParams = new URLSearchParams(window.location.search);
 
     function pickCamera() {
-        const name = urlParams.get("name");
-        location.href = `/pick-camera-device?name=${name}`;
+        location.href = `/pick-camera-device?name=${urlParams.get("name")}&user_id=${urlParams.get("user_id")}`;
     }
 
     socket.on('response', function(data) {
         if (data.id_status == "Error"){
-            const name = urlParams.get("name");
-            const camera = urlParams.get("camera");
-            location.href = `/game?name=${name}&camera=${camera}`;
+            location.href = `/find-session?name=${urlParams.get("name")}`;
         }
         document.getElementById('players').innerText = `${urlParams.get('name')} vs ${data.opponent}`;
         document.getElementById('game_status').innerText = data.status;
