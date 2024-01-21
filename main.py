@@ -68,8 +68,7 @@ return jsonify({"session_id": session.id})
 
 @app.route('/find-random-session', methods=['POST'])
 def find__random_session_post():
-    user = db.get_user(request.json['user_id'])
-    session = db.connect_random_session(user.id)
+    session = db.connect_random_session(request.json['user_id'])
     return jsonify({"session_id": session.id})
 
 @app.route('/game')
@@ -105,12 +104,12 @@ def handle_image(data):
     session = db.get_session(user.id)
     if session.user1_id == user.id:
         user_status = session.user1_status
-        if user_status != UserStatusEnums.WAITING:
+        if session.user2_status != UserStatusEnums.WAITING:
             opponent = db.get_user(session.user2_id)
         else: opponent = "?????"
     else:
         user_status = session.user2_status
-        if user_status != UserStatusEnums.WAITING:
+        if session.user1_status != UserStatusEnums.WAITING:
             opponent = db.get_user(session.user1_id)
         else: opponent = "?????"
 

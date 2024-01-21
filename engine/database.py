@@ -107,14 +107,14 @@ class Database:
         self.cursor.execute("DELETE FROM users WHERE updated_at < ?", (five_minutes_ago,))
         self.connection.commit()
 
-    def create_session(self, user1_id:str, user2_id:str) -> Session:
+    def create_session(self, user1_id:str) -> Session:
         """
         Create session
         """
         session_id = str(random.randint(100000, 9999999))
-        self.cursor.execute("insert into sessions (id, user1_id, user1_status, user2_id, user2_status) values (?, ?, ?, ?, ?)", (session_id, user1_id, UserStatusEnums.WAITING, user2_id, UserStatusEnums.WAITING))
+        self.cursor.execute("insert into sessions (id, user1_id, user1_status, user2_id, user2_status) values (?, ?, ?, ?, ?)", (session_id, user1_id, UserStatusEnums.CONNECTED, "None", UserStatusEnums.WAITING))
         self.connection.commit()
-        return Session(session_id, user1_id, UserStatusEnums.WAITING, user2_id, UserStatusEnums.WAITING)
+        return Session(session_id, user1_id, UserStatusEnums.CONNECTED, "None", UserStatusEnums.WAITING)
 
     """def connect_session(self, user_id:str, session_id:str="None") -> Session:
         user = self.get_user(user_id)
@@ -134,14 +134,16 @@ class Database:
         Connect random session
         """
         user = self.get_user(user_id)
-        self.cursor.execute("select * from sessions where user2_id=:user_id", {"user_id": "None"})
+        self.cursor.execute("select * from sessions where user2_id=:user2_id", {"user2_id": "None"})
         try: 
-            session_id = self.cursor.fetchall()[-1]
-            self.cursor.execute("update sessions set user2_id=:user2_id, user2_status=:user2_status, user1_status=:user1_status where id=:id", {"user2_id": user.id, "user2_status": UserStatusEnums.CONNECTED, "user1_status": UserStatusEnums.CONNECTED, "id": session_id})
+            session_id = self.cursor.fetchall()[0][0]
+            self.cursor.execute("update sessions set user2_id=:user2_id, user2_status=:user2_status where id=:id", {"user2_id": user.id, "user2_status": UserStatusEnums.CONNECTED, "id": session_id})
             self.connection.commit()
         except Exception as e:
-            session_id = self.create_session(user.id, "None").id
+            print(e)
+            session_id = self.create_session(user.id).id
 
+        print(session_id)
         self.cursor.execute("select * from sessions where id=:id", {"id": session_id})
         session = self.cursor.fetchone()
         return Session(session[0], session[1], session[2], session[3], session[4])
@@ -174,6 +176,7 @@ class Database:
         """
         Remove sessions that are not connected anymore
         """
-        five_minutes_ago = datetime.now() - timedelta(minutes=5)
-        self.cursor.execute("DELETE FROM sessions WHERE updated_at < ?", (five_minutes_ago,))
+        five_minutes_ago = datetime.utcnow() - timedelta(minutes=5)
+        five_minutes_ago = five_minutes_ago.strftime('%Y-%m-%d %H:%M:%S')
+        self.cursor.execute("DELETE FROM users WHERE updated_at < ?", (five_minutes_ago,))
         self.connection.commit()
