@@ -15,6 +15,8 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
+RUN python -c "from engine.database import Database; db = Database(); db.push()"
+
 EXPOSE 5000
 
 CMD python3 main.py
