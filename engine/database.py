@@ -18,11 +18,12 @@ class Session:
 
 class UserStatusEnums:
     WAITING = 0
-    READY = 1
-    PLAYING = 2
-    WINNER = 3
-    LOSER = 4
-    TIED = 5
+    CONNECTED = 1
+    READY = 2
+    PLAYING = 3
+    WINNER = 4
+    LOSER = 5
+    TIED = 6
 
 class Database:
     def __init__(self, file_location:str="database.db"):
@@ -136,7 +137,7 @@ class Database:
         self.cursor.execute("select * from sessions where user2_id=:user_id", {"user_id": "None"})
         try: 
             session_id = self.cursor.fetchall()[-1]
-            self.cursor.execute("update sessions set user2_id=:user2_id, user2_status=:user2_status where id=:id", {"user2_id": user.id, "user2_status": UserStatusEnums.WAITING, "id": session_id})
+            self.cursor.execute("update sessions set user2_id=:user2_id, user2_status=:user2_status, user1_status=:user1_status where id=:id", {"user2_id": user.id, "user2_status": UserStatusEnums.CONNECTED, "user1_status": UserStatusEnums.CONNECTED, "id": session_id})
             self.connection.commit()
         except Exception as e:
             session_id = self.create_session(user.id, "None").id

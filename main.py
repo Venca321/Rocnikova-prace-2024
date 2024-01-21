@@ -24,6 +24,7 @@ def get_gesture_screen_info(gesture) -> (str, str):
 
 def get_user_status_screen_info(user_status) -> str:
     if user_status == UserStatusEnums.WAITING: return "Čekání na protihráče"
+    elif user_status == UserStatusEnums.CONNECTED: return "Připojen"
     elif user_status == UserStatusEnums.READY: return "Připraven"
     elif user_status == UserStatusEnums.PLAYING: return "Probíhá hra"
     elif user_status == UserStatusEnums.WINNER: return "Vítěz"
