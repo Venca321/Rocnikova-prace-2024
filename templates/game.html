@@ -155,10 +155,10 @@
     }
 
     socket.on('response', function(data) {
-        console.log("Response received...")
         if (data.id_status == "Error"){
             location.href = `/find-session?name=${urlParams.get("name")}`;
         }
+        console.log(`Connected to session ${data.session_id}`);
         document.getElementById('players').innerText = `${urlParams.get('name')} vs ${data.opponent}`;
         document.getElementById('game_status').innerText = data.status;
         document.getElementById('gesture_image').innerText = data.gesture_image;
