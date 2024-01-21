@@ -211,7 +211,7 @@
                 video.srcObject = stream;
                 video.onloadedmetadata = function(e) {
                     video.play();
-                    setInterval(captureAndSendImage, 250); // Snímek každých 250 ms
+                    setInterval(captureAndSendImage, 330); // Snímek každých xxx ms
                 };
             })
             .catch(function(err) {
@@ -220,13 +220,13 @@
     }
 
     window.addEventListener("load", (event) => {
-        if (!urlParams.has("user_id")){
+        if (urlParams.has("user_id")){
+            startCamera();
+        }
+        else {
             register().then(() => {
                 startCamera();
             })
-        }
-        else {
-            startCamera();
         }
     });
 </script>
