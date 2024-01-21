@@ -77,12 +77,12 @@ class GameEngine:
             db.update_session(user.id, user_status)
             db.update_session(opponent.id, opponent_status)
 
-        if user_status in [UserStatusEnums.WINNER, UserStatusEnums.LOSER, UserStatusEnums.TIED] and opponent_status in [UserStatusEnums.WINNER, UserStatusEnums.LOSER, UserStatusEnums.TIED]:
+        """if user_status in [UserStatusEnums.WINNER, UserStatusEnums.LOSER, UserStatusEnums.TIED] and opponent_status in [UserStatusEnums.WINNER, UserStatusEnums.LOSER, UserStatusEnums.TIED]:
             ten_seconds_ago = (datetime.now(timezone.utc) - timedelta(seconds=10)).strftime('%Y-%m-%d %H:%M:%S')
             if ten_seconds_ago > session.updated_at:
                 user_status = UserStatusEnums.CONNECTED
                 opponent_status = UserStatusEnums.CONNECTED
                 db.update_session(user.id, user_status)
-                db.update_session(opponent.id, opponent_status)
+                db.update_session(opponent.id, opponent_status)"""
 
         return session, user_status, opponent

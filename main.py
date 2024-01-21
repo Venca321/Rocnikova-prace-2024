@@ -93,7 +93,8 @@ def handle_image(data):
     nparr = np.frombuffer(img_data, np.uint8)
     img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
-    if session.user1_status != UserStatusEnums.SUBMITED and session.user2_status != UserStatusEnums.SUBMITED:
+    banned_status = [UserStatusEnums.SUBMITED, UserStatusEnums.WINNER, UserStatusEnums.LOSER, UserStatusEnums.TIED]
+    if session.user1_status not in banned_status or session.user2_status not in banned_status:
         try:
             landmark = hand_recognizer.getLandmark(img)
             gesture = gesture_recognizer.detectGesture(landmark)
