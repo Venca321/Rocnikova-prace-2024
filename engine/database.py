@@ -106,19 +106,16 @@ class Database:
         self.cursor.execute("DELETE FROM users WHERE updated_at < ?", (five_minutes_ago,))
         self.connection.commit()
 
-    def create_session(self, user1_id, user2_id) -> Session:
+    def create_session(self, user1_id:str, user2_id:str) -> Session:
         """
         Create session
         """
         session_id = str(random.randint(100000, 9999999))
         self.cursor.execute("insert into sessions (id, user1_id, user1_status, user2_id, user2_status) values (?, ?, ?, ?, ?)", (session_id, user1_id, UserStatusEnums.WAITING, user2_id, UserStatusEnums.WAITING))
         self.connection.commit()
-        return Session(session_id, user2_id, UserStatusEnums.WAITING, user2_id, UserStatusEnums.WAITING)
+        return Session(session_id, user1_id, UserStatusEnums.WAITING, user2_id, UserStatusEnums.WAITING)
 
-    def connect_session(self, user_id:str, session_id:str="None") -> Session:
-        """
-        Connect session
-        """
+    """def connect_session(self, user_id:str, session_id:str="None") -> Session:
         user = self.get_user(user_id)
         if session_id == "None":
             self.cursor.execute("select * from sessions where user2_id=:user_id", {"user_id": "None"})
@@ -129,6 +126,21 @@ class Database:
 
         self.cursor.execute("update sessions set user2_id=:user2_id user2_status=:user2_status where id=:id", {"user2_id": user.id, "user2_status": UserStatusEnums.WAITING, "id": session_id})
         self.connection.commit()
+        return self.get_session(session_id)"""
+    
+    def connect_random_session(self, user_id:str) -> Session:
+        """
+        Connect random session
+        """
+        user = self.get_user(user_id)
+        self.cursor.execute("select * from sessions where user2_id=:user_id", {"user_id": "None"})
+        try: 
+            session_id = self.cursor.fetchone()[0]
+            self.cursor.execute("update sessions set user2_id=:user2_id, user2_status=:user2_status where id=:id", {"user2_id": user.id, "user2_status": UserStatusEnums.WAITING, "id": session_id})
+            self.connection.commit()
+        except Exception as e:
+            session_id = self.create_session(user.id, "None").id
+
         return self.get_session(session_id)
 
     def get_session(self, session_id:str) -> Session:
