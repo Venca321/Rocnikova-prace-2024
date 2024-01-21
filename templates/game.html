@@ -158,6 +158,7 @@
     async function register(){
         response = await fetch("https://" + document.domain + ':' + location.port + "/register", {
             method: 'POST',
+            headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({username: urlParams.get('name')})
         })
         data = await response.json()
