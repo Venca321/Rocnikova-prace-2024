@@ -57,7 +57,7 @@ return jsonify({"session_id": session.id})
 @app.route('/find-random-session', methods=['POST'])
 def find__random_session_post():
     user = db.get_user(request.json['user_id'])
-    session = db.connect_session(user.id)
+    session = db.connect_random_session(user.id)
     return jsonify({"session_id": session.id})
 
 @app.route('/game')

@@ -135,7 +135,7 @@ class Database:
         user = self.get_user(user_id)
         self.cursor.execute("select * from sessions where user2_id=:user_id", {"user_id": "None"})
         try: 
-            session_id = self.cursor.fetchone()[0]
+            session_id = self.cursor.fetchall()[-1]
             self.cursor.execute("update sessions set user2_id=:user2_id, user2_status=:user2_status where id=:id", {"user2_id": user.id, "user2_status": UserStatusEnums.WAITING, "id": session_id})
             self.connection.commit()
         except Exception as e:
