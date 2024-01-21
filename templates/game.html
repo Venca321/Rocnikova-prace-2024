@@ -208,18 +208,14 @@
     }
 
     window.addEventListener("load", (event) => {
-        fetch('/register', {
+        fetch(document.domain + ':' + location.port + "/register", {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                username: urlParams.get('name'),
-            })
+            body: JSON.stringify({username: urlParams.get('name')})
         })
         .then(response => response.json())
         .then(data => console.log(data))
         .catch(error => console.error('Error:', error));
+
         startCamera();
     });
 </script>
