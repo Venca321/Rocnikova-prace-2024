@@ -168,6 +168,9 @@
     }
 
     socket.on('response', function(data) {
+        if (data.id_status == "Error"){
+            location.href = `/game?name=${name}&camera=${camera}`;
+        }
         document.getElementById('players').innerText = `${urlParams.get('name')} vs ${data.opponent}`;
         document.getElementById('game_status').innerText = data.status;
         document.getElementById('gesture_image').innerText = data.gesture_image;
