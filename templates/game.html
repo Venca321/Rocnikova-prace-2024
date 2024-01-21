@@ -155,6 +155,7 @@
     }
 
     socket.on('response', function(data) {
+        console.log("Response received...")
         if (data.id_status == "Error"){
             location.href = `/find-session?name=${urlParams.get("name")}`;
         }
