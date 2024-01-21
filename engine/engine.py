@@ -11,4 +11,8 @@ class GameEngine:
             user_status = session.user2_status
             opponent_status = session.user1_status
 
+        if opponent_status == UserStatusEnums.WAITING:
+            opponent.username = "?????"
+            return session, user_status, opponent
+
         return session, user_status, opponent
