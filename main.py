@@ -49,7 +49,7 @@ def handle_image(data):
     user_id = data['user_id']
 
     try: user = db.get_user(user_id)
-    except: emit('response', {"opponent": "None", "status": "None", "gesture_image": gesture_image, "gesture_name": GestureEnums.NONE, "id_status": "Error"})
+    except: emit('response', {"opponent": "None", "status": "None", "gesture_image": "", "gesture_name": GestureEnums.NONE, "id_status": "Error"})
 
     img_data = base64.b64decode(img_data.split(',')[1])
     nparr = np.frombuffer(img_data, np.uint8)
