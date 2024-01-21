@@ -98,8 +98,10 @@ def handle_image(data):
         try:
             landmark = hand_recognizer.getLandmark(img)
             gesture = gesture_recognizer.detectGesture(landmark)
-            db.update_user(user, gesture)
-        except Exception: None
+        except Exception:
+            gesture = GestureEnums.NONE
+
+    if gesture != GestureEnums.NONE: db.update_user(user, gesture)
 
     session, user_status, opponent = GameEngine.process(db, session, user)
     gesture_name, gesture_image = get_gesture_screen_info(gesture)
