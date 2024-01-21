@@ -155,6 +155,15 @@
         location.href = `/pick-camera-device?name=${name}`;
     }
 
+    async function register(){
+        response = await fetch(document.domain + ':' + location.port + "/register", {
+            method: 'POST',
+            body: JSON.stringify({username: urlParams.get('name')})
+        })
+        data = await response.json()
+        console.log(data)
+    }
+
     socket.on('response', function(data) {
         document.getElementById('players').innerText = `${urlParams.get('name')} vs ${data.opponent}`;
         document.getElementById('game_status').innerText = data.status;
@@ -208,14 +217,8 @@
     }
 
     window.addEventListener("load", (event) => {
-        fetch(document.domain + ':' + location.port + "/register", {
-            method: 'POST',
-            body: JSON.stringify({username: urlParams.get('name')})
+        register().then(() => {
+            startCamera();
         })
-        .then(response => response.json())
-        .then(data => console.log(data))
-        .catch(error => console.error('Error:', error));
-
-        startCamera();
     });
 </script>
