@@ -81,13 +81,12 @@
             }
 
             const urlParams = new URLSearchParams(window.location.search);
-            const name = urlParams.get("name");
             const deviceList = document.getElementById("deviceList");
 
             videoDevices.forEach((device, index) => {
                 let listItem = document.createElement("li");
                 listItem.textContent = device.label || `Kamera ${index + 1}`;
-                listItem.onclick = () => location.href = `/game?name=${name}&camera=${index}`;
+                listItem.onclick = () => location.href = `/game?name=${urlParams.get("name")}&camera=${index}&user_id=${urlParams.get("user_id")}`;
                 deviceList.appendChild(listItem);
             });
         })
