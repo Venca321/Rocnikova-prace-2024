@@ -3,7 +3,10 @@ from engine.gestureRecognition import GestureEnums, ThumbLandmark, FingerLandmar
 from engine.database import Database, UserStatusEnums, User, Session
 
 class GameEngine:
-    def process(session:Session, user:User, opponent:User) -> (Session, int, User):
+    def process(db:Database, session:Session, user:User, opponent_id:str) -> (Session, int, User):
+        try: opponent = db.get_user(opponent_id)
+        except Exception: return session, user_status, User("None", "?????", 0)
+
         if user.id == session.user1_id:
             user_status = session.user1_status
             opponent_status = session.user2_status
@@ -11,8 +14,6 @@ class GameEngine:
             user_status = session.user2_status
             opponent_status = session.user1_status
 
-        if opponent_status == UserStatusEnums.WAITING:
-            opponent.username = "?????"
-            return session, user_status, opponent
+        
 
         return session, user_status, opponent

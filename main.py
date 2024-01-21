@@ -102,9 +102,9 @@ def handle_image(data):
 
     session = db.get_session(user.id)
     if session.user1_id == user.id:
-        session, user_status, opponent = GameEngine.process(session, user, db.get_user(session.user2_id))
+        session, user_status, opponent = GameEngine.process(db, session, user, session.user2_id)
     else:
-        session, user_status, opponent = GameEngine.process(session, user, db.get_user(session.user1_id))
+        session, user_status, opponent = GameEngine.process(db, session, user, session.user1_id)
 
     gesture_name, gesture_image = get_gesture_screen_info(gesture)
     user_status_text = get_user_status_screen_info(user_status)
