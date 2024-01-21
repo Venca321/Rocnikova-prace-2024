@@ -101,14 +101,7 @@ def handle_image(data):
     db.update_user(user, gesture)
 
     session = db.get_session(user.id)
-    if session.user1_id == user.id:
-        if session.user1_status != UserStatusEnums.WAITING:
-            session, user_status, opponent = GameEngine.process(db, session, user, db.get_user(session.user2_id))
-        else: opponent = User("None", "?????", 0)
-    else:
-        if session.user2_status != UserStatusEnums.WAITING:
-            session, user_status, opponent = GameEngine.process(db, session, user, db.get_user(session.user2_id))
-        else: opponent = User("None", "?????", 0)
+    session, user_status, opponent = GameEngine.process(db, session, user)
 
     gesture_name, gesture_image = get_gesture_screen_info(gesture)
     user_status_text = get_user_status_screen_info(user_status)
