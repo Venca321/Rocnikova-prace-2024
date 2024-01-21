@@ -1,6 +1,6 @@
 
 from engine.engine import HandRecognition, GestureRecognition, GestureEnums, GameEngine
-from engine.database import Database, UserStatusEnums
+from engine.database import Database, UserStatusEnums, User
 from flask import Flask, render_template, request, jsonify
 from flask_socketio import SocketIO, emit
 import numpy as np
@@ -102,9 +102,13 @@ def handle_image(data):
 
     session = db.get_session(user.id)
     if session.user1_id == user.id:
-        session, user_status, opponent = GameEngine.process(db, session, user, session.user2_id)
+        if session.user1_status != UserStatusEnums.WAITING:
+            session, user_status, opponent = GameEngine.process(db, session, user, db.get_user(session.user2_id))
+        else: opponent = User("None", "?????", 0)
     else:
-        session, user_status, opponent = GameEngine.process(db, session, user, session.user1_id)
+        if session.user2_status != UserStatusEnums.WAITING:
+            session, user_status, opponent = GameEngine.process(db, session, user, db.get_user(session.user2_id))
+        else: opponent = User("None", "?????", 0)
 
     gesture_name, gesture_image = get_gesture_screen_info(gesture)
     user_status_text = get_user_status_screen_info(user_status)
