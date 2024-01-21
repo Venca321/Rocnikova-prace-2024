@@ -1,5 +1,5 @@
 
-from engine.engine import HandRecognition, GestureRecognition, GestureEnums
+from engine.engine import HandRecognition, GestureRecognition, GestureEnums, GameEngine
 from engine.database import Database, UserStatusEnums
 from flask import Flask, render_template, request, jsonify
 from flask_socketio import SocketIO, emit
@@ -23,11 +23,12 @@ def get_gesture_screen_info(gesture) -> (str, str):
     else: return "Neznámé", "❓"
 
 def get_user_status_screen_info(user_status) -> str:
-    if user_status == UserStatusEnums.WAITING: return "Čekání na protihráče"
-    elif user_status == UserStatusEnums.CONNECTED: return "Připojen"
+    if user_status == UserStatusEnums.WAITING: return "Čekání na protihráče..."
+    elif user_status == UserStatusEnums.CONNECTED: return "Dejte like pro spuštění hry"
     elif user_status == UserStatusEnums.READY: return "Připraven"
-    elif user_status == UserStatusEnums.PLAYING: return "Probíhá hra"
-    elif user_status == UserStatusEnums.WINNER: return "Vítěz"
+    elif user_status == UserStatusEnums.PLAYING: return "Probíhá hra..."
+    elif user_status == UserStatusEnums.SUBMITED: return "Čekání na vyhodnocení..."
+    elif user_status == UserStatusEnums.WINNER: return "Vítěz!"
     elif user_status == UserStatusEnums.LOSER: return "Poražený"
     elif user_status == UserStatusEnums.TIED: return "Remíza"
     else: return "Error"
@@ -99,23 +100,15 @@ def handle_image(data):
 
     db.update_user(user, gesture)
 
-    #Engine code
-
     session = db.get_session(user.id)
     if session.user1_id == user.id:
-        user_status = session.user1_status
-        if session.user2_status != UserStatusEnums.WAITING:
-            opponent = db.get_user(session.user2_id).username
-        else: opponent = "?????"
+        session, user_status, opponent = GameEngine.process(session, user, db.get_user(session.user2_id))
     else:
-        user_status = session.user2_status
-        if session.user1_status != UserStatusEnums.WAITING:
-            opponent = db.get_user(session.user1_id).username
-        else: opponent = "?????"
+        session, user_status, opponent = GameEngine.process(session, user, db.get_user(session.user1_id))
 
     gesture_name, gesture_image = get_gesture_screen_info(gesture)
     user_status_text = get_user_status_screen_info(user_status)
-    emit('response', {"session_id": session.id, "opponent": opponent, "status": user_status_text, "gesture_image": gesture_image, "gesture_name": gesture_name, "id_status": "Correct"})
+    emit('response', {"session_id": session.id, "opponent": opponent.username, "status": user_status_text, "gesture_image": gesture_image, "gesture_name": gesture_name, "id_status": "Correct"})
 
 if __name__ == '__main__':
     #serve(app, host="0.0.0.0", port=5000)

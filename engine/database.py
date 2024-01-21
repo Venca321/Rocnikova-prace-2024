@@ -21,9 +21,10 @@ class UserStatusEnums:
     CONNECTED = 1
     READY = 2
     PLAYING = 3
-    WINNER = 4
-    LOSER = 5
-    TIED = 6
+    SUBMITED = 4
+    WINNER = 5
+    LOSER = 6
+    TIED = 7
 
 class Database:
     def __init__(self, file_location:str="database.db"):
@@ -114,7 +115,7 @@ class Database:
         session_id = str(random.randint(100000, 9999999))
         self.cursor.execute("insert into sessions (id, user1_id, user1_status, user2_id, user2_status) values (?, ?, ?, ?, ?)", (session_id, user1_id, UserStatusEnums.CONNECTED, "None", UserStatusEnums.WAITING))
         self.connection.commit()
-        return Session(session_id, user1_id, UserStatusEnums.CONNECTED, "None", UserStatusEnums.WAITING)
+        return Session(session_id, user1_id, UserStatusEnums.WAITING, "None", UserStatusEnums.WAITING)
 
     """def connect_session(self, user_id:str, session_id:str="None") -> Session:
         user = self.get_user(user_id)
@@ -137,7 +138,7 @@ class Database:
         self.cursor.execute("select * from sessions where user2_id=:user2_id", {"user2_id": "None"})
         try: 
             session_id = self.cursor.fetchall()[0][0]
-            self.cursor.execute("update sessions set user2_id=:user2_id, user2_status=:user2_status where id=:id", {"user2_id": user.id, "user2_status": UserStatusEnums.CONNECTED, "id": session_id})
+            self.cursor.execute("update sessions set user2_id=:user2_id, user2_status=:user2_status, user1_status=:user1_status where id=:id", {"user2_id": user.id, "user2_status": UserStatusEnums.CONNECTED, "user1_status": UserStatusEnums.CONNECTED, "id": session_id})
             self.connection.commit()
         except Exception as e:
             print(e)
