@@ -46,9 +46,7 @@ def pick_camera_device():
 @socketio.on('image')
 def handle_image(data):
     img_data = data['image']
-    user_id = data['id']
-    user_name = data['name']
-    print(user_id)
+    user_id = data['user_id']
 
     img_data = base64.b64decode(img_data.split(',')[1])
     nparr = np.frombuffer(img_data, np.uint8)
@@ -59,6 +57,10 @@ def handle_image(data):
         gesture = gesture_recognizer.detectGesture(landmark)
     except Exception:
         gesture = GestureEnums.NONE
+
+    user = db.get_user(user_id)
+    db.update_user(user, gesture)
+    db.remove_old_users()
 
     gesture_name, gesture_image = get_gesture_screen_info(gesture)
     emit('response', {"opponent": "Bot1", "status": "Not implemented...", "gesture_image": gesture_image, "gesture_name": gesture_name})

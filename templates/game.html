@@ -162,7 +162,9 @@
             body: JSON.stringify({username: urlParams.get('name')})
         })
         data = await response.json()
-        console.log(data)
+        const name = urlParams.get("name");
+        const camera = urlParams.get("camera");
+        location.href = `/game?name=${name}&camera=${camera}&user_id=${data.user_id}`;
     }
 
     socket.on('response', function(data) {
@@ -178,7 +180,7 @@
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
         canvas.getContext('2d').drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
-        socket.emit('image', { image: canvas.toDataURL('image/jpeg'), id: "None", name: urlParams.get('name')});
+        socket.emit('image', { image: canvas.toDataURL('image/jpeg'), user_id: urlParams.get("user_id")});
     }
 
     function startCamera() {
