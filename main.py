@@ -87,22 +87,22 @@ def handle_image(data):
 
     try: user = db.get_user(user_id)
     except: emit('response', {"opponent": "None", "status": "None", "gesture_image": "", "gesture_name": GestureEnums.NONE, "id_status": "Error"})
+    session = db.get_session(user.id)
 
     img_data = base64.b64decode(img_data.split(',')[1])
     nparr = np.frombuffer(img_data, np.uint8)
     img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
-    try:
-        landmark = hand_recognizer.getLandmark(img)
-        gesture = gesture_recognizer.detectGesture(landmark)
-    except Exception:
-        gesture = GestureEnums.NONE
+    if session.user1_status != UserStatusEnums.SUBMITED and session.user2_status != UserStatusEnums.SUBMITED:
+        try:
+            landmark = hand_recognizer.getLandmark(img)
+            gesture = gesture_recognizer.detectGesture(landmark)
+        except Exception:
+            gesture = GestureEnums.NONE
 
-    db.update_user(user, gesture)
+        db.update_user(user, gesture)
 
-    session = db.get_session(user.id)
     session, user_status, opponent = GameEngine.process(db, session, user)
-
     gesture_name, gesture_image = get_gesture_screen_info(gesture)
     user_status_text = get_user_status_screen_info(user_status)
     emit('response', {"session_id": session.id, "opponent": opponent.username, "status": user_status_text, "gesture_image": gesture_image, "gesture_name": gesture_name, "id_status": "Correct"})
