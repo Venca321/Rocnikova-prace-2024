@@ -105,12 +105,12 @@ def handle_image(data):
     if session.user1_id == user.id:
         user_status = session.user1_status
         if session.user2_status != UserStatusEnums.WAITING:
-            opponent = db.get_user(session.user2_id)
+            opponent = db.get_user(session.user2_id).username
         else: opponent = "?????"
     else:
         user_status = session.user2_status
         if session.user1_status != UserStatusEnums.WAITING:
-            opponent = db.get_user(session.user1_id)
+            opponent = db.get_user(session.user1_id).username
         else: opponent = "?????"
 
     gesture_name, gesture_image = get_gesture_screen_info(gesture)

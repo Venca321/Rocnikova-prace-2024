@@ -143,7 +143,6 @@ class Database:
             print(e)
             session_id = self.create_session(user.id).id
 
-        print(session_id)
         self.cursor.execute("select * from sessions where id=:id", {"id": session_id})
         session = self.cursor.fetchone()
         return Session(session[0], session[1], session[2], session[3], session[4])
