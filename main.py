@@ -39,19 +39,25 @@ def register_post():
 def find_session():
     return render_template('find-session.html')
 
-@app.route('/find-session', methods=['POST'])
-def find_session_post():
-    user = db.get_user(request.json['user_id'])
-    session_id = request.json['session_id']
+"""
+user = db.get_user(request.json['user_id'])
+session_id = request.json['session_id']
 
-    if session_id == "None":
-        if request.json['host'] == "true":
-            session = db.create_session(user.id, "Not yet")
-        else:
-            session = db.connect_session(user.id)
+if session_id == "None":
+    if request.json['host'] == "true":
+        session = db.create_session(user.id, "Not yet")
     else:
-        session = db.connect_session(user.id, session_id)
-    
+        session = db.connect_session(user.id)
+else:
+    session = db.connect_session(user.id, session_id)
+
+return jsonify({"session_id": session.id})
+"""
+
+@app.route('/find-random-session', methods=['POST'])
+def find__random_session_post():
+    user = db.get_user(request.json['user_id'])
+    session = db.connect_session(user.id)
     return jsonify({"session_id": session.id})
 
 @app.route('/game')

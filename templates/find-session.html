@@ -87,10 +87,10 @@
     }
 
     async function connect_session(user_id){
-        response = await fetch("https://" + document.domain + ':' + location.port + "/find-session", {
+        response = await fetch("https://" + document.domain + ':' + location.port + "/find-random-session", {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({user_id: user_id, session_id: "None", host: false})
+            body: JSON.stringify({user_id: user_id})
         });
         data = await response.json();
         return data.session_id;
@@ -100,6 +100,8 @@
         const urlParams = new URLSearchParams(window.location.search);
         const name = urlParams.get('name');
         const user_id = await register(name);
+
+        console.log(user_id);
         
         console.log(await connect_session(user_id));
 
