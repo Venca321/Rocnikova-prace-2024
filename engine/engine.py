@@ -39,4 +39,44 @@ class GameEngine:
                 db.update_session(user.id, user_status)
                 db.update_session(opponent.id, opponent_status)
 
+        if user_status == UserStatusEnums.SUBMITED and opponent_status == UserStatusEnums.SUBMITED:
+            if user.gesture == GestureEnums.ROCK and opponent.gesture == GestureEnums.PAPER:
+                user_status = UserStatusEnums.LOSER
+                opponent_status = UserStatusEnums.WINNER
+            elif user.gesture == GestureEnums.ROCK and opponent.gesture == GestureEnums.SCISSORS:
+                user_status = UserStatusEnums.WINNER
+                opponent_status = UserStatusEnums.LOSER
+            elif user.gesture == GestureEnums.ROCK and opponent.gesture == GestureEnums.ROCK:
+                user_status = UserStatusEnums.TIED
+                opponent_status = UserStatusEnums.TIED
+            elif user.gesture == GestureEnums.PAPER and opponent.gesture == GestureEnums.PAPER:
+                user_status = UserStatusEnums.TIED
+                opponent_status = UserStatusEnums.TIED
+            elif user.gesture == GestureEnums.PAPER and opponent.gesture == GestureEnums.SCISSORS:
+                user_status = UserStatusEnums.LOSER
+                opponent_status = UserStatusEnums.WINNER
+            elif user.gesture == GestureEnums.PAPER and opponent.gesture == GestureEnums.ROCK:
+                user_status = UserStatusEnums.WINNER
+                opponent_status = UserStatusEnums.LOSER
+            elif user.gesture == GestureEnums.SCISSORS and opponent.gesture == GestureEnums.PAPER:
+                user_status = UserStatusEnums.WINNER
+                opponent_status = UserStatusEnums.LOSER
+            elif user.gesture == GestureEnums.SCISSORS and opponent.gesture == GestureEnums.SCISSORS:
+                user_status = UserStatusEnums.TIED
+                opponent_status = UserStatusEnums.TIED
+            elif user.gesture == GestureEnums.SCISSORS and opponent.gesture == GestureEnums.ROCK:
+                user_status = UserStatusEnums.LOSER
+                opponent_status = UserStatusEnums.WINNER
+
+            db.update_session(user.id, user_status)
+            db.update_session(opponent.id, opponent_status)
+
+        if user_status in [UserStatusEnums.WINNER, UserStatusEnums.LOSER, UserStatusEnums.TIED] and opponent_status in [UserStatusEnums.WINNER, UserStatusEnums.LOSER, UserStatusEnums.TIED]:
+            ten_seconds_ago = (datetime.now(timezone.utc) - timedelta(seconds=10)).strftime('%Y-%m-%d %H:%M:%S')
+            if ten_seconds_ago > session.updated_at:
+                user_status = UserStatusEnums.CONNECTED
+                opponent_status = UserStatusEnums.CONNECTED
+                db.update_session(user.id, user_status)
+                db.update_session(opponent.id, opponent_status)
+
         return session, user_status, opponent
