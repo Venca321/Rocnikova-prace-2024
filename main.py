@@ -96,22 +96,26 @@ def handle_image(data):
         gesture = gesture_recognizer.detectGesture(landmark)
     except Exception:
         gesture = GestureEnums.NONE
-    
+
     db.update_user(user, gesture)
 
     #Engine code
 
-    """session = db.get_session(user.id)
+    session = db.get_session(user.id)
     if session.user1_id == user.id:
         user_status = session.user1_status
-        opponent = db.get_user(session.user2_id)
+        if user_status != UserStatusEnums.WAITING:
+            opponent = db.get_user(session.user2_id)
+        else: opponent = "?????"
     else:
         user_status = session.user2_status
-        opponent = db.get_user(session.user1_id)"""
+        if user_status != UserStatusEnums.WAITING:
+            opponent = db.get_user(session.user1_id)
+        else: opponent = "?????"
 
     gesture_name, gesture_image = get_gesture_screen_info(gesture)
-    user_status_text = get_user_status_screen_info(0)
-    emit('response', {"opponent": "Bot1", "status": user_status_text, "gesture_image": gesture_image, "gesture_name": gesture_name, "id_status": "Correct"})
+    user_status_text = get_user_status_screen_info(user_status)
+    emit('response', {"opponent": opponent, "status": user_status_text, "gesture_image": gesture_image, "gesture_name": gesture_name, "id_status": "Correct"})
 
 if __name__ == '__main__':
     #serve(app, host="0.0.0.0", port=5000)
