@@ -19,7 +19,7 @@ class GameEngine:
             except Exception:
                 return session, user_status, User("None", "?????", 0)
             
-        if user_status == UserStatusEnums.WAITING and user.gesture == GestureEnums.LIKE:
+        if user_status == UserStatusEnums.CONNECTED and user.gesture == GestureEnums.LIKE:
             user_status = UserStatusEnums.READY
             db.update_session(user.id, user_status)
 
