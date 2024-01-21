@@ -195,7 +195,7 @@
                     return navigator.mediaDevices.getUserMedia({ video: { deviceId: chosenCamera.deviceId } });
                 }
                 else {
-                    location.href = `/game?name=${urlParams.get("name")}&camera=0&${urlParams.get("user_id")}`;
+                    location.href = `/game?name=${urlParams.get("name")}&camera=0&user_id=${urlParams.get("user_id")}`;
                 }
             })
             .then(function(stream) {
