@@ -1,6 +1,7 @@
 
 from engine.engine import HandRecognition, GestureRecognition, GestureEnums
-from flask import Flask, render_template
+from engine.database import Database
+from flask import Flask, render_template, request, jsonify
 from flask_socketio import SocketIO, emit
 import numpy as np
 import cv2, base64
@@ -12,6 +13,7 @@ socketio = SocketIO(app)
 
 hand_recognizer = HandRecognition()
 gesture_recognizer = GestureRecognition()
+db = Database()
 
 def get_gesture_screen_info(gesture) -> (str, str):
     if gesture == GestureEnums.ROCK: return "Kámen", "🪨"
@@ -28,6 +30,11 @@ def index():
 def register():
     return render_template('register.html')
 
+@app.route('/register', methods=['POST'])
+def register_post():
+    user = db.create_user(request.json['username'], GestureEnums.NONE)
+    return jsonify({"user_id": user.id})
+
 @app.route('/game')
 def game():
     return render_template('game.html')
@@ -40,6 +47,7 @@ def pick_camera_device():
 def handle_image(data):
     img_data = data['image']
     user_id = data['id']
+    user_name = data['name']
     print(user_id)
 
     img_data = base64.b64decode(img_data.split(',')[1])

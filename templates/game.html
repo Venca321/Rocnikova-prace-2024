@@ -168,7 +168,7 @@
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
         canvas.getContext('2d').drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
-        socket.emit('image', { image: canvas.toDataURL('image/jpeg'), id: "--test--" });
+        socket.emit('image', { image: canvas.toDataURL('image/jpeg'), id: "None", name: urlParams.get('name')});
     }
 
     function startCamera() {
@@ -208,6 +208,18 @@
     }
 
     window.addEventListener("load", (event) => {
+        fetch('/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: urlParams.get('name'),
+            })
+        })
+        .then(response => response.json())
+        .then(data => console.log(data))
+        .catch(error => console.error('Error:', error));
         startCamera();
     });
 </script>
