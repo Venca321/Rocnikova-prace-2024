@@ -155,7 +155,7 @@ class Database:
         """
         self.cursor.execute("select * from sessions where user1_id=:id or user2_id=:id", {"id": user_id})
         session = self.cursor.fetchone()
-        return Session(session[0], session[1], session[2], session[3], session[4])
+        return Session(session[0], session[1], session[2], session[3], session[4], session[5])
 
     def update_session(self, user_id:str, user_status:int) -> Session:
         """
