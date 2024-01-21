@@ -2,6 +2,7 @@
 __pycache__/
 .venv/
 tempCodeRunnerFile.py
+*.db
 
 *-indev.*
 .env

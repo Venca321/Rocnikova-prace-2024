@@ -168,7 +168,7 @@
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
         canvas.getContext('2d').drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
-        socket.emit('image', canvas.toDataURL('image/jpeg'));
+        socket.emit('image', { image: canvas.toDataURL('image/jpeg'), id: "--test--" });
     }
 
     function startCamera() {

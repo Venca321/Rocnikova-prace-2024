@@ -38,7 +38,11 @@ def pick_camera_device():
 
 @socketio.on('image')
 def handle_image(data):
-    img_data = base64.b64decode(data.split(',')[1])
+    img_data = data['image']
+    user_id = data['id']
+    print(user_id)
+
+    img_data = base64.b64decode(img_data.split(',')[1])
     nparr = np.frombuffer(img_data, np.uint8)
     img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
