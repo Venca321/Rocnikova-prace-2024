@@ -9,12 +9,13 @@ class User:
         self.gesture = gesture
 
 class Session:
-    def __init__(self, id:str, user1_id:str, user_1_status:int, user2_id:str, user_2_status:int):
+    def __init__(self, id:str, user1_id:str, user_1_status:int, user2_id:str, user_2_status:int, updated_at):
         self.id = id
         self.user1_id = user1_id
         self.user1_status = user_1_status
         self.user2_id = user2_id
         self.user2_status = user_2_status
+        self.updated_at = updated_at
 
 class UserStatusEnums:
     WAITING = 0
@@ -115,7 +116,7 @@ class Database:
         session_id = str(random.randint(100000, 9999999))
         self.cursor.execute("insert into sessions (id, user1_id, user1_status, user2_id, user2_status) values (?, ?, ?, ?, ?)", (session_id, user1_id, UserStatusEnums.CONNECTED, "None", UserStatusEnums.WAITING))
         self.connection.commit()
-        return Session(session_id, user1_id, UserStatusEnums.WAITING, "None", UserStatusEnums.WAITING)
+        return Session(session_id, user1_id, UserStatusEnums.WAITING, "None", UserStatusEnums.WAITING, datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S'))
 
     """def connect_session(self, user_id:str, session_id:str="None") -> Session:
         user = self.get_user(user_id)
@@ -146,7 +147,7 @@ class Database:
 
         self.cursor.execute("select * from sessions where id=:id", {"id": session_id})
         session = self.cursor.fetchone()
-        return Session(session[0], session[1], session[2], session[3], session[4])
+        return Session(session[0], session[1], session[2], session[3], session[4], session[5])
 
     def get_session(self, user_id:str) -> Session:
         """
@@ -170,7 +171,7 @@ class Database:
 
         self.cursor.execute("update sessions set user1_status=:user1_status, user2_status=:user2_status where id=:id", {"user1_status": user1_status, "user2_status": user2_status, "id": session.id})
         self.connection.commit()
-        return Session(session.id, session.user1_id, user1_status, session.user2_id, user2_status)
+        return Session(session.id, session.user1_id, user1_status, session.user2_id, user2_status, datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S'))
 
     def remove_old_sessions(self):
         """
