@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Kámen, nůžky, papír</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+        <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Inter'>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    </head>
+    <body>
+        <a id="home_button" href="/">Domů</a>
+        <h1>Kámen, nůžky, papír</h1>
+        <p>Pomocí počítačového vidění</p>
+        <div id="buttons">
+            <button class="button" onclick="joinRandom();">Hrát náhodnou hru</button>
+            <a class="button" href="/find-session-friends">Hrát s přáteli</a>
+        </div>
+        <button id="info_button"><?xml version="1.0" ?><svg class="bi bi-info-circle" fill="currentColor" height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/><path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/></svg></button>
+    </body>
+</html>
+
+<style>
+    h1 {
+        font-weight: 700;
+        font-size: 64px;
+        color: rgba(255, 255, 255, 1);
+    }
+
+    p {
+        margin-top: -20px;
+        font-weight: 400;
+        font-size: 32px;
+        color: rgba(255, 255, 255, 0.9);
+    }
+
+    #buttons {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .button {
+        width: 320px;
+        padding: 12px 0px 12px 0px;
+        margin-top: 16px;
+        text-align: center;
+        font-weight: 600;
+        font-size: 26px;
+        color: #000000;
+        background: #ffffff;
+        border-radius: 15px;
+        text-decoration: none;
+        transition: 0.25s;
+    }
+
+    .button:hover {
+        background: #2bdda2;
+        text-decoration: underline;
+    }
+
+    @media only screen and (max-device-width: 480px) {
+        h1 {
+            font-size: 28px;
+        }
+
+        p {
+            font-size: 18px;
+        }
+
+        .button {
+            font-size: 22px;
+            width: 280px;
+            padding: 10px 0px 10px 0px;
+        }
+    }
+</style>
+
+<script>
+    async function register(){
+        response = await fetch("https://" + document.domain + ':' + location.port + "/register", {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({username: urlParams.get('name')})
+        });
+        data = await response.json();
+        return data.user_id;
+    }
+
+    async function connect_session(user_id){
+        response = await fetch("https://" + document.domain + ':' + location.port + "/find-session", {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({user_id: user_id, session_id: "None", host: false})
+        });
+        data = await response.json();
+        return data.session_id;
+    }
+
+    async function joinRandom() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const name = urlParams.get('name');
+        const user_id = await register();
+        
+        console.log(await connect_session(user_id));
+
+        //location.href = `/game?name=${name}&user_id=${user_id}`;
+    }
+</script>

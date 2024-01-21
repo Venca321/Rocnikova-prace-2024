@@ -115,6 +115,22 @@ class Database:
         self.connection.commit()
         return Session(session_id, user2_id, UserStatusEnums.WAITING, user2_id, UserStatusEnums.WAITING)
 
+    def connect_session(self, user_id:str, session_id:str="None") -> Session:
+        """
+        Connect session
+        """
+        user = self.get_user(user_id)
+        if session_id == "None":
+            self.cursor.execute("select * from sessions where user2_id=:user_id", {"user_id": "None"})
+            try: 
+                session_id = self.cursor.fetchone()[0]
+            except Exception:
+                session_id = self.create_session(user.id, "None").id
+
+        self.cursor.execute("update sessions set user2_id=:user2_id user2_status=:user2_status where id=:id", {"user2_id": user.id, "user2_status": UserStatusEnums.WAITING, "id": session_id})
+        self.connection.commit()
+        return self.get_session(session_id)
+
     def get_session(self, session_id:str) -> Session:
         """
         Get session from id

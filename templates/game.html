@@ -155,20 +155,10 @@
         location.href = `/pick-camera-device?name=${name}`;
     }
 
-    async function register(){
-        response = await fetch("https://" + document.domain + ':' + location.port + "/register", {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({username: urlParams.get('name')})
-        })
-        data = await response.json()
-        const name = urlParams.get("name");
-        const camera = urlParams.get("camera");
-        location.href = `/game?name=${name}&camera=${camera}&user_id=${data.user_id}`;
-    }
-
     socket.on('response', function(data) {
         if (data.id_status == "Error"){
+            const name = urlParams.get("name");
+            const camera = urlParams.get("camera");
             location.href = `/game?name=${name}&camera=${camera}`;
         }
         document.getElementById('players').innerText = `${urlParams.get('name')} vs ${data.opponent}`;
@@ -205,8 +195,7 @@
                     return navigator.mediaDevices.getUserMedia({ video: { deviceId: chosenCamera.deviceId } });
                 }
                 else {
-                    const name = urlParams.get("name");
-                    location.href = `/game?name=${name}&camera=0`;
+                    location.href = `/game?name=${urlParams.get("name")}&camera=0&${urlParams.get("user_id")}`;
                 }
             })
             .then(function(stream) {
@@ -227,9 +216,7 @@
             startCamera();
         }
         else {
-            register().then(() => {
-                startCamera();
-            })
+            location.href = `/find-session?name=${urlParams.get("name")}`;
         }
     });
 </script>

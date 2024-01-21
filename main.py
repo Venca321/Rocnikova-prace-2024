@@ -35,6 +35,26 @@ def register_post():
     user = db.create_user(request.json['username'], GestureEnums.NONE)
     return jsonify({"user_id": user.id})
 
+@app.route('/find-session')
+def find_session():
+    return render_template('find-session.html')
+
+@app.route('/find-session', methods=['POST'])
+def find_session_post():
+    user = db.get_user(request.json['user_id'])
+    session_id = request.json['session_id']
+    host = request.json['host']
+
+    if session_id == "None":
+        if host == "true":
+            session = db.create_session(user.id, "Not yet")
+        else:
+            session = db.connect_session(user.id)
+    else:
+        session = db.connect_session(user.id, session_id)
+    
+    return jsonify({"session_id": session.id})
+
 @app.route('/game')
 def game():
     return render_template('game.html')
