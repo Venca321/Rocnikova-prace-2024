@@ -32,8 +32,8 @@ class GameEngine:
             db.update_session(opponent.id, opponent_status)
 
         if user_status == UserStatusEnums.PLAYING and opponent_status == UserStatusEnums.PLAYING:
-            three_seconds_ago = (datetime.now(timezone.utc) - timedelta(seconds=3)).strftime('%Y-%m-%d %H:%M:%S')
-            if three_seconds_ago > session.updated_at:
+            five_seconds_ago = (datetime.now(timezone.utc) - timedelta(seconds=5)).strftime('%Y-%m-%d %H:%M:%S')
+            if session.updated_at < five_seconds_ago:
                 user_status = UserStatusEnums.SUBMITED
                 opponent_status = UserStatusEnums.SUBMITED
                 db.update_session(user.id, user_status)
