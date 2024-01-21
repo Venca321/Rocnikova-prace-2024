@@ -220,8 +220,13 @@
     }
 
     window.addEventListener("load", (event) => {
-        register().then(() => {
+        if (!urlParams.has("user_id")){
+            register().then(() => {
+                startCamera();
+            })
+        }
+        else {
             startCamera();
-        })
+        }
     });
 </script>
