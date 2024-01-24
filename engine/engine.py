@@ -31,6 +31,7 @@ class GameEngine:
             db.update_session(user.id, user_status)
             db.update_session(opponent.id, opponent_status)
 
+        """
         if user_status == UserStatusEnums.PLAYING and opponent_status == UserStatusEnums.PLAYING:
             five_seconds_ago = (datetime.now(timezone.utc) - timedelta(seconds=5)).strftime('%Y-%m-%d %H:%M:%S')
             if session.updated_at < five_seconds_ago:
@@ -38,6 +39,7 @@ class GameEngine:
                 opponent_status = UserStatusEnums.SUBMITED
                 db.update_session(user.id, user_status)
                 db.update_session(opponent.id, opponent_status)
+        """
 
         if user_status == UserStatusEnums.SUBMITED and opponent_status == UserStatusEnums.SUBMITED:
             if user.gesture == GestureEnums.NONE:
@@ -76,13 +78,5 @@ class GameEngine:
 
             db.update_session(user.id, user_status)
             db.update_session(opponent.id, opponent_status)
-
-        """if user_status in [UserStatusEnums.WINNER, UserStatusEnums.LOSER, UserStatusEnums.TIED] and opponent_status in [UserStatusEnums.WINNER, UserStatusEnums.LOSER, UserStatusEnums.TIED]:
-            ten_seconds_ago = (datetime.now(timezone.utc) - timedelta(seconds=10)).strftime('%Y-%m-%d %H:%M:%S')
-            if ten_seconds_ago > session.updated_at:
-                user_status = UserStatusEnums.CONNECTED
-                opponent_status = UserStatusEnums.CONNECTED
-                db.update_session(user.id, user_status)
-                db.update_session(opponent.id, opponent_status)"""
-
+            
         return session, user_status, opponent

@@ -149,6 +149,8 @@
 <script type="text/javascript">
     const socket = io.connect('wss://' + document.domain + ':' + location.port);
     const urlParams = new URLSearchParams(window.location.search);
+    let waiting_for = 0;
+    let playing_for = 0;
 
     function pickCamera() {
         location.href = `/pick-camera-device?name=${urlParams.get("name")}&user_id=${urlParams.get("user_id")}`;
@@ -158,7 +160,22 @@
         if (data.status == "Error"){
             location.href = `/find-session?name=${urlParams.get("name")}`;
         }
+
         console.log(`Connected to session ${data.session_id}`);
+
+        if (data.status == "Čekání na protihráče..."){
+            waiting_for += 1;
+            if (waiting_for >= 20){
+                console.log("Random player test")
+            }
+        }
+        if (data.status == "Probíhá hra..."){
+            playing_for += 1;
+            if (playing_for >= 12){
+                console.log("Submit gesture")
+            }
+        }
+        
         document.getElementById('players').innerText = `${urlParams.get('name')} vs ${data.opponent}`;
         document.getElementById('game_status').innerText = data.status;
         document.getElementById('gesture_image').innerText = data.gesture_image;
@@ -201,7 +218,7 @@
                 video.srcObject = stream;
                 video.onloadedmetadata = function(e) {
                     video.play();
-                    setInterval(captureAndSendImage, 330); // Snímek každých xxx ms
+                    setInterval(captureAndSendImage, 250); // Snímek každých xxx ms
                 };
             })
             .catch(function(err) {
