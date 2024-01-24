@@ -85,6 +85,9 @@ def handle_image(data):
     except: emit('response', {"session_id": "", "opponent": "", "status": "Error", "gesture_image": "", "gesture_name": GestureEnums.NONE})
     session = db.get_session(user.id)
 
+    if submited:
+        db.update_session(user.id, UserStatusEnums.SUBMITED)
+
     img_data = base64.b64decode(img_data.split(',')[1])
     nparr = np.frombuffer(img_data, np.uint8)
     img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
