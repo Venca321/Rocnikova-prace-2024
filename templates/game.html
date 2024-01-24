@@ -165,14 +165,16 @@
 
         if (data.status == "Čekání na protihráče..."){
             waiting_for += 1;
-            if (waiting_for >= 20){
-                console.log("Random player test")
+            if (waiting_for >= 40){
+                console.log("Bot test")
+                waiting_for = 0;
             }
         }
         if (data.status == "Probíhá hra..."){
             playing_for += 1;
             if (playing_for >= 12){
                 console.log("Submit gesture")
+                playing_for = 0;
             }
         }
         
