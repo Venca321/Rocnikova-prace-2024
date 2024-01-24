@@ -1,10 +1,10 @@
 
 from engine.engine import HandRecognition, GestureRecognition, GestureEnums, GameEngine
-from engine.database import Database, UserStatusEnums, User
-from flask import Flask, render_template, request, jsonify
+from engine.database import Database, UserStatusEnums
+from flask import Flask, render_template, request, jsonify, send_from_directory
 from flask_socketio import SocketIO, emit
 import numpy as np
-import cv2, base64
+import cv2, base64, os
 
 
 app = Flask(__name__)
@@ -32,6 +32,11 @@ def get_user_status_screen_info(user_status) -> str:
     elif user_status == UserStatusEnums.LOSER: return "Poražený"
     elif user_status == UserStatusEnums.TIED: return "Remíza"
     else: return "Error"
+
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory(os.path.join(app.root_path, 'static'),
+                               'images/favicon.ico', mimetype='image/vnd.microsoft.icon')
 
 @app.route('/')
 def index():
