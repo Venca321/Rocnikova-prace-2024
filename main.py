@@ -79,6 +79,7 @@ def pick_camera_device():
 def handle_image(data):
     img_data = data['image']
     user_id = data['user_id']
+    submited = data['submited'] == "True"
 
     try: user = db.get_user(user_id)
     except: emit('response', {"session_id": "", "opponent": "", "status": "Error", "gesture_image": "", "gesture_name": GestureEnums.NONE})
