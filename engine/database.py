@@ -114,7 +114,7 @@ class Database:
         Create session
         """
         session_id = str(random.randint(100000, 9999999))
-        self.cursor.execute("insert into sessions (id, user1_id, user1_status, user2_id, user2_status) values (?, ?, ?, ?, ?)", (session_id, user1_id, UserStatusEnums.CONNECTED, "None", UserStatusEnums.WAITING))
+        self.cursor.execute("insert into sessions (id, user1_id, user1_status, user2_id, user2_status) values (?, ?, ?, ?, ?)", (session_id, user1_id, UserStatusEnums.WAITING, "None", UserStatusEnums.WAITING))
         self.connection.commit()
         return Session(session_id, user1_id, UserStatusEnums.WAITING, "None", UserStatusEnums.WAITING, datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S'))
 
