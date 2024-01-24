@@ -165,8 +165,12 @@
 
         if (data.status == "Čekání na protihráče..."){
             waiting_for += 1;
-            if (waiting_for >= 40){
-                console.log("Bot test")
+            if (waiting_for >= 28){
+                fetch("https://" + document.domain + ':' + location.port + "/connect-bot", {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({session_id: data.session_id})
+                });
                 waiting_for = 0;
             }
         }

@@ -117,19 +117,6 @@ class Database:
         self.cursor.execute("insert into sessions (id, user1_id, user1_status, user2_id, user2_status) values (?, ?, ?, ?, ?)", (session_id, user1_id, UserStatusEnums.WAITING, "None", UserStatusEnums.WAITING))
         self.connection.commit()
         return Session(session_id, user1_id, UserStatusEnums.WAITING, "None", UserStatusEnums.WAITING, datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S'))
-
-    """def connect_session(self, user_id:str, session_id:str="None") -> Session:
-        user = self.get_user(user_id)
-        if session_id == "None":
-            self.cursor.execute("select * from sessions where user2_id=:user_id", {"user_id": "None"})
-            try: 
-                session_id = self.cursor.fetchone()[0]
-            except Exception:
-                session_id = self.create_session(user.id, "None").id
-
-        self.cursor.execute("update sessions set user2_id=:user2_id user2_status=:user2_status where id=:id", {"user2_id": user.id, "user2_status": UserStatusEnums.WAITING, "id": session_id})
-        self.connection.commit()
-        return self.get_session(session_id)"""
     
     def connect_random_session(self, user_id:str) -> Session:
         """
@@ -150,6 +137,17 @@ class Database:
         self.cursor.execute("select * from sessions where id=:id", {"id": session_id})
         session = self.cursor.fetchone()
         return Session(session[0], session[1], session[2], session[3], session[4], session[5])
+
+    def connect_bot_to_session(self, session_id:str):
+        """
+        Connect bot to session
+        """
+        bot = "bot_"+str(random.randint(1, 9999))
+        self.cursor.execute("insert into users (id, username, gesture) values (?, ?, ?)", (bot, bot, 0))
+        self.connection.commit()
+
+        self.cursor.execute("update sessions set user2_id=:user2_id, user2_status=:user2_status, user1_status=:user1_status where id=:id", {"user2_id": bot, "user2_status": UserStatusEnums.CONNECTED, "user1_status": UserStatusEnums.CONNECTED, "id": session_id})
+        self.connection.commit()
 
     def get_session(self, user_id:str) -> Session:
         """

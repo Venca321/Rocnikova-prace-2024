@@ -58,9 +58,14 @@ def find_session():
     return render_template('find-session.html')
 
 @app.route('/find-random-session', methods=['POST'])
-def find__random_session_post():
+def find_random_session_post():
     session = db.connect_random_session(request.json['user_id'])
     return jsonify({"session_id": session.id})
+
+@app.route('/connect-bot', methods=['POST'])
+def connect_bot_post():
+    db.connect_bot_to_session(request.json["session_id"])
+    return jsonify({"status": "ok"})
 
 @app.route('/game')
 def game():
