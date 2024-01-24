@@ -136,6 +136,7 @@ class Database:
         Connect random session
         """
         user = self.get_user(user_id)
+        self.cursor.execute("SELETE * FROM sessions WHERE user1_id=:user_id OR user2_id=:user_id", {"user_id": user.id})
         self.cursor.execute("select * from sessions where user2_id=:user2_id", {"user2_id": "None"})
         try: 
             session_id = self.cursor.fetchall()[0][0]
