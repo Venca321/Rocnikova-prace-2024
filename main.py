@@ -86,7 +86,7 @@ def handle_image(data):
     user_id = data['user_id']
 
     try: user = db.get_user(user_id)
-    except: emit('response', {"opponent": "None", "status": "None", "gesture_image": "", "gesture_name": GestureEnums.NONE, "id_status": "Error"})
+    except: emit('response', {"session_id": "", "opponent": "", "status": "Error", "gesture_image": "", "gesture_name": GestureEnums.NONE})
     session = db.get_session(user.id)
 
     img_data = base64.b64decode(img_data.split(',')[1])
@@ -106,7 +106,7 @@ def handle_image(data):
     session, user_status, opponent = GameEngine.process(db, session, user)
     gesture_name, gesture_image = get_gesture_screen_info(user.gesture)
     user_status_text = get_user_status_screen_info(user_status)
-    emit('response', {"session_id": session.id, "opponent": opponent.username, "status": user_status_text, "gesture_image": gesture_image, "gesture_name": gesture_name, "id_status": "Correct"})
+    emit('response', {"session_id": session.id, "opponent": opponent.username, "status": user_status_text, "gesture_image": gesture_image, "gesture_name": gesture_name})
 
 if __name__ == '__main__':
     #serve(app, host="0.0.0.0", port=5000)

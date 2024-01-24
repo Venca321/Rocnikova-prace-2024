@@ -155,7 +155,7 @@
     }
 
     socket.on('response', function(data) {
-        if (data.id_status == "Error"){
+        if (data.status == "Error"){
             location.href = `/find-session?name=${urlParams.get("name")}`;
         }
         console.log(`Connected to session ${data.session_id}`);
