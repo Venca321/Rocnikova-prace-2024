@@ -104,9 +104,9 @@ class Database:
         """
         Remove users that are not connected anymore
         """
-        five_minutes_ago = datetime.utcnow() - timedelta(minutes=5)
-        five_minutes_ago = five_minutes_ago.strftime('%Y-%m-%d %H:%M:%S')
-        self.cursor.execute("DELETE FROM users WHERE updated_at < ?", (five_minutes_ago,))
+        three_seconds_ago = datetime.utcnow() - timedelta(seconds=3)
+        three_seconds_ago = three_seconds_ago.strftime('%Y-%m-%d %H:%M:%S')
+        self.cursor.execute("DELETE FROM users WHERE updated_at < ?", (three_seconds_ago,))
         self.connection.commit()
 
     def create_session(self, user1_id:str) -> Session:
@@ -177,7 +177,7 @@ class Database:
         """
         Remove sessions that are not connected anymore
         """
-        five_minutes_ago = datetime.utcnow() - timedelta(minutes=5)
-        five_minutes_ago = five_minutes_ago.strftime('%Y-%m-%d %H:%M:%S')
-        self.cursor.execute("DELETE FROM users WHERE updated_at < ?", (five_minutes_ago,))
+        three_seconds_ago = datetime.utcnow() - timedelta(seconds=3)
+        three_seconds_ago = three_seconds_ago.strftime('%Y-%m-%d %H:%M:%S')
+        self.cursor.execute("DELETE FROM users WHERE updated_at < ?", (three_seconds_ago,))
         self.connection.commit()
