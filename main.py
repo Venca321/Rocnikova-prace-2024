@@ -105,10 +105,9 @@ def handle_image(data):
     session, user_status, opponent = GameEngine.process(db, session, user)
     gesture_name, gesture_image = get_gesture_screen_info(user.gesture)
     user_status_text = get_user_status_screen_info(user_status)
-    emit('response', {"session_id": session.id, "opponent": opponent.username, "status": user_status_text, "gesture_image": gesture_image, "gesture_name": gesture_name})
+    emit('response', {"session_id": session.id, "opponent": opponent.username, "status": user_status_text, "gesture_image": gesture_image, "message": gesture_name})
 
 if __name__ == '__main__':
-    #serve(app, host="0.0.0.0", port=5000)
     socketio.run(app, host="0.0.0.0")
 
 
