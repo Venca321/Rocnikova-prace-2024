@@ -13,7 +13,7 @@ class GameEngine:
             user1_status = UserStatusEnums.LOSER
             user2_status = UserStatusEnums.WINNER
         if gesture2 not in [GestureEnums.ROCK, GestureEnums.PAPER, GestureEnums.SCISSORS]:
-            if not user1_status == UserStatusEnums.LOSER:
+            if user1_status != UserStatusEnums.LOSER:
                 user1_status = UserStatusEnums.WINNER
             user2_status = UserStatusEnums.LOSER
 

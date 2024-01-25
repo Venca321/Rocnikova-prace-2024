@@ -2,9 +2,12 @@
 <html>
     <head>
         <title>Kámen, nůžky, papír</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
-        <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Inter'>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+        <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Inter'>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+        <script src="{{ url_for('static', filename='script.js') }}"></script>
+        <link rel="stylesheet" href="{{ url_for('static', filename='find-session/style.css') }}">
+        <script src="{{ url_for('static', filename='find-session/script.js') }}"></script>
     </head>
     <body>
         <a id="home_button" href="/">Domů</a>
@@ -23,99 +26,3 @@
         </div>
     </body>
 </html>
-
-<style>
-    h1 {
-        font-weight: 700;
-        font-size: 58px;
-        color: rgba(255, 255, 255, 1);
-    }
-
-    p {
-        margin-top: -20px;
-        font-weight: 400;
-        font-size: 26px;
-        color: rgba(255, 255, 255, 0.9);
-    }
-
-    #buttons {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .button {
-        width: 320px;
-        padding: 12px 0px 12px 0px;
-        margin-top: 16px;
-        text-align: center;
-        font-weight: 600;
-        font-size: 26px;
-        color: #000000;
-        background: #ffffff;
-        border-radius: 15px;
-        text-decoration: none;
-        transition: 0.25s;
-    }
-
-    .button:hover {
-        background: #2bdda2;
-        text-decoration: underline;
-    }
-
-    @media only screen and (max-device-width: 480px) {
-        h1 {
-            font-size: 28px;
-        }
-
-        p {
-            font-size: 18px;
-        }
-
-        .button {
-            font-size: 22px;
-            width: 280px;
-            padding: 10px 0px 10px 0px;
-        }
-    }
-</style>
-
-<script>
-    async function register(name){
-        response = await fetch("https://" + document.domain + ':' + location.port + "/register", {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({username: name})
-        });
-        data = await response.json();
-        return data.user_id;
-    }
-
-    async function connect_session(user_id){
-        response = await fetch("https://" + document.domain + ':' + location.port + "/find-random-session", {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({user_id: user_id})
-        });
-        data = await response.json();
-        return data.session_id;
-    }
-
-    async function joinRandom() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const name = urlParams.get('name');
-        const user_id = await register(name);
-
-        console.log(user_id);
-        console.log(await connect_session(user_id));
-
-        location.href = `/game?name=${name}&user_id=${user_id}`;
-    }
-</script>
-
-<script>
-    function toggle_info(){
-        document.getElementsByClassName("info")[0].classList.toggle("info-show");
-    }
-</script>

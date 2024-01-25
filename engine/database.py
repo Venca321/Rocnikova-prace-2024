@@ -142,7 +142,7 @@ class Database:
         """
         Connect bot to session
         """
-        bot = "bot_"+str(random.randint(1, 9999))
+        bot = f"bot_{random.randint(1, 9999)}"
         self.cursor.execute("insert into users (id, username, gesture) values (?, ?, ?)", (bot, bot, random.randint(1, 3)))
         self.connection.commit()
 

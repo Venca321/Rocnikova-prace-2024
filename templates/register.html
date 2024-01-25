@@ -2,9 +2,11 @@
 <html>
     <head>
         <title>Kámen, nůžky, papír - Registrace</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
-        <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Inter'>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+        <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Inter'>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+        <script src="{{ url_for('static', filename='script.js') }}"></script>
+        <link rel="stylesheet" href="{{ url_for('static', filename='register/style.css') }}">
     </head>
     <body>
         <a id="home_button" href="/">Domů</a>
@@ -21,111 +23,9 @@
         <button id="info_button" onclick="toggle_info();"><?xml version="1.0" ?><svg class="bi bi-info-circle" fill="currentColor" height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/><path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/></svg></button>
         <div class="info">
             <div>
-                <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Minima hic possimus nostrum nemo iure, minus eos expedita. Officiis vero consequatur quisquam debitis, ut, dolor molestiae quis id aspernatur sit consectetur!</p>
+                <p></p>
             </div>
             <button onclick="toggle_info();">Zavřít</button>
         </div>
     </body>
 </html>
-
-<style>
-    h1 {
-        font-weight: 700;
-        font-size: 58px;
-        color: rgba(255, 255, 255, 1);
-    }
-
-    p {
-        margin-top: -20px;
-        font-weight: 400;
-        font-size: 26px;
-        color: rgba(255, 255, 255, 0.9);
-    }
-
-    form {
-        width: 340px;
-        padding: 25px;
-        margin-bottom: 10vh;
-        margin-top: 5vh;
-        background-color: #D9D9D9;
-        border-radius: 25px;
-    }
-
-    form label {
-        width: 90%;
-        margin-top: 48px;
-        margin-bottom: 12px;
-        font-size: 22px;
-        color: rgba(0, 0, 0 0.8);
-    }
-
-    form input {
-        width: 90%;
-        padding: 4px;
-        background: none;
-        font-size: 28px;
-        border-radius: 12px;
-        border: 1px solid rgba(0, 0, 0 0.8);
-        text-align: left;
-    }
-
-    form button {
-        width: 90%;
-        padding: 12px 0px 12px 0px;
-        margin-top: 48px;
-        margin-bottom: 16px;
-        background: #50BF9E;
-        border-radius: 15px;
-        border: none;
-        text-decoration: none;
-        color: white;
-        font-size: 26px;
-        font-weight: 700;
-        transition: 0.25s;
-    }
-
-    form button:hover {
-        background: #4AAE8C;
-        text-decoration: underline;
-    }
-
-    @media only screen and (max-device-width: 480px) {
-        h1 {
-            font-size: 32px;
-        }
-
-        p {
-            font-size: 18px;
-        }
-
-        form {
-            width: 70vw;
-        }
-
-        form label {
-            margin-bottom: 12px;
-            margin-top: 20px;
-            font-size: 16px;
-            width: 65vw;
-        }
-
-        form input {
-            font-size: 16px;
-            width: 65vw;
-        }
-
-        form button {
-            width: 65vw;
-            padding: 10px 0px 10px 0px;
-            font-size: 18px;
-            margin-bottom: 12px;
-            margin-top: 48px;
-        }
-    }
-</style>
-
-<script>
-    function toggle_info(){
-        document.getElementsByClassName("info")[0].classList.toggle("info-show");
-    }
-</script>

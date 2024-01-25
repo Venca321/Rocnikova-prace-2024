@@ -27,6 +27,7 @@ input:focus{
 }
 
 #info_button {
+    z-index: 1000;
     position: fixed;
     bottom: 2vw;
     left: 2vw;
