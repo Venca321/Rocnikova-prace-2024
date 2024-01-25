@@ -85,8 +85,10 @@ def handle_image(data):
     except: emit('response', {"session_id": "", "opponent": "", "status": "Error", "gesture_image": "", "gesture_name": GestureEnums.NONE})
     session = db.get_session(user.id)
 
-    if status == "submited":
+    if status == "submited": 
         db.update_session(user.id, UserStatusEnums.SUBMITED)
+    elif status == "ready_to_replay":
+        db.update_session(user.id, UserStatusEnums.CONNECTED)
 
     img_data = base64.b64decode(img_data.split(',')[1])
     nparr = np.frombuffer(img_data, np.uint8)
