@@ -79,13 +79,13 @@ def pick_camera_device():
 def handle_image(data):
     img_data = data['image']
     user_id = data['user_id']
-    submited = data['submited'] == "True"
+    status = data['status']
 
     try: user = db.get_user(user_id)
     except: emit('response', {"session_id": "", "opponent": "", "status": "Error", "gesture_image": "", "gesture_name": GestureEnums.NONE})
     session = db.get_session(user.id)
 
-    if submited:
+    if status == "submited":
         db.update_session(user.id, UserStatusEnums.SUBMITED)
 
     img_data = base64.b64decode(img_data.split(',')[1])

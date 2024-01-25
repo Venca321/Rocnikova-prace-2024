@@ -9,12 +9,14 @@ class GameEngine:
         """
         Evaluate gestures and return statuses
         """
-        if gesture1 == GestureEnums.NONE:
+        if gesture1 not in [GestureEnums.ROCK, GestureEnums.PAPER, GestureEnums.SCISSORS]:
             user1_status = UserStatusEnums.LOSER
             user2_status = UserStatusEnums.WINNER
-        if gesture2 == GestureEnums.NONE:
-            user1_status = UserStatusEnums.WINNER
+        if gesture2 not in [GestureEnums.ROCK, GestureEnums.PAPER, GestureEnums.SCISSORS]:
+            if not user1_status == UserStatusEnums.LOSER:
+                user1_status = UserStatusEnums.WINNER
             user2_status = UserStatusEnums.LOSER
+
         if gesture1 == GestureEnums.ROCK and gesture2 == GestureEnums.PAPER:
             user1_status = UserStatusEnums.LOSER
             user2_status = UserStatusEnums.WINNER
@@ -58,7 +60,7 @@ class GameEngine:
             db.update_session(user.id, user_status)
 
         if user_status == UserStatusEnums.SUBMITED:
-            user_status, bot_status = GameEngine.__evaluate_gestures(user.gesture, bot.gesture)
+            user_status, _ = GameEngine.__evaluate_gestures(user.gesture, bot.gesture)
             db.update_session(user.id, user_status)
             
         return session, user_status, bot

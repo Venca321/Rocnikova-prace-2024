@@ -151,7 +151,7 @@
     const urlParams = new URLSearchParams(window.location.search);
     let waiting_for = 0;
     let playing_for = 0;
-    let submited = "False"
+    let status = "loading"
 
     function pickCamera() {
         location.href = `/pick-camera-device?name=${urlParams.get("name")}&user_id=${urlParams.get("user_id")}`;
@@ -178,7 +178,7 @@
         if (data.status == "Probíhá hra..."){
             playing_for += 1;
             if (playing_for >= 12){
-                submited = "True";
+                status = "submited";
                 playing_for = 0;
             }
         }
@@ -195,7 +195,7 @@
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
         canvas.getContext('2d').drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
-        socket.emit('image', { image: canvas.toDataURL('image/jpeg'), user_id: urlParams.get("user_id"), submited: submited});
+        socket.emit('image', { image: canvas.toDataURL('image/jpeg'), user_id: urlParams.get("user_id"), status: status});
     }
 
     function startCamera() {
