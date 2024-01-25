@@ -100,4 +100,16 @@ input:focus{
         left: 5vw;
         font-size: 18px;
     }
+
+    .info div {
+        width: 70vw;
+    }
+
+    .info div p {
+        font-size: 18px;
+    }
+
+    .info button {
+        left: 74vw;
+    }
 }
