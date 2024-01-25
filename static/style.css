@@ -65,6 +65,7 @@ input:focus{
     padding: 32px;
     border-radius: 15px;
     display: flex;
+    flex-direction: column;
     align-items: center;
 }
 
