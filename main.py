@@ -66,6 +66,14 @@ def find_random_session_post():
 def friend_game():
     return render_template('friend-game.html')
 
+@app.route('/create-friend-game')
+def create_friend_game():
+    return render_template('create-friend-game.html')
+
+@app.route('/connect-friend-game')
+def connect_friend_game():
+    return render_template('connect-friend-game.html')
+
 @app.route('/connect-bot', methods=['POST'])
 def connect_bot_post():
     db.connect_bot_to_session(request.json["session_id"])
