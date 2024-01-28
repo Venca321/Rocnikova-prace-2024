@@ -67,6 +67,18 @@ video {
     height: 32px;
 }
 
+#win_screen {
+    color: black;
+}
+
+#win_screen h1 {
+    margin-bottom: 0px;
+}
+
+#win_screen_gesture_image {
+    font-size: 256px;
+}
+
 @media only screen and (max-device-width: 480px) {
     body {
         flex-direction: column;
