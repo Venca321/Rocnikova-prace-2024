@@ -44,6 +44,7 @@ socket.on('response', function(data) {
         }
     }
     if (["Vítěz!", "Poražený", "Remíza"].includes(data.status) && status != "ready_to_replay"){
+        console.log("Opening win screen");
         open_win_screen();
     }
     
