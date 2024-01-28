@@ -6,9 +6,9 @@ let end_screen_for = 0;
 let status = "loading"
 
 function toggle_win_screen(){
-    document.getElementById('win_screen_players').innerText = `${urlParams.get('name')} vs ${data.opponent}`;
-    document.getElementById('win_screen_game_status').innerText = data.status;
-    document.getElementById('win_screen_gesture_image').innerText = data.gesture_image;
+    document.getElementById('win_screen_players').innerText = document.getElementById('players').innerText;
+    document.getElementById('win_screen_game_status').innerText = document.getElementById('game_status').innerText;
+    document.getElementById('win_screen_gesture_image').innerText = document.getElementById('gesture_image').innerText;
     document.getElementById("win_screen").classList.toggle("info-show");
 }
 
