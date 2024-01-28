@@ -43,7 +43,7 @@ socket.on('response', function(data) {
             playing_for = 0;
         }
     }
-    if (["Vítěz!", "Poražený", "Remíza"].includes(data.status) && status == "submited"){
+    if (["Vítěz!", "Poražený", "Remíza"].includes(data.status) && status != "ready_to_replay"){
         open_win_screen();
     }
     
