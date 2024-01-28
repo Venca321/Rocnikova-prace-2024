@@ -25,7 +25,7 @@ socket.on('response', function(data) {
         location.href = `/find-session?name=${urlParams.get("name")}`;
     }
 
-    console.log(`Connected to session ${data.session_id}`, playing_for);
+    console.log(`Connected to session ${data.session_id}`, playing_for, status);
 
     if (data.status == "Čekání na protihráče..."){
         waiting_for += 1;
