@@ -1,4 +1,4 @@
-async function connect_friend_game(){
+async function create_friend_game(){
     const urlParams = new URLSearchParams(window.location.search);
     const name = urlParams.get('name');
 
@@ -22,3 +22,8 @@ async function connect_friend_game(){
 
     location.href = `?name=${name}&user_id=${user_id}`;
 }
+
+
+window.addEventListener("load", (event) => {
+    create_friend_game();
+});
