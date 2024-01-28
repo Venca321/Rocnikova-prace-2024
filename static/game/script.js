@@ -53,7 +53,7 @@ socket.on('response', function(data) {
         if (end_screen_for >= 40){
             close_win_screen();
             status = "ready_to_replay";
-            end_screen_for = 0;
+            end_screen_for = -5;
             playing_for = 0;
         }
     }
@@ -61,7 +61,6 @@ socket.on('response', function(data) {
     document.getElementById('players').innerText = `${urlParams.get('name')} vs ${data.opponent}`;
     document.getElementById('game_status').innerText = data.status;
     document.getElementById('gesture_image').innerText = data.gesture_image;
-    //document.getElementById('gesture_name').innerText = `Hrajete: ${data.message}`;
 
     document.getElementById('win_screen_players').innerText = document.getElementById('players').innerText;
     document.getElementById('win_screen_game_status').innerText = document.getElementById('game_status').innerText;
