@@ -51,6 +51,7 @@ socket.on('response', function(data) {
         }
         end_screen_for += 1;
         if (end_screen_for >= 40){
+            close_win_screen();
             status = "ready_to_replay";
             end_screen_for = 0;
             playing_for = 0;

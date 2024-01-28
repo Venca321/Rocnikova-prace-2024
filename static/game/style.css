@@ -117,4 +117,8 @@ video {
         font-size: 128px;
         margin-top: 20px;
     }
+
+    #win_screen_gesture_image {
+        font-size: 128px;
+    }
 }
