@@ -25,5 +25,8 @@ async function create_friend_game(){
 
 
 window.addEventListener("load", (event) => {
-    create_friend_game();
+    const urlParams = new URLSearchParams(window.location.search);
+    if (!urlParams.has('user_id')){
+        create_friend_game();
+    }
 });
