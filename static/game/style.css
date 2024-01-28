@@ -68,11 +68,14 @@ video {
 }
 
 #win_screen {
-    color: black;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
-#win_screen h1 {
+#win_screen_game_status {
     margin-bottom: 0px;
+    color: black;
 }
 
 #win_screen_gesture_image {
