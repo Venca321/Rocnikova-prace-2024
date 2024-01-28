@@ -2,7 +2,7 @@ const socket = io.connect('wss://' + document.domain + ':' + location.port);
 const urlParams = new URLSearchParams(window.location.search);
 let waiting_for = 0;
 let playing_for = 0;
-let status = "loading"
+let user_status = "loading"
 let win_screen_opened = false;
 
 function open_win_screen(){
@@ -12,7 +12,7 @@ function open_win_screen(){
 function close_win_screen(){
     document.getElementById("win_screen").classList.remove("info-show");
     win_screen_opened = false;
-    status = "ready_to_replay";
+    user_status = "ready_to_replay";
     playing_for = 0;
 }
 
@@ -25,7 +25,7 @@ socket.on('response', function(data) {
         location.href = `/find-session?name=${urlParams.get("name")}`;
     }
 
-    console.log(`Connected to session ${data.session_id}`, playing_for, status);
+    console.log(`Connected to session ${data.session_id}`, playing_for, user_status);
 
     if (data.status == "Čekání na protihráče..."){
         waiting_for += 1;
@@ -41,11 +41,11 @@ socket.on('response', function(data) {
     if (data.status == "Probíhá hra..."){
         playing_for += 1;
         if (playing_for >= 12){
-            status = "submited";
+            user_status = "submited";
             playing_for = 0;
         }
     }
-    if (["Vítěz!", "Poražený", "Remíza"].includes(data.status) && status != "ready_to_replay" && !win_screen_opened){
+    if (["Vítěz!", "Poražený", "Remíza"].includes(data.status) && "ready_to_replay" != user_status && !win_screen_opened){
         win_screen_opened = true;
         open_win_screen();
     }
@@ -65,7 +65,7 @@ function captureAndSendImage() {
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
     canvas.getContext('2d').drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
-    socket.emit('image', { image: canvas.toDataURL('image/jpeg'), user_id: urlParams.get("user_id"), status: status});
+    socket.emit('image', { image: canvas.toDataURL('image/jpeg'), user_id: urlParams.get("user_id"), status: user_status});
 }
 
 function startCamera() {
