@@ -70,9 +70,19 @@ def friend_game():
 def create_friend_game():
     return render_template('create-friend-game.html')
 
+@app.route('/create-friend-game', methods=['POST'])
+def create_friend_game_post():
+    session = db.create_session(request.json['user_id'])
+    return jsonify({"status": "ok", "session_id": session.id})
+
 @app.route('/connect-friend-game')
 def connect_friend_game():
     return render_template('connect-friend-game.html')
+
+@app.route('/connect-friend-game', methods=['POST'])
+def connect_friend_game_post():
+    db.connect_session(request.json['user_id'], request.json['session_id'])
+    return jsonify({"status": "ok"})
 
 @app.route('/connect-bot', methods=['POST'])
 def connect_bot_post():

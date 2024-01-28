@@ -118,6 +118,14 @@ class Database:
         self.connection.commit()
         return Session(session_id, user1_id, UserStatusEnums.WAITING, "None", UserStatusEnums.WAITING, datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S'))
     
+    def connect_session(self, user_id:str, session_id:str) -> Session:
+        """
+        Connect session
+        """
+        self.cursor.execute("update sessions set user2_id=:user2_id, user2_status=:user2_status where id=:id", {"user2_id": user_id, "user2_status": UserStatusEnums.CONNECTED, "id": session_id})
+        self.connection.commit()
+        return self.get_session(user_id)
+
     def connect_random_session(self, user_id:str) -> Session:
         """
         Connect random session
