@@ -12,7 +12,7 @@ function open_win_screen(){
 function close_win_screen(){
     document.getElementById("win_screen").classList.remove("info-show");
     status = "ready_to_replay";
-    end_screen_for = 0;
+    end_screen_for = -1;
     playing_for = 0;
 }
 
