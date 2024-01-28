@@ -47,7 +47,6 @@ socket.on('response', function(data) {
         }
     }
     if (["Vítěz!", "Poražený", "Remíza"].includes(data.status) && "ready_to_replay" != user_status && !win_screen_opened){
-        user_status = "win_screen_opened"
         win_screen_opened = true;
         open_win_screen();
     }
@@ -68,6 +67,9 @@ function captureAndSendImage() {
     canvas.height = video.videoHeight;
     canvas.getContext('2d').drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
     socket.emit('image', { image: canvas.toDataURL('image/jpeg'), user_id: urlParams.get("user_id"), status: user_status});
+    if (user_status == "submited"){
+        user_status = "win_screen_opened";
+    }
 }
 
 function startCamera() {
