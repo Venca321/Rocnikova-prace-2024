@@ -12,7 +12,7 @@ function open_win_screen(){
 function close_win_screen(){
     document.getElementById("win_screen").classList.remove("info-show");
     status = "ready_to_replay";
-    end_screen_for = -5;
+    end_screen_for = -10;
     playing_for = 0;
 }
 
@@ -53,7 +53,7 @@ socket.on('response', function(data) {
         if (end_screen_for >= 40){
             close_win_screen();
             status = "ready_to_replay";
-            end_screen_for = -5;
+            end_screen_for = -10;
             playing_for = 0;
         }
     }
