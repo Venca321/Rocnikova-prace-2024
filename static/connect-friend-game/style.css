@@ -38,12 +38,12 @@ p {
 }
 
 input {
-    width: 90%;
+    width: 360px;
     padding: 4px;
-    background: none;
     font-size: 28px;
-    border-radius: 12px;
-    border: 1px solid rgba(0, 0, 0 0.8);
+    color: #000000;
+    background: #ffffff;
+    border-radius: 15px;
     text-align: left;
 }
 
