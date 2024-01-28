@@ -25,7 +25,7 @@ socket.on('response', function(data) {
         location.href = `/find-session?name=${urlParams.get("name")}`;
     }
 
-    console.log(`Connected to session ${data.session_id}`);
+    console.log(`Connected to session ${data.session_id}`, playing_for);
 
     if (data.status == "Čekání na protihráče..."){
         waiting_for += 1;
@@ -46,7 +46,6 @@ socket.on('response', function(data) {
         }
     }
     if (["Vítěz!", "Poražený", "Remíza"].includes(data.status) && status != "ready_to_replay" && !win_screen_opened){
-        console.log("Opening win screen");
         win_screen_opened = true;
         open_win_screen();
     }
