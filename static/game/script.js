@@ -13,10 +13,10 @@ function open_win_screen(){
 }
 
 function close_win_screen(){
+    document.getElementById("win_screen").classList.remove("info-show");
     status = "ready_to_replay";
     end_screen_for = 0;
     playing_for = 0;
-    document.getElementById("win_screen").classList.remove("info-show");
 }
 
 function pickCamera() {
