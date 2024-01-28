@@ -47,6 +47,7 @@ socket.on('response', function(data) {
         }
     }
     if (["Vítěz!", "Poražený", "Remíza"].includes(data.status) && "ready_to_replay" != user_status && !win_screen_opened){
+        user_status = "win_screen_opened"
         win_screen_opened = true;
         open_win_screen();
     }
