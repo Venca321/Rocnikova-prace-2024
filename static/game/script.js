@@ -2,7 +2,6 @@ const socket = io.connect('wss://' + document.domain + ':' + location.port);
 const urlParams = new URLSearchParams(window.location.search);
 let waiting_for = 0;
 let playing_for = 0;
-let end_screen_for = 0;
 let status = "loading"
 
 function open_win_screen(){
@@ -12,7 +11,6 @@ function open_win_screen(){
 function close_win_screen(){
     document.getElementById("win_screen").classList.remove("info-show");
     status = "ready_to_replay";
-    end_screen_for = -10;
     playing_for = 0;
 }
 
@@ -46,13 +44,7 @@ socket.on('response', function(data) {
         }
     }
     if (["Vítěz!", "Poražený", "Remíza"].includes(data.status)){
-        if (end_screen_for == 0){
-            open_win_screen();
-        }
-        end_screen_for += 1;
-        if (end_screen_for >= 30){
-            close_win_screen();
-        }
+        open_win_screen();
     }
     
     document.getElementById('players').innerText = `${urlParams.get('name')} vs ${data.opponent}`;
