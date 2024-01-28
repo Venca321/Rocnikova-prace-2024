@@ -3,6 +3,7 @@ const urlParams = new URLSearchParams(window.location.search);
 let waiting_for = 0;
 let playing_for = 0;
 let status = "loading"
+let win_screen_opened = false;
 
 function open_win_screen(){
     document.getElementById("win_screen").classList.add("info-show");
@@ -10,6 +11,7 @@ function open_win_screen(){
 
 function close_win_screen(){
     document.getElementById("win_screen").classList.remove("info-show");
+    win_screen_opened = false;
     status = "ready_to_replay";
     playing_for = 0;
 }
@@ -43,8 +45,9 @@ socket.on('response', function(data) {
             playing_for = 0;
         }
     }
-    if (["Vítěz!", "Poražený", "Remíza"].includes(data.status) && status != "ready_to_replay"){
+    if (["Vítěz!", "Poražený", "Remíza"].includes(data.status) && status != "ready_to_replay" && !win_screen_opened){
         console.log("Opening win screen");
+        win_screen_opened = true;
         open_win_screen();
     }
     
