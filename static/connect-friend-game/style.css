@@ -37,6 +37,16 @@ p {
     text-decoration: underline;
 }
 
+input {
+    width: 90%;
+    padding: 4px;
+    background: none;
+    font-size: 28px;
+    border-radius: 12px;
+    border: 1px solid rgba(0, 0, 0 0.8);
+    text-align: left;
+}
+
 @media only screen and (max-device-width: 480px) {
     h1 {
         font-size: 28px;
