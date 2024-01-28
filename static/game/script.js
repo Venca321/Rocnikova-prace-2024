@@ -5,8 +5,18 @@ let playing_for = 0;
 let end_screen_for = 0;
 let status = "loading"
 
-function toggle_win_screen(){
-    document.getElementById("win_screen").classList.toggle("info-show");
+function open_win_screen(){
+    document.getElementById('win_screen_players').innerText = document.getElementById('players').innerText;
+    document.getElementById('win_screen_game_status').innerText = document.getElementById('game_status').innerText;
+    document.getElementById('win_screen_gesture_image').innerText = document.getElementById('gesture_image').innerText;
+    document.getElementById("win_screen").classList.add("info-show");
+}
+
+function close_win_screen(){
+    status = "ready_to_replay";
+    end_screen_for = 0;
+    playing_for = 0;
+    document.getElementById("win_screen").classList.remove("info-show");
 }
 
 function pickCamera() {
@@ -40,10 +50,10 @@ socket.on('response', function(data) {
     }
     if (["Vítěz!", "Poražený", "Remíza"].includes(data.status)){
         if (end_screen_for == 0){
-            toggle_win_screen();
+            open_win_screen();
         }
         end_screen_for += 1;
-        if (end_screen_for >= 20){
+        if (end_screen_for >= 40){
             status = "ready_to_replay";
             end_screen_for = 0;
             playing_for = 0;
@@ -54,10 +64,6 @@ socket.on('response', function(data) {
     document.getElementById('game_status').innerText = data.status;
     document.getElementById('gesture_image').innerText = data.gesture_image;
     //document.getElementById('gesture_name').innerText = `Hrajete: ${data.message}`;
-
-    document.getElementById('win_screen_players').innerText = document.getElementById('players').innerText;
-    document.getElementById('win_screen_game_status').innerText = document.getElementById('game_status').innerText;
-    document.getElementById('win_screen_gesture_image').innerText = document.getElementById('gesture_image').innerText;
 });
 
 function captureAndSendImage() {
