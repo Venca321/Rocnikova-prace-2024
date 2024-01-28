@@ -17,16 +17,21 @@ async function create_friend_game(){
     });
     data = await response.json();
     const {session_id} = data;
-
-    document.getElementById('session_id').innerText = session_id;
-
-    location.href = `?name=${name}&user_id=${user_id}`;
+    
+    location.href = `?name=${name}&user_id=${user_id}&session_id=${session_id}`;
 }
 
+function redirect_to_session(){
+    const urlParams = new URLSearchParams(window.location.search);
+    const name = urlParams.get('name');
+    const user_id = urlParams.get('user_id');
+    location.href = `/game?name=${name}&user_id=${user_id}`;
+}
 
 window.addEventListener("load", (event) => {
     const urlParams = new URLSearchParams(window.location.search);
     if (!urlParams.has('user_id')){
         create_friend_game();
     }
+    document.getElementById('session_id').innerText = urlParams.get('session_id');
 });
