@@ -68,9 +68,7 @@ video {
 }
 
 #win_screen {
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    text-align: center;
 }
 
 #win_screen_game_status {
