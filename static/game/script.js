@@ -39,6 +39,7 @@ socket.on('response', function(data) {
         }
     }
     if (data.status == "Probíhá hra..."){
+        user_status = "playing";
         playing_for += 1;
         if (playing_for >= 12){
             user_status = "submited";
