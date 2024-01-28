@@ -3,6 +3,7 @@ from datetime import timezone
 from engine.gestureRecognition import GestureEnums, ThumbLandmark, FingerLandmark, HandLandmark, HandLandmarks, HandRecognition, GestureRecognition
 from engine.database import Database, UserStatusEnums, User, Session
 from datetime import datetime, timedelta
+import random
 
 class GameEngine:
     def __evaluate_gestures(gesture1:int, gesture2:int) -> (int, int):
@@ -60,7 +61,9 @@ class GameEngine:
             db.update_session(user.id, user_status)
 
         if user_status == UserStatusEnums.SUBMITED:
-            user_status, _ = GameEngine.__evaluate_gestures(user.gesture, bot.gesture)
+            bot_gesture = random.randint(1, 3)
+            db.update_user(bot, bot_gesture)
+            user_status, _ = GameEngine.__evaluate_gestures(user.gesture, bot_gesture)
             db.update_session(user.id, user_status)
             
         return session, user_status, bot

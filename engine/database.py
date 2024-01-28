@@ -143,7 +143,7 @@ class Database:
         Connect bot to session
         """
         bot = f"bot_{random.randint(1, 9999)}"
-        self.cursor.execute("insert into users (id, username, gesture) values (?, ?, ?)", (bot, bot, random.randint(1, 3)))
+        self.cursor.execute("insert into users (id, username, gesture) values (?, ?, ?)", (bot, bot, 0))
         self.connection.commit()
 
         self.cursor.execute("update sessions set user2_id=:user2_id, user2_status=:user2_status, user1_status=:user1_status where id=:id", {"user2_id": bot, "user2_status": UserStatusEnums.CONNECTED, "user1_status": UserStatusEnums.CONNECTED, "id": session_id})
