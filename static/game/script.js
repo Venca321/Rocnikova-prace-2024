@@ -6,7 +6,7 @@ let end_screen_for = 0;
 let status = "loading"
 
 function toggle_win_screen(){
-    document.getElementById("win_screen")[0].classList.toggle("info-show");
+    document.getElementById("win_screen").classList.toggle("info-show");
 }
 
 function pickCamera() {
