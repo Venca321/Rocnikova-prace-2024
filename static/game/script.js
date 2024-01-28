@@ -5,6 +5,10 @@ let playing_for = 0;
 let end_screen_for = 0;
 let status = "loading"
 
+function toggle_win_screen(){
+    document.getElementById("win_screen")[0].classList.toggle("info-show");
+}
+
 function pickCamera() {
     location.href = `/pick-camera-device?name=${urlParams.get("name")}&user_id=${urlParams.get("user_id")}`;
 }
@@ -35,6 +39,9 @@ socket.on('response', function(data) {
         }
     }
     if (["Vítěz!", "Poražený", "Remíza"].includes(data.status)){
+        if (end_screen_for == 0){
+            toggle_win_screen();
+        }
         end_screen_for += 1;
         if (end_screen_for >= 20){
             status = "ready_to_replay";
