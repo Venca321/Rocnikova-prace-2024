@@ -39,8 +39,8 @@ socket.on('response', function(data) {
         }
     }
     if (data.status == "Probíhá hra..."){
-        user_status = "playing";
         playing_for += 1;
+        if (user_status != "submited"){user_status = "playing";}
         if (playing_for >= 12){
             user_status = "submited";
             playing_for = 0;
