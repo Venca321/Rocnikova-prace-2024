@@ -13,9 +13,10 @@ class GameEngine:
         if gesture1 == gesture2:
             return UserStatusEnums.TIED, UserStatusEnums.TIED
 
-        if gesture1 not in [GestureEnums.ROCK, GestureEnums.PAPER, GestureEnums.SCISSORS]:
+        valid_gestures = [GestureEnums.ROCK, GestureEnums.PAPER, GestureEnums.SCISSORS]
+        if gesture1 not in valid_gestures:
             return UserStatusEnums.LOSER, UserStatusEnums.WINNER
-        if gesture2 not in [GestureEnums.ROCK, GestureEnums.PAPER, GestureEnums.SCISSORS]:
+        if gesture2 not in valid_gestures:
             return UserStatusEnums.WINNER, UserStatusEnums.LOSER
 
         if gesture1 == GestureEnums.ROCK and gesture2 == GestureEnums.SCISSORS:
@@ -72,8 +73,12 @@ class GameEngine:
             db.update_session(user.id, user_status)
             db.update_session(opponent.id, opponent_status)
 
-        if user_status == UserStatusEnums.SUBMITED and opponent_status == UserStatusEnums.SUBMITED:
-            user_status, opponent_status = GameEngine.__evaluate_gestures(user.gesture, opponent.gesture)
+        if (
+            user_status == UserStatusEnums.SUBMITED 
+            and opponent_status == UserStatusEnums.SUBMITED
+        ):
+            user_status, opponent_status = GameEngine.__evaluate_gestures(
+                user.gesture, opponent.gesture)
             db.update_session(user.id, user_status)
             db.update_session(opponent.id, opponent_status)
             

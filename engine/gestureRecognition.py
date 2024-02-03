@@ -100,11 +100,13 @@ class GestureRecognition:
         )
 
     def __is_thumb_to_index_finger_distance_shorter_than_thumb_lenght(
-            self, thumb:ThumbLandmark, index_finger:FingerLandmark) -> bool:
+            self, thumb:ThumbLandmark, index_finger:FingerLandmark
+        ) -> bool:
         __THUMB_DISTANCE_TO_INDEX_FINGER_RATIO = 2
         return (
             self.__calculate_points_distance(thumb.finger_ip, index_finger.finger_pip)
-            < self.__calculate_thumb_length(thumb) / __THUMB_DISTANCE_TO_INDEX_FINGER_RATIO
+            < (self.__calculate_thumb_length(thumb) 
+               / __THUMB_DISTANCE_TO_INDEX_FINGER_RATIO)
         )
 
     def detectGesture(self, hand_landmark:HandLandmark):
@@ -140,7 +142,7 @@ class GestureRecognition:
         return True
 
     def isHandScissors(self, index_finger_up,
-                        middle_finger_up, ring_finger_up, pinky_finger_up) -> bool:
+                       middle_finger_up, ring_finger_up, pinky_finger_up) -> bool:
         if not index_finger_up: return False
         if not middle_finger_up: return False
         if ring_finger_up: return False
@@ -148,7 +150,8 @@ class GestureRecognition:
         return True
 
     def isHandLike(self, index_finger_up, 
-                   middle_finger_up, ring_finger_up, pinky_finger_up, thumb_near_palm) -> bool:
+                   middle_finger_up, ring_finger_up, 
+                   pinky_finger_up, thumb_near_palm) -> bool:
         if index_finger_up: return False
         if middle_finger_up: return False
         if ring_finger_up: return False
