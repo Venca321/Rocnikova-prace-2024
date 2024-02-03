@@ -10,43 +10,21 @@ class GameEngine:
         """
         Evaluate gestures and return statuses
         """
+        if gesture1 == gesture2:
+            return UserStatusEnums.TIED, UserStatusEnums.TIED
+
         if gesture1 not in [GestureEnums.ROCK, GestureEnums.PAPER, GestureEnums.SCISSORS]:
-            user1_status = UserStatusEnums.LOSER
-            user2_status = UserStatusEnums.WINNER
+            return UserStatusEnums.LOSER, UserStatusEnums.WINNER
         if gesture2 not in [GestureEnums.ROCK, GestureEnums.PAPER, GestureEnums.SCISSORS]:
-            if user1_status != UserStatusEnums.LOSER:
-                user1_status = UserStatusEnums.WINNER
-            user2_status = UserStatusEnums.LOSER
+            return UserStatusEnums.WINNER, UserStatusEnums.LOSER
 
-        if gesture1 == GestureEnums.ROCK and gesture2 == GestureEnums.PAPER:
-            user1_status = UserStatusEnums.LOSER
-            user2_status = UserStatusEnums.WINNER
-        elif gesture1 == GestureEnums.ROCK and gesture2 == GestureEnums.SCISSORS:
-            user1_status = UserStatusEnums.WINNER
-            user2_status = UserStatusEnums.LOSER
-        elif gesture1 == GestureEnums.ROCK and gesture2 == GestureEnums.ROCK:
-            user1_status = UserStatusEnums.TIED
-            user2_status = UserStatusEnums.TIED
-        elif gesture1 == GestureEnums.PAPER and gesture2 == GestureEnums.PAPER:
-            user1_status = UserStatusEnums.TIED
-            user2_status = UserStatusEnums.TIED
-        elif gesture1 == GestureEnums.PAPER and gesture2 == GestureEnums.SCISSORS:
-            user1_status = UserStatusEnums.LOSER
-            user2_status = UserStatusEnums.WINNER
+        if gesture1 == GestureEnums.ROCK and gesture2 == GestureEnums.SCISSORS:
+            return UserStatusEnums.WINNER, UserStatusEnums.LOSER
         elif gesture1 == GestureEnums.PAPER and gesture2 == GestureEnums.ROCK:
-            user1_status = UserStatusEnums.WINNER
-            user2_status = UserStatusEnums.LOSER
+            return UserStatusEnums.WINNER, UserStatusEnums.LOSER
         elif gesture1 == GestureEnums.SCISSORS and gesture2 == GestureEnums.PAPER:
-            user1_status = UserStatusEnums.WINNER
-            user2_status = UserStatusEnums.LOSER
-        elif gesture1 == GestureEnums.SCISSORS and gesture2 == GestureEnums.SCISSORS:
-            user1_status = UserStatusEnums.TIED
-            user2_status = UserStatusEnums.TIED
-        elif gesture1 == GestureEnums.SCISSORS and gesture2 == GestureEnums.ROCK:
-            user1_status = UserStatusEnums.LOSER
-            user2_status = UserStatusEnums.WINNER
-        return user1_status, user2_status
-
+            return UserStatusEnums.WINNER, UserStatusEnums.LOSER
+        return UserStatusEnums.LOSER, UserStatusEnums.WINNER
 
     def __process_bot(db:Database, session:Session, user:User) -> (Session, int, User):
         user_status = session.user1_status
@@ -68,21 +46,19 @@ class GameEngine:
             
         return session, user_status, bot
 
-    def process(db:Database, session:Session, user:User) -> (Session, int, User):
+    def __sort_users(db:Database, session:Session, user:User) -> (int, int, User):
+        """
+        Return user1_status, user2_status, opponent
+        """
         if user.id == session.user1_id:
-            try:
-                user_status = session.user1_status
-                opponent_status = session.user2_status
-                opponent = db.get_user(session.user2_id)
-            except Exception:
-                return session, user_status, User("None", "?????", 0)
-        else:
-            try:
-                user_status = session.user2_status
-                opponent_status = session.user1_status
-                opponent = db.get_user(session.user1_id)
-            except Exception:
-                return session, user_status, User("None", "?????", 0)
+            return session.user1_status, session.user2_status, db.get_user(session.user2_id)
+        return session.user2_status, session.user1_status, db.get_user(session.user1_id)
+
+    def process(db:Database, session:Session, user:User) -> (Session, int, User):
+        try:
+            user_status, opponent_status, opponent = GameEngine.__sort_users(db, session, user)
+        except Exception:
+            return session, user_status, User("None", "?????", 0)
 
         if opponent.id.startswith("bot_"): return GameEngine.__process_bot(db, session, user)
 
