@@ -27,9 +27,13 @@ def index():
 def about():
     return render_template('about.html')
 
+@app.route("/settings")
+def settings():
+    return render_template('settings.html')
+
 @socketio.on('image_navigation')
 def handle_image_navigation(data):
-    flip = bool(data['flip'])
+    flip = data['flip'] == "true"
 
     img_data = data['image']
     img_data = base64.b64decode(img_data.split(',')[1])
