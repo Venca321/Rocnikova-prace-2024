@@ -1,8 +1,11 @@
 
 const urlParams = new URLSearchParams(window.location.search);
-const socket = io.connect('wss://' + document.domain + ':' + location.port);
+const socket = io.connect('ws://' + document.domain + ':' + location.port);
+let sended = 0;
+let received = 0;
 
 socket.on('response', function(data) {
+    received += 1;
     if (data.status === "ok" && data.image) {
         console.log("Status: ok")
         const processedImageElement = document.getElementById('processedImage');
@@ -18,7 +21,10 @@ function captureAndSendImage() {
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
     canvas.getContext('2d').drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
-    socket.emit('image_navigation', { image: canvas.toDataURL('image/jpeg')});
+    if (sended -1 <= received) {
+        socket.emit('image_navigation', { image: canvas.toDataURL('image/jpeg')});
+        sended += 1;
+    }
 }
 
 function startCamera() {
