@@ -29,6 +29,13 @@ h1 {
     color: #ffffffbb;
 }
 
+p {
+    color: #ffffffbb;
+    font-size: 20px;
+    margin-bottom: 18px;
+    margin-top: 18px;
+}
+
 .button {
     width: 320px;
     padding: 12px 0px 12px 0px;
@@ -56,6 +63,10 @@ h1 {
 @media only screen and (max-device-width: 480px) {
     h1 {
         font-size: 28px;
+    }
+
+    p {
+        font-size: 18px;
     }
 
     .button {

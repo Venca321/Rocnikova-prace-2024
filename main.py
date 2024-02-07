@@ -23,6 +23,10 @@ def favicon():
 def index():
     return render_template('index.html')
 
+@app.route("/about")
+def about():
+    return render_template('about.html')
+
 @socketio.on('image_navigation')
 def handle_image_navigation(data):
     flip = bool(data['flip'])
@@ -35,14 +39,12 @@ def handle_image_navigation(data):
 
     cursor, click = None, None
     try:
-        # TODO: downsite the image if needed
+        # TODO: downscale the image if needed
 
         landmark, image = hand_recognizer.getLandmark(input_img)
         if landmark.index_finger.finger_tip[0] is not None and landmark.thumb.finger_tip[0] is not None:
             cursor = gesture_recognizer.calculate_middle_point(landmark.index_finger.finger_tip, landmark.thumb.finger_tip)
             click = gesture_recognizer.is_clicked(landmark)
-
-        # TODO: get data from the landmark
 
         _, buffer = cv2.imencode('.png', image)
         img_base64 = base64.b64encode(buffer).decode('utf-8')
@@ -54,15 +56,14 @@ def handle_image_navigation(data):
 
 @socketio.on('image')
 def handle_image(data):
-    #user_id = data['user_id']
-    #status = data['status']
-
     img_data = data['image']
     img_data = base64.b64decode(img_data.split(',')[1])
     nparr = np.frombuffer(img_data, np.uint8)
     img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
     try:
+        # TODO: downscale the image if needed
+
         landmark = hand_recognizer.getLandmark(img)
         gesture = gesture_recognizer.detectGesture(landmark)
     except Exception:

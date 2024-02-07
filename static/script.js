@@ -1,6 +1,7 @@
 
 const urlParams = new URLSearchParams(window.location.search);
-const socket = io.connect('ws://' + document.domain + ':' + location.port);
+const socket = io.connect('wss://' + document.domain + ':' + location.port);
+let loaded = false;
 let video_res = [0, 0]
 let sended = 0;
 let received = 0;
@@ -9,10 +10,14 @@ socket.on('response', function(data) {
     received += 1;
     let cursor = [0, 0];
     if (data.status === "ok" && data.image) {
-        console.log("Status: ok", data.click)
+        console.log("Status: ok")
+
+        if (!loaded && !data.click) {
+            loaded = true;
+        }
 
         const buttons = document.querySelectorAll('.button');
-        if (data.cursor != null) {
+        if (data.cursor != null && loaded) {
           cursor = [(window.innerWidth / video_res[0]) * data.cursor[0], (window.innerHeight / video_res[1]) * data.cursor[1]]
         }
 
