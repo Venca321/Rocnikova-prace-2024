@@ -25,10 +25,13 @@ def index():
 
 @socketio.on('image_navigation')
 def handle_image_navigation(data):
+    flip = bool(data['flip'])
+
     img_data = data['image']
     img_data = base64.b64decode(img_data.split(',')[1])
     nparr = np.frombuffer(img_data, np.uint8)
     input_img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+    if flip: input_img = cv2.flip(input_img, 1)
 
     cursor, click = None, None
     try:

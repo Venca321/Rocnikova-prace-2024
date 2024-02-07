@@ -1,6 +1,6 @@
 
 const urlParams = new URLSearchParams(window.location.search);
-const socket = io.connect('wss://' + document.domain + ':' + location.port);
+const socket = io.connect('ws://' + document.domain + ':' + location.port);
 let video_res = [0, 0]
 let sended = 0;
 let received = 0;
@@ -44,7 +44,7 @@ function captureAndSendImage() {
     video_res = [video.videoWidth, video.videoHeight]
     canvas.getContext('2d').drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
     if (sended -1 <= received) {
-        socket.emit('image_navigation', { image: canvas.toDataURL('image/jpeg')});
+        socket.emit('image_navigation', { flip: urlParams.get("flip"), image: canvas.toDataURL('image/jpeg')});
         sended += 1;
     }
 }
@@ -59,13 +59,8 @@ function startCamera() {
             throw new Error('Žádná kamera nenalezena.');
         }
         
-        if (urlParams.has('camera')){
-            const cameraID = Number(urlParams.get('camera'));
-            return navigator.mediaDevices.getUserMedia({ video: { deviceId: videoDevices[cameraID].deviceId } });
-        }
-        else {
-            location.href = `?camera=0`;
-        }
+        const cameraID = Number(urlParams.get('camera'));
+        return navigator.mediaDevices.getUserMedia({ video: { deviceId: videoDevices[cameraID].deviceId } });
     })
     .then(function(stream) {
         const video = document.querySelector('video');
@@ -81,5 +76,21 @@ function startCamera() {
 }
 
 window.addEventListener("load", (event) => {
+    if (!urlParams.has('flip')){
+        if (location.href.includes("?")) {
+            location.href = window.location.search + `&flip=true`;
+        } else {
+            location.href = `?flip=true`;
+        }
+    }
+
+    if (!urlParams.has('camera')){
+        if (location.href.includes("?")) {
+            location.href = window.location.search + `&camera=0`;
+        } else {
+            location.href = `?camera=0`;
+        }
+    }
+
     startCamera();
 });
