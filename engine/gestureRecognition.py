@@ -1,5 +1,6 @@
 
 import mediapipe as mp
+import numpy as np
 import cv2
 
 
@@ -40,20 +41,18 @@ class HandLandmarks:
 
 class HandRecognition:
     def __init__(self):
-        self.video = cv2.VideoCapture(0)
-        self.image = self.video.read()
         self.mpHands = mp.solutions.hands
         self.hands = self.mpHands.Hands(False, 1, 1, 0.5, 0.5) #mode, maxHands, modelComplex, detectionCon, trackCon
 
-    def getLandmark(self, image, draw_landmarks:bool=False) -> HandLandmark | None:
+    def getLandmark(self, image) -> HandLandmark | None:
         image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        black_image = np.zeros((image.shape[0], image.shape[1], 3), dtype=np.uint8)
         results = self.hands.process(image_rgb).multi_hand_landmarks
 
-        if not results: return HandLandmark([[None, None, None] for _ in range(21)])
+        if not results: return HandLandmark([[None, None, None] for _ in range(21)]), black_image
 
-        if draw_landmarks:
-            mpDraw = mp.solutions.drawing_utils
-            mpDraw.draw_landmarks(image, results[0], self.mpHands.HAND_CONNECTIONS)
+        mpDraw = mp.solutions.drawing_utils
+        mpDraw.draw_landmarks(black_image, results[0], self.mpHands.HAND_CONNECTIONS)
 
         # remap landmarks to list of points and calculate their position in image
         hand_landmarks = []
@@ -62,24 +61,7 @@ class HandRecognition:
             point_x, point_y = int(hand_point.x * image_width), int(hand_point.y * image_height)
             hand_landmarks.append([point_x, point_y, hand_point.z])
 
-        return HandLandmark(hand_landmarks)
-
-    def getLandmarks(self, draw_landmarks:bool=False) -> HandLandmarks:
-        _, image = self.video.read()
-        self.image = image
-
-        # split image to left and right side
-        self.imageLeft = image[0:image.shape[0], 0:int(image.shape[1]/2)]
-        self.imageRight = image[0:image.shape[0], int(image.shape[1]/2):image.shape[1]]
-
-        resultsLeft = self.getLandmark(self.imageLeft, draw_landmarks)
-        resultsRight = self.getLandmark(self.imageRight, draw_landmarks)
-
-        return HandLandmarks(resultsRight, resultsLeft)
-
-    def stop(self):
-        self.video.release()
-        cv2.destroyAllWindows()
+        return HandLandmark(hand_landmarks), black_image
 
 class GestureRecognition:
     def __calculate_points_distance(self, point1:list, point2:list) -> float:
@@ -158,15 +140,3 @@ class GestureRecognition:
         if pinky_finger_up: return False
         if thumb_near_palm: return False
         return True
-
-if __name__ == "__main__":
-    hand_recognizer = HandRecognition()
-    gesture_recognizer = GestureRecognition()
-
-    while True:
-        landmarks = hand_recognizer.getLandmarks(True)
-        cv2.imshow("Output", hand_recognizer.image)
-        cv2.waitKey(1)
-        
-        print("Left:", gesture_recognizer.detectGesture(landmarks.left_landmark))
-        print("Right:", gesture_recognizer.detectGesture(landmarks.right_landmark))

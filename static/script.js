@@ -1,9 +1,15 @@
 
-const socket = io.connect('wss://' + document.domain + ':' + location.port);
 const urlParams = new URLSearchParams(window.location.search);
+const socket = io.connect('ws://' + document.domain + ':' + location.port);
 
 socket.on('response', function(data) {
-    console.log(data);
+    if (data.status === "ok" && data.image) {
+        console.log("Status: ok")
+        const processedImageElement = document.getElementById('processedImage');
+        processedImageElement.src = data.image;
+    } else {
+        console.error("Nepodařilo se získat zpracovaný obrázek.");
+    }
 });
 
 function captureAndSendImage() {
@@ -16,35 +22,34 @@ function captureAndSendImage() {
 }
 
 function startCamera() {
-    navigator.mediaDevices.enumerateDevices()
-        .then(function(devices) {
-            const videoDevices = devices.filter(function(device) {
-                return device.kind === 'videoinput';
-            });
+    navigator.mediaDevices.getUserMedia({ video: true }) // get permission
+    .then(() => navigator.mediaDevices.enumerateDevices())
+    .then(devices => {
+        const videoDevices = devices.filter(device => device.kind === 'videoinput');
 
-            if (videoDevices.length <= 0){
-                throw new Error('Žádná kamera nenalezena.');
-            }
-            
-            if (urlParams.has('camera')){
-                const cameraID = Number(urlParams.get('camera'));
-                return navigator.mediaDevices.getUserMedia({ video: { deviceId: videoDevices[cameraID].deviceId } });
-            }
-            else {
-                location.href = `?camera=0`;
-            }
-        })
-        .then(function(stream) {
-            const video = document.querySelector('video');
-            video.srcObject = stream;
-            video.onloadedmetadata = function(e) {
-                video.play();
-                setInterval(captureAndSendImage, 250); // Snímek každých xxx ms
-            };
-        })
-        .catch(function(err) {
-            console.log(err);
-        });
+        if (videoDevices.length <= 0){
+            throw new Error('Žádná kamera nenalezena.');
+        }
+        
+        if (urlParams.has('camera')){
+            const cameraID = Number(urlParams.get('camera'));
+            return navigator.mediaDevices.getUserMedia({ video: { deviceId: videoDevices[cameraID].deviceId } });
+        }
+        else {
+            location.href = `?camera=0`;
+        }
+    })
+    .then(function(stream) {
+        const video = document.querySelector('video');
+        video.srcObject = stream;
+        video.onloadedmetadata = function(e) {
+            video.play();
+            setInterval(captureAndSendImage, 67); // Snímek každých xxx ms
+        };
+    })
+    .catch(function(err) {
+        console.log(err);
+    });
 }
 
 window.addEventListener("load", (event) => {

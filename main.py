@@ -24,21 +24,33 @@ def index():
     return render_template('index.html')
 
 @socketio.on('image_navigation')
-def handle_image(data):
+def handle_image_navigation(data):
+    img_data = data['image']
     img_data = base64.b64decode(img_data.split(',')[1])
     nparr = np.frombuffer(img_data, np.uint8)
-    img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+    input_img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
-    # Do something with the image
+    try:
+        # TODO: downsite the image if needed
 
-    emit('response', {"status": "ok"})
+        landmark, image = hand_recognizer.getLandmark(input_img)
+
+        # TODO: get data from the landmark
+
+        _, buffer = cv2.imencode('.png', image)
+        img_base64 = base64.b64encode(buffer).decode('utf-8')
+        
+        emit('response', {"status": "ok", "image": f"data:image/png;base64,{img_base64}"})
+    except Exception as e:
+        print(e)
+        emit('response', {"status": "error"})
 
 @socketio.on('image')
 def handle_image(data):
-    #img_data = data['image']
     #user_id = data['user_id']
     #status = data['status']
 
+    img_data = data['image']
     img_data = base64.b64decode(img_data.split(',')[1])
     nparr = np.frombuffer(img_data, np.uint8)
     img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
