@@ -1,5 +1,5 @@
 
-const socket = io.connect('ws://' + document.domain + ':' + location.port);
+const socket = io.connect('wss://' + document.domain + ':' + location.port);
 const urlParams = new URLSearchParams(window.location.search);
 
 socket.on('response', function(data) {
