@@ -1,6 +1,6 @@
 
 const urlParams = new URLSearchParams(window.location.search);
-const socket = io.connect('ws://' + document.domain + ':' + location.port);
+const socket = io.connect('wss://' + document.domain + ':' + location.port);
 
 socket.on('response', function(data) {
     if (data.status === "ok" && data.image) {
