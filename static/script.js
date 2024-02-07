@@ -44,7 +44,7 @@ function startCamera() {
         video.srcObject = stream;
         video.onloadedmetadata = function(e) {
             video.play();
-            setInterval(captureAndSendImage, 67); // Snímek každých xxx ms
+            setInterval(captureAndSendImage, 100); // Snímek každých xxx ms
         };
     })
     .catch(function(err) {
