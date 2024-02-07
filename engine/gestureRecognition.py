@@ -90,8 +90,17 @@ class GestureRecognition:
             < (self.__calculate_thumb_length(thumb) 
                / __THUMB_DISTANCE_TO_INDEX_FINGER_RATIO)
         )
+    
+    def calculate_middle_point(self, point1, point2) -> (int, int):
+        return (int((point1[0] + point2[0]) / 2), int((point1[1] + point2[1]) / 2))
+    
+    def is_clicked(self, hand_landmark:HandLandmark) -> bool:
+        return (
+            self.__calculate_points_distance(hand_landmark.index_finger.finger_tip, hand_landmark.index_finger.finger_dip)
+            > self.__calculate_points_distance(hand_landmark.index_finger.finger_tip, hand_landmark.thumb.finger_tip)
+        )
 
-    def detectGesture(self, hand_landmark:HandLandmark):
+    def detectGesture(self, hand_landmark:HandLandmark) -> int:
         try:
             index_finger_up = self.__is_tip_to_wrist_longer_than_pip_to_wrist(hand_landmark.index_finger, hand_landmark.wrist)
             middle_finger_up = self.__is_tip_to_wrist_longer_than_pip_to_wrist(hand_landmark.middle_finger, hand_landmark.wrist)

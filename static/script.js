@@ -1,13 +1,34 @@
 
 const urlParams = new URLSearchParams(window.location.search);
 const socket = io.connect('wss://' + document.domain + ':' + location.port);
+let video_res = [0, 0]
 let sended = 0;
 let received = 0;
 
 socket.on('response', function(data) {
     received += 1;
+    let cursor = [0, 0];
     if (data.status === "ok" && data.image) {
-        console.log("Status: ok")
+        console.log("Status: ok", data.click)
+
+        const buttons = document.querySelectorAll('.button');
+        if (data.cursor != null) {
+          cursor = [(window.innerWidth / video_res[0]) * data.cursor[0], (window.innerHeight / video_res[1]) * data.cursor[1]]
+        }
+
+        buttons.forEach(button => {
+            const rect = button.getBoundingClientRect();
+            if (cursor[0] >= rect.left && cursor[0] <= rect.right && cursor[1] >= rect.top && cursor[1] <= rect.bottom) {
+                button.classList.add('button_hover');
+                if (data.click){
+                    const hrefValue = button.getAttribute('onclick');
+                    eval(hrefValue);
+                }
+            } else {
+                button.classList.remove('button_hover');
+            }            
+        });
+
         const processedImageElement = document.getElementById('processedImage');
         processedImageElement.src = data.image;
     } else {
@@ -20,6 +41,7 @@ function captureAndSendImage() {
     const canvas = document.createElement('canvas');
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
+    video_res = [video.videoWidth, video.videoHeight]
     canvas.getContext('2d').drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
     if (sended -1 <= received) {
         socket.emit('image_navigation', { image: canvas.toDataURL('image/jpeg')});

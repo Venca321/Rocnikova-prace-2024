@@ -30,17 +30,21 @@ def handle_image_navigation(data):
     nparr = np.frombuffer(img_data, np.uint8)
     input_img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
+    cursor, click = None, None
     try:
         # TODO: downsite the image if needed
 
         landmark, image = hand_recognizer.getLandmark(input_img)
+        if landmark.index_finger.finger_tip[0] is not None and landmark.thumb.finger_tip[0] is not None:
+            cursor = gesture_recognizer.calculate_middle_point(landmark.index_finger.finger_tip, landmark.thumb.finger_tip)
+            click = gesture_recognizer.is_clicked(landmark)
 
         # TODO: get data from the landmark
 
         _, buffer = cv2.imencode('.png', image)
         img_base64 = base64.b64encode(buffer).decode('utf-8')
         
-        emit('response', {"status": "ok", "image": f"data:image/png;base64,{img_base64}"})
+        emit('response', {"status": "ok", "cursor": cursor, "click": click, "image": f"data:image/png;base64,{img_base64}"})
     except Exception as e:
         print(e)
         emit('response', {"status": "error"})

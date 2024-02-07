@@ -22,3 +22,45 @@ img {
     width: 100vw;
     background: #f0f0f01e;
 }
+
+h1 {
+    font-weight: 700;
+    font-size: 52px;
+    color: #ffffffbb;
+}
+
+.button {
+    width: 320px;
+    padding: 12px 0px 12px 0px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 26px;
+    color: #000000;
+    background: #ffffffbb;
+    border-radius: 15px;
+    text-decoration: none;
+    transition: 0.25s;
+    margin-top: 12px;
+}
+
+.button:hover {
+    background: #2bdda2;
+    text-decoration: underline;
+}
+
+.button_hover {
+    background: #2bdda2;
+    text-decoration: underline;
+}
+
+@media only screen and (max-device-width: 480px) {
+    h1 {
+        font-size: 28px;
+    }
+
+    .button {
+        padding: 10px 0px 10px 0px;
+        font-size: 18px;
+        width: 75vw;
+    }
+}
