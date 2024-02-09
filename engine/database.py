@@ -1,10 +1,22 @@
 
 class UserStatusEnums:
-    WAITING = 0
-    CONNECTED = 1
-    READY = 2
-    PLAYING = 3
-    SUBMITED = 4
-    WINNER = 5
-    LOSER = 6
-    TIED = 7
+    CONNECTED = 0
+    READY = 1
+    PLAYING = 2
+    SUBMITED = 3
+    WINNER = 4
+    LOSER = 5
+    TIED = 6
+    
+    def decode(status:int) -> str:
+        """
+        Decode status enum to string
+        """
+        if status == UserStatusEnums.CONNECTED: return 'Dejte gesto "palec nahoru"'
+        elif status == UserStatusEnums.READY: return "Připraven"
+        elif status == UserStatusEnums.PLAYING: return "Probíhá hra..."
+        elif status == UserStatusEnums.SUBMITED: return "Vyhodnocoání..."
+        elif status == UserStatusEnums.WINNER: return "Vítěz"
+        elif status == UserStatusEnums.LOSER: return "Poražen"
+        elif status == UserStatusEnums.TIED: return "Remíza"
+        raise NotImplementedError

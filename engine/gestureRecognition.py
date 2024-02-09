@@ -11,6 +11,16 @@ class GestureEnums:
     SCISSORS = 3
     LIKE = 4
 
+    def decode(gesture:int) -> str:
+        """
+        Decode gesture enum to string
+        """
+        if gesture == GestureEnums.ROCK: return "Kámen"
+        elif gesture == GestureEnums.PAPER: return "Papír"
+        elif gesture == GestureEnums.SCISSORS: return "Nůžky"
+        elif gesture == GestureEnums.LIKE: return "Palec nahoru"
+        else: return "Neznámé"
+
 class ThumbLandmark:
     def __init__(self, finger_cmc, finger_mcp, finger_ip, finger_tip):
         self.finger_cmc = finger_cmc

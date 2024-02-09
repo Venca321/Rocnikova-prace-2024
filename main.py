@@ -31,6 +31,10 @@ def about():
 def settings():
     return render_template('settings.html')
 
+@app.route("/game")
+def game():
+    return render_template('game.html')
+
 @socketio.on('image_navigation')
 def handle_image_navigation(data):
     flip = data['flip'] == "true"
@@ -60,20 +64,34 @@ def handle_image_navigation(data):
 
 @socketio.on('image')
 def handle_image(data):
+    flip = data['flip'] == "true"
+    user_status = data["user_status"]
+
     img_data = data['image']
     img_data = base64.b64decode(img_data.split(',')[1])
     nparr = np.frombuffer(img_data, np.uint8)
-    img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+    input_img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+    if flip: input_img = cv2.flip(input_img, 1)
 
     try:
         # TODO: downscale the image if needed
 
-        landmark = hand_recognizer.getLandmark(img)
+        landmark, image = hand_recognizer.getLandmark(input_img)
         gesture = gesture_recognizer.detectGesture(landmark)
-    except Exception:
-        gesture = GestureEnums.NONE
+        
 
-    emit('response', {"status": ""})
+
+        _, buffer = cv2.imencode('.png', image)
+        img_base64 = base64.b64encode(buffer).decode('utf-8')
+        
+        emit('response', {
+            "status": "ok", "gesture": gesture, "gesture_text": GestureEnums.decode(gesture), 
+            "user_status": user_status, "user_status_text": UserStatusEnums.decode(user_status),
+            "image": f"data:image/png;base64,{img_base64}"
+        })
+    except Exception as e:
+        print(e)
+        emit('response', {"status": "error"})
 
 if __name__ == '__main__':
     socketio.run(app, host="0.0.0.0")
