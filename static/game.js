@@ -4,14 +4,25 @@ const socket = io.connect('wss://' + document.domain + ':' + location.port);
 let sended = 0;
 let received = 0;
 let user_status = 0;
+let user_gesture = 0;
+let playing_for = 0;
 
 socket.on('response', function(data) {
     received += 1;
     if (data.status === "ok" && data.image) {
         console.log("Status: ok", "| Gesture:", data.gesture, "| User status:", data.user_status)
         user_status = data.user_status;
+        user_gesture = data.gesture;
+
         const processedImageElement = document.getElementById('processedImage');
         processedImageElement.src = data.image;
+
+        if (data.user_status === 1) {
+            playing_for += 1;
+            if (playing_for > 20) {
+                user_status = 2;
+            }
+        }
 
         const statusTextElement = document.getElementById('status-text');
         statusTextElement.textContent = `Stav: ${data.user_status_text},`;
@@ -30,7 +41,7 @@ function captureAndSendImage() {
     video_res = [video.videoWidth, video.videoHeight]
     canvas.getContext('2d').drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
     if (sended -1 <= received) {
-        socket.emit('image', { flip: urlParams.get("flip"), user_status: user_status, image: canvas.toDataURL('image/jpeg')});
+        socket.emit('image', { flip: urlParams.get("flip"), user_status: user_status, gesture: user_gesture, image: canvas.toDataURL('image/jpeg')});
         sended += 1;
     }
 }

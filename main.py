@@ -1,5 +1,5 @@
 
-from engine.engine import HandRecognition, GestureRecognition, GestureEnums, UserStatusEnums
+from engine.engine import HandRecognition, GestureRecognition, GestureEnums, UserStatusEnums, GameEngine
 from flask import Flask, render_template, request, jsonify, send_from_directory
 from flask_socketio import SocketIO, emit
 import numpy as np
@@ -12,6 +12,7 @@ socketio = SocketIO(app)
 
 hand_recognizer = HandRecognition()
 gesture_recognizer = GestureRecognition()
+game_engine = GameEngine()
 
 
 @app.route('/favicon.ico')
@@ -65,7 +66,8 @@ def handle_image_navigation(data):
 @socketio.on('image')
 def handle_image(data):
     flip = data['flip'] == "true"
-    user_status = data["user_status"]
+    user_status = int(data["user_status"])
+    gesture = int(data["gesture"])
 
     img_data = data['image']
     img_data = base64.b64decode(img_data.split(',')[1])
@@ -77,9 +79,11 @@ def handle_image(data):
         # TODO: downscale the image if needed
 
         landmark, image = hand_recognizer.getLandmark(input_img)
-        gesture = gesture_recognizer.detectGesture(landmark)
+        gesture_detection_states = [UserStatusEnums.CONNECTED, UserStatusEnums.PLAYING]
+        if user_status in gesture_detection_states:
+            gesture = gesture_recognizer.detectGesture(landmark)
         
-
+        user_status = game_engine.process(gesture, user_status)
 
         _, buffer = cv2.imencode('.png', image)
         img_base64 = base64.b64encode(buffer).decode('utf-8')

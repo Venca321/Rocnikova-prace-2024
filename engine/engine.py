@@ -1,29 +1,23 @@
 
 from engine.gestureRecognition import GestureEnums, ThumbLandmark, FingerLandmark, HandLandmark, HandLandmarks, HandRecognition, GestureRecognition
 from engine.database import UserStatusEnums
+import random
 
 
 class GameEngine:
-    def __evaluate_gestures(gesture1:int, gesture2:int) -> (int, int):
+    def __evaluate_results(self, gesture:int) -> int:
         """
-        Evaluate gestures and return statuses
+        Evaluate gesture and return status
         """
-        if gesture1 == gesture2:
-            return UserStatusEnums.TIED, UserStatusEnums.TIED
-
         valid_gestures = [GestureEnums.ROCK, GestureEnums.PAPER, GestureEnums.SCISSORS]
-        if gesture1 not in valid_gestures:
-            return UserStatusEnums.LOSER, UserStatusEnums.WINNER
-        if gesture2 not in valid_gestures:
-            return UserStatusEnums.WINNER, UserStatusEnums.LOSER
+        if gesture not in valid_gestures: return UserStatusEnums.LOSER
+        return random.randint(UserStatusEnums.WINNER, UserStatusEnums.TIED)
 
-        if gesture1 == GestureEnums.ROCK and gesture2 == GestureEnums.SCISSORS:
-            return UserStatusEnums.WINNER, UserStatusEnums.LOSER
-        elif gesture1 == GestureEnums.PAPER and gesture2 == GestureEnums.ROCK:
-            return UserStatusEnums.WINNER, UserStatusEnums.LOSER
-        elif gesture1 == GestureEnums.SCISSORS and gesture2 == GestureEnums.PAPER:
-            return UserStatusEnums.WINNER, UserStatusEnums.LOSER
-        return UserStatusEnums.LOSER, UserStatusEnums.WINNER
+    def process(self, gesture:int, user_status:int) -> int:
+        if user_status == UserStatusEnums.CONNECTED and gesture == GestureEnums.LIKE: 
+            return UserStatusEnums.PLAYING
 
-    def process():
-        raise NotImplementedError
+        elif user_status == UserStatusEnums.SUBMITED:
+            return self.__evaluate_results(gesture)
+
+        return user_status
