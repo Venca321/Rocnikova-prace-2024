@@ -105,10 +105,15 @@ class GestureRecognition:
         return (int((point1[0] + point2[0]) / 2), int((point1[1] + point2[1]) / 2))
     
     def is_clicked(self, hand_landmark:HandLandmark) -> bool:
-        return (
-            self.__calculate_points_distance(hand_landmark.index_finger.finger_tip, hand_landmark.index_finger.finger_dip)
-            > self.__calculate_points_distance(hand_landmark.index_finger.finger_tip, hand_landmark.thumb.finger_tip)
+        finger_tips_distance = self.__calculate_points_distance(
+            hand_landmark.index_finger.finger_tip,
+            hand_landmark.thumb.finger_tip
         )
+        index_finger_tip_to_tip_distance = self.__calculate_points_distance(
+            hand_landmark.index_finger.finger_tip,
+            hand_landmark.index_finger.finger_dip
+        )
+        return finger_tips_distance > index_finger_tip_to_tip_distance
 
     def detectGesture(self, hand_landmark:HandLandmark) -> int:
         try:
