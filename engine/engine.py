@@ -15,9 +15,9 @@ class GameEngine:
 
     def process(self, gesture:int, user_status:int) -> int:
         if user_status == UserStatusEnums.CONNECTED and gesture == GestureEnums.LIKE: 
-            return UserStatusEnums.PLAYING
+            user_status = UserStatusEnums.PLAYING
 
         elif user_status == UserStatusEnums.SUBMITED:
-            return self.__evaluate_results(gesture)
+            user_status = self.__evaluate_results(gesture)
 
         return user_status
