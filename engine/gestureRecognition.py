@@ -38,11 +38,26 @@ class FingerLandmark:
 class HandLandmark:
     def __init__(self, raw_landmark:list):
         self.wrist = raw_landmark[0]
-        self.thumb = ThumbLandmark(raw_landmark[1], raw_landmark[2], raw_landmark[3], raw_landmark[4])
-        self.index_finger = FingerLandmark(raw_landmark[5], raw_landmark[6], raw_landmark[7], raw_landmark[8])
-        self.middle_finger = FingerLandmark(raw_landmark[9], raw_landmark[10], raw_landmark[11], raw_landmark[12])
-        self.ring_finger = FingerLandmark(raw_landmark[13], raw_landmark[14], raw_landmark[15], raw_landmark[16])
-        self.pinky = FingerLandmark(raw_landmark[17], raw_landmark[18], raw_landmark[19], raw_landmark[20])
+        self.thumb = ThumbLandmark(
+            raw_landmark[1], raw_landmark[2], 
+            raw_landmark[3], raw_landmark[4]
+        )
+        self.index_finger = FingerLandmark(
+            raw_landmark[5], raw_landmark[6], 
+            raw_landmark[7], raw_landmark[8]
+        )
+        self.middle_finger = FingerLandmark(
+            raw_landmark[9], raw_landmark[10], 
+            raw_landmark[11], raw_landmark[12]
+        )
+        self.ring_finger = FingerLandmark(
+            raw_landmark[13], raw_landmark[14], 
+            raw_landmark[15], raw_landmark[16]
+        )
+        self.pinky = FingerLandmark(
+            raw_landmark[17], raw_landmark[18], 
+            raw_landmark[19], raw_landmark[20]
+        )
 
 class HandLandmarks:
     def __init__(self, right_landmark:HandLandmark, left_landmark:HandLandmark):
