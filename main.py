@@ -3,7 +3,7 @@ from engine.engine import HandRecognition, GestureRecognition, GestureEnums, Use
 from flask import Flask, render_template, send_from_directory
 from flask_socketio import SocketIO, emit
 import numpy as np
-import cv2, base64, os
+import cv2, base64, os, time
 
 
 app = Flask(__name__)
@@ -72,12 +72,14 @@ def handle_image(data):
     img_data = data['image']
     img_data = base64.b64decode(img_data.split(',')[1])
     nparr = np.frombuffer(img_data, np.uint8)
-    input_img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+    input_img = cv2.imdecode(nparr, cv2.IMREAD_GRAYSCALE)
     if flip: input_img = cv2.flip(input_img, 1)
 
-    try:
-        # TODO: downscale the image if needed
+    #cv2.imwrite("test.png", input_img)
 
+    try:
+        start = time.time()
+        # TODO: downscale the image if needed
         landmark, image = hand_recognizer.getLandmark(input_img)
         gesture_detection_states = [UserStatusEnums.CONNECTED, UserStatusEnums.PLAYING]
         if user_status in gesture_detection_states:
@@ -88,6 +90,8 @@ def handle_image(data):
         _, buffer = cv2.imencode('.png', image)
         img_base64 = base64.b64encode(buffer).decode('utf-8')
         
+        #print(time.time() - start)
+
         emit('response', {
             "status": "ok", "gesture": gesture, "gesture_text": GestureEnums.decode(gesture), 
             "user_status": user_status, "user_status_text": UserStatusEnums.decode(user_status),
@@ -99,5 +103,3 @@ def handle_image(data):
 
 if __name__ == '__main__':
     socketio.run(app, host="0.0.0.0")
-
-

@@ -65,7 +65,13 @@ function startCamera() {
         }
         
         const cameraID = Number(urlParams.get('camera'));
-        return navigator.mediaDevices.getUserMedia({ video: { deviceId: videoDevices[cameraID].deviceId } });
+        return navigator.mediaDevices.getUserMedia({ 
+            video: { 
+                deviceId: videoDevices[cameraID].deviceId,
+                width: { ideal: 640 },
+                height: { ideal: 480 }
+            } 
+        });
     })
     .then(function(stream) {
         const video = document.querySelector('video');
