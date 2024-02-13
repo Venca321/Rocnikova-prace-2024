@@ -48,8 +48,6 @@ def handle_image_navigation(data):
 
     cursor, click = None, None
     try:
-        # TODO: downscale the image if needed
-
         landmark, image = hand_recognizer.getLandmark(input_img)
         if landmark.index_finger.finger_tip[0] is not None and landmark.thumb.finger_tip[0] is not None:
             cursor = gesture_recognizer.calculate_middle_point(landmark.index_finger.finger_tip, landmark.thumb.finger_tip)
@@ -77,7 +75,6 @@ def handle_image(data):
 
     try:
         start = time.time()
-        # TODO: downscale the image if needed
         landmark, image = hand_recognizer.getLandmark(input_img)
         gesture_detection_states = [UserStatusEnums.CONNECTED, UserStatusEnums.PLAYING]
         if user_status in gesture_detection_states:

@@ -139,7 +139,7 @@ class GestureRecognition:
             thumb_near_palm = self.__is_thumb_to_index_finger_distance_shorter_than_thumb_lenght(hand_landmark.thumb, hand_landmark.index_finger)
             
             
-            """
+
             if not index_finger_up and not middle_finger_up:
                 return GestureEnums.ROCK
             
@@ -147,7 +147,7 @@ class GestureRecognition:
                 return GestureEnums.PAPER
             
             return GestureEnums.SCISSORS
-            """
+            
 
 
             if self.isHandRock(index_finger_up, middle_finger_up, ring_finger_up, pinky_finger_up, thumb_near_palm): return GestureEnums.ROCK
