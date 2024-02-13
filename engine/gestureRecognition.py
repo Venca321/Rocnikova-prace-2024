@@ -71,9 +71,8 @@ class HandRecognition:
         self.hands = self.mpHands.Hands(False, 1, 1, 0.5, 0.5) #mode, maxHands, modelComplex, detectionCon, trackCon
 
     def getLandmark(self, image) -> HandLandmark | None:
-        image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         black_image = np.zeros((image.shape[0], image.shape[1], 3), dtype=np.uint8)
-        results = self.hands.process(image_rgb).multi_hand_landmarks
+        results = self.hands.process(image).multi_hand_landmarks
 
         if not results: return HandLandmark([[None, None, None] for _ in range(21)]), black_image
 
@@ -135,24 +134,26 @@ class GestureRecognition:
         try:
             index_finger_up = self.__is_tip_to_wrist_longer_than_pip_to_wrist(hand_landmark.index_finger, hand_landmark.wrist)
             middle_finger_up = self.__is_tip_to_wrist_longer_than_pip_to_wrist(hand_landmark.middle_finger, hand_landmark.wrist)
+            ring_finger_up = self.__is_tip_to_wrist_longer_than_pip_to_wrist(hand_landmark.ring_finger, hand_landmark.wrist)
+            pinky_finger_up = self.__is_tip_to_wrist_longer_than_pip_to_wrist(hand_landmark.pinky, hand_landmark.wrist)
+            thumb_near_palm = self.__is_thumb_to_index_finger_distance_shorter_than_thumb_lenght(hand_landmark.thumb, hand_landmark.index_finger)
+            
+            
+            """
             if not index_finger_up and not middle_finger_up:
                 return GestureEnums.ROCK
             
-            ring_finger_up = self.__is_tip_to_wrist_longer_than_pip_to_wrist(hand_landmark.ring_finger, hand_landmark.wrist)
-            pinky_finger_up = self.__is_tip_to_wrist_longer_than_pip_to_wrist(hand_landmark.pinky, hand_landmark.wrist)
             if ring_finger_up and pinky_finger_up:
                 return GestureEnums.PAPER
             
             return GestureEnums.SCISSORS
+            """
 
 
-
-
-            thumb_near_palm = self.__is_thumb_to_index_finger_distance_shorter_than_thumb_lenght(hand_landmark.thumb, hand_landmark.index_finger)
             if self.isHandRock(index_finger_up, middle_finger_up, ring_finger_up, pinky_finger_up, thumb_near_palm): return GestureEnums.ROCK
             if self.isHandPaper(index_finger_up, middle_finger_up, ring_finger_up, pinky_finger_up): return GestureEnums.PAPER
             if self.isHandScissors(index_finger_up, middle_finger_up, ring_finger_up, pinky_finger_up): return GestureEnums.SCISSORS
-            if self.isHandLike(index_finger_up, middle_finger_up, ring_finger_up, pinky_finger_up, thumb_near_palm): return GestureEnums.LIKE
+            #if self.isHandLike(index_finger_up, middle_finger_up, ring_finger_up, pinky_finger_up, thumb_near_palm): return GestureEnums.LIKE
         except Exception: None
         return GestureEnums.NONE
 
