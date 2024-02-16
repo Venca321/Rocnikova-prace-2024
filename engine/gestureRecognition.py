@@ -1,8 +1,6 @@
 
 import mediapipe as mp
 import numpy as np
-import cv2
-import time
 
 
 class GestureEnums:
@@ -116,7 +114,7 @@ class GestureRecognition:
                / __THUMB_DISTANCE_TO_INDEX_FINGER_RATIO)
         )
     
-    def calculate_middle_point(self, point1, point2) -> (int, int):
+    def calculate_middle_point(self, point1, point2) -> tuple[int, int]:
         return (int((point1[0] + point2[0]) / 2), int((point1[1] + point2[1]) / 2))
     
     def is_clicked(self, hand_landmark:HandLandmark) -> bool:
@@ -124,11 +122,11 @@ class GestureRecognition:
             hand_landmark.index_finger.finger_tip,
             hand_landmark.thumb.finger_tip
         )
-        index_finger_tip_to_tip_distance = self.__calculate_points_distance(
+        index_finger_tip_to_dip_distance = self.__calculate_points_distance(
             hand_landmark.index_finger.finger_tip,
             hand_landmark.index_finger.finger_dip
         )
-        return finger_tips_distance > index_finger_tip_to_tip_distance
+        return finger_tips_distance < index_finger_tip_to_dip_distance
 
     def detectGesture(self, hand_landmark:HandLandmark) -> int:
         try:
