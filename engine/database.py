@@ -13,7 +13,7 @@ class UserStatusEnums:
         """
         if status == UserStatusEnums.CONNECTED: return 'Dejte gesto "palec nahoru"'
         elif status == UserStatusEnums.PLAYING: return "Probíhá hra..."
-        elif status == UserStatusEnums.SUBMITED: return "Vyhodnocoání..."
+        elif status == UserStatusEnums.SUBMITED: return "Vyhodnocování..."
         elif status == UserStatusEnums.WINNER: return "Vítěz"
         elif status == UserStatusEnums.LOSER: return "Poražen"
         elif status == UserStatusEnums.TIED: return "Remíza"

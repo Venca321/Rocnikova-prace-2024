@@ -148,15 +148,18 @@ class GestureRecognition:
         return GestureEnums.NONE
 
     def isHandLike(self, hand_landmark:HandLandmark) -> bool:
-        index_finger_up = self.__is_tip_to_wrist_longer_than_pip_to_wrist(hand_landmark.index_finger, hand_landmark.wrist)
-        middle_finger_up = self.__is_tip_to_wrist_longer_than_pip_to_wrist(hand_landmark.middle_finger, hand_landmark.wrist)
-        ring_finger_up = self.__is_tip_to_wrist_longer_than_pip_to_wrist(hand_landmark.ring_finger, hand_landmark.wrist)
-        pinky_finger_up = self.__is_tip_to_wrist_longer_than_pip_to_wrist(hand_landmark.pinky, hand_landmark.wrist)
-        thumb_near_palm = self.__is_thumb_to_index_finger_distance_shorter_than_thumb_lenght(hand_landmark.thumb, hand_landmark.index_finger)
-        
-        if index_finger_up: return False
-        if middle_finger_up: return False
-        if ring_finger_up: return False
-        if pinky_finger_up: return False
-        if thumb_near_palm: return False
-        return True
+        try:
+            index_finger_up = self.__is_tip_to_wrist_longer_than_pip_to_wrist(hand_landmark.index_finger, hand_landmark.wrist)
+            middle_finger_up = self.__is_tip_to_wrist_longer_than_pip_to_wrist(hand_landmark.middle_finger, hand_landmark.wrist)
+            ring_finger_up = self.__is_tip_to_wrist_longer_than_pip_to_wrist(hand_landmark.ring_finger, hand_landmark.wrist)
+            pinky_finger_up = self.__is_tip_to_wrist_longer_than_pip_to_wrist(hand_landmark.pinky, hand_landmark.wrist)
+            thumb_near_palm = self.__is_thumb_to_index_finger_distance_shorter_than_thumb_lenght(hand_landmark.thumb, hand_landmark.index_finger)
+            
+            if index_finger_up: return False
+            if middle_finger_up: return False
+            if ring_finger_up: return False
+            if pinky_finger_up: return False
+            if thumb_near_palm: return False
+            return True
+        except Exception: 
+            return False

@@ -75,9 +75,8 @@ def handle_image(data):
 
     try:
         landmark, image = hand_recognizer.getLandmark(input_img)
-        
-
-        if user_status == UserStatusEnums.PLAYING:
+        recognition_game_status = [UserStatusEnums.CONNECTED, UserStatusEnums.PLAYING]
+        if user_status in recognition_game_status:
             gesture = gesture_recognizer.detectGesture(landmark)
             if (
                 user_status == UserStatusEnums.CONNECTED 
@@ -85,7 +84,7 @@ def handle_image(data):
                 ):
                 gesture = GestureEnums.LIKE
 
-            user_status = game_engine.process(gesture, user_status)
+        user_status = game_engine.process(gesture, user_status)
 
         _, buffer = cv2.imencode('.png', image)
         img_base64 = base64.b64encode(buffer).decode('utf-8')
