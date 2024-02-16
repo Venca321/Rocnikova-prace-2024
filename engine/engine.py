@@ -5,13 +5,32 @@ import random
 
 
 class GameEngine:
+    def __evaluate_gestures(self, user_gesture:int, bot_gesture:int) -> int:
+        """
+        Evaluate gestures and return user status
+        """
+        if user_gesture == bot_gesture:
+            return UserStatusEnums.TIED, UserStatusEnums.TIED
+
+        valid_gestures = [GestureEnums.ROCK, GestureEnums.PAPER, GestureEnums.SCISSORS]
+        if user_gesture not in valid_gestures:
+            return UserStatusEnums.LOSER
+
+        if user_gesture == GestureEnums.ROCK and bot_gesture == GestureEnums.SCISSORS:
+            return UserStatusEnums.WINNER
+        elif user_gesture == GestureEnums.PAPER and bot_gesture == GestureEnums.ROCK:
+            return UserStatusEnums.WINNER
+        elif user_gesture == GestureEnums.SCISSORS and bot_gesture == GestureEnums.PAPER:
+            return UserStatusEnums.WINNER
+        
+        return UserStatusEnums.LOSER
+
     def __evaluate_results(self, gesture:int) -> int:
         """
         Evaluate gesture and return status
         """
-        valid_gestures = [GestureEnums.ROCK, GestureEnums.PAPER, GestureEnums.SCISSORS]
-        if gesture not in valid_gestures: return UserStatusEnums.LOSER
-        return random.randint(UserStatusEnums.WINNER, UserStatusEnums.TIED)
+        bot_gesture = random.randint(1, 3)
+        return self.__evaluate_gestures(gesture, bot_gesture)
 
     def process(self, gesture:int, user_status:int) -> int:
         if user_status == UserStatusEnums.CONNECTED and gesture == GestureEnums.LIKE: 
