@@ -3,7 +3,7 @@ from engine.engine import HandRecognition, GestureRecognition, GestureEnums, Use
 from flask import Flask, render_template, send_from_directory
 from flask_socketio import SocketIO, emit
 import numpy as np
-import cv2, base64, os, time
+import cv2, base64, os
 
 
 app = Flask(__name__)
@@ -74,19 +74,20 @@ def handle_image(data):
     if flip: input_img = cv2.flip(input_img, 1)
 
     try:
-        start = time.time()
         landmark, image = hand_recognizer.getLandmark(input_img)
-        gesture_detection_states = [UserStatusEnums.CONNECTED, UserStatusEnums.PLAYING]
-        if user_status in gesture_detection_states:
+        if user_status == UserStatusEnums.CONNECTED:
+            if gesture_recognizer.isHandLike(landmark):
+                gesture = GestureEnums.LIKE
+            else:
+                gesture = GestureEnums.NONE
+
+        if user_status == UserStatusEnums.PLAYING:
             gesture = gesture_recognizer.detectGesture(landmark)
-        
-        user_status = game_engine.process(gesture, user_status)
+            user_status = game_engine.process(gesture, user_status)
 
         _, buffer = cv2.imencode('.png', image)
         img_base64 = base64.b64encode(buffer).decode('utf-8')
         
-        #print(time.time() - start)
-
         emit('response', {
             "status": "ok", "gesture": gesture, "gesture_text": GestureEnums.decode(gesture), 
             "user_status": user_status, "user_status_text": UserStatusEnums.decode(user_status),
