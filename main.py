@@ -75,14 +75,16 @@ def handle_image(data):
 
     try:
         landmark, image = hand_recognizer.getLandmark(input_img)
-        if user_status == UserStatusEnums.CONNECTED:
-            if gesture_recognizer.isHandLike(landmark):
-                gesture = GestureEnums.LIKE
-            else:
-                gesture = GestureEnums.NONE
+        
 
         if user_status == UserStatusEnums.PLAYING:
             gesture = gesture_recognizer.detectGesture(landmark)
+            if (
+                user_status == UserStatusEnums.CONNECTED 
+                and gesture_recognizer.isHandLike(landmark)
+                ):
+                gesture = GestureEnums.LIKE
+
             user_status = game_engine.process(gesture, user_status)
 
         _, buffer = cv2.imencode('.png', image)
