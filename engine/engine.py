@@ -25,18 +25,26 @@ class GameEngine:
         
         return UserStatusEnums.LOSER
 
-    def __evaluate_results(self, gesture:int) -> int:
+    def __evaluate_results(self, gesture:int, history:list) -> tuple[int, int]:
         """
-        Evaluate gesture and return status
+        Evaluate gesture and return status (win stay, lose change strategy)
         """
-        bot_gesture = random.randint(1, 3)
-        return self.__evaluate_gestures(gesture, bot_gesture)
+        valid_gestures = [GestureEnums.ROCK, GestureEnums.PAPER, GestureEnums.SCISSORS]
+        # sourcery skip: merge-nested-ifs
+        if history:
+            if history[-1]["user_status"] == UserStatusEnums.LOSER and random.randint(0, 10) <= 8:
+                bot_gesture = history[-1]["bot_gesture"]
+                return self.__evaluate_gestures(gesture, bot_gesture), bot_gesture
+            valid_gestures.remove(history[-1]["bot_gesture"])
 
-    def process(self, gesture:int, user_status:int) -> int:
+        bot_gesture = random.choice(valid_gestures)
+        return self.__evaluate_gestures(gesture, bot_gesture), bot_gesture
+
+    def process(self, gesture:int, user_status:int, history:list) -> tuple[int, int]:
         if user_status == UserStatusEnums.CONNECTED and gesture == GestureEnums.LIKE: 
-            user_status = UserStatusEnums.PLAYING
+            return UserStatusEnums.PLAYING, 0
 
         elif user_status == UserStatusEnums.SUBMITED:
-            user_status = self.__evaluate_results(gesture)
+            return self.__evaluate_results(gesture, history)
 
-        return user_status
+        return user_status, 0

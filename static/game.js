@@ -7,6 +7,7 @@ let user_status = 0;
 let user_gesture = 0;
 let playing_for = 0;
 let win_screen_for = 0;
+let history = [];
 
 socket.on('response', function(data) {
     received += 1;
@@ -30,6 +31,8 @@ socket.on('response', function(data) {
             win_screen_for += 1;
 
             if (win_screen_for == 1) {
+                history.push({user_gesture: user_gesture, user_status: user_status, bot_gesture: data.bot_gesture});
+
                 const winScreenTextElement = document.getElementById('win-screen-text');
                 winScreenTextElement.innerText = `${data.user_status_text}`
 
@@ -64,7 +67,7 @@ function captureAndSendImage() {
     video_res = [video.videoWidth, video.videoHeight]
     canvas.getContext('2d').drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
     if (sended -1 <= received) {
-        socket.emit('image', { flip: urlParams.get("flip"), user_status: user_status, gesture: user_gesture, image: canvas.toDataURL('image/jpeg')});
+        socket.emit('image', { flip: urlParams.get("flip"), user_status: user_status, gesture: user_gesture, history: history, image: canvas.toDataURL('image/jpeg')});
         sended += 1;
     }
 }
