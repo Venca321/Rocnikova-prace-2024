@@ -3,6 +3,7 @@ const urlParams = new URLSearchParams(window.location.search);
 const socket = io.connect('wss://' + document.domain + ':' + location.port);
 let sended = 0;
 let received = 0;
+let last_user_status = 0;
 let user_status = 0;
 let user_gesture = 0;
 let history = [];
@@ -13,7 +14,10 @@ socket.on('response', function(data) {
     received += 1;
     if (data.status === "ok" && data.image) {
         console.log("Status: ok", "| Gesture:", data.gesture, "| User status:", data.user_status)
-        user_status = data.user_status;
+        if (last_user_status == data.user_status){
+            user_status = data.user_status;
+        }
+        last_user_status = data.user_status;
         user_gesture = data.gesture;
 
         const processedImageElement = document.getElementById('processedImage');
