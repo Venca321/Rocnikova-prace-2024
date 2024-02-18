@@ -1,5 +1,5 @@
 
-from engine.gestureRecognition import GestureEnums, ThumbLandmark, FingerLandmark, HandLandmark, HandLandmarks, HandRecognition, GestureRecognition
+from engine.gestureRecognition import GestureEnums, ThumbLandmark, FingerLandmark, HandLandmark, HandRecognition, GestureRecognition
 from engine.database import UserStatusEnums
 import random
 

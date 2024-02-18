@@ -1,6 +1,7 @@
 
 import mediapipe as mp
 import numpy as np
+from dataclasses import dataclass
 
 
 class GestureEnums:
@@ -20,19 +21,19 @@ class GestureEnums:
         elif gesture == GestureEnums.LIKE: return "Palec nahoru"
         else: return "Neznámé"
 
+@dataclass
 class ThumbLandmark:
-    def __init__(self, finger_cmc, finger_mcp, finger_ip, finger_tip):
-        self.finger_cmc = finger_cmc
-        self.finger_mcp = finger_mcp
-        self.finger_ip = finger_ip
-        self.finger_tip = finger_tip
+    finger_cmc: list[float | None, float | None, float | None]
+    finger_mcp: list[float | None, float | None, float | None]
+    finger_ip: list[float | None, float | None, float | None]
+    finger_tip: list[float | None, float | None, float | None]
 
+@dataclass
 class FingerLandmark:
-    def __init__(self, finger_mcp, finger_pip, finger_dip, finger_tip):
-        self.finger_mcp = finger_mcp
-        self.finger_pip = finger_pip
-        self.finger_dip = finger_dip
-        self.finger_tip = finger_tip
+    finger_mcp: list[float | None, float | None, float | None]
+    finger_pip: list[float | None, float | None, float | None]
+    finger_dip: list[float | None, float | None, float | None]
+    finger_tip: list[float | None, float | None, float | None]
 
 class HandLandmark:
     def __init__(self, raw_landmark:list):
@@ -57,11 +58,6 @@ class HandLandmark:
             raw_landmark[17], raw_landmark[18], 
             raw_landmark[19], raw_landmark[20]
         )
-
-class HandLandmarks:
-    def __init__(self, right_landmark:HandLandmark, left_landmark:HandLandmark):
-        self.left_landmark = left_landmark
-        self.right_landmark = right_landmark
 
 class HandRecognition:
     def __init__(self):
