@@ -5,9 +5,9 @@ let sended = 0;
 let received = 0;
 let user_status = 0;
 let user_gesture = 0;
-let playing_for = 0;
-let win_screen_for = 0;
 let history = [];
+let game_started = undefined;
+let win_screen_started = undefined;
 
 socket.on('response', function(data) {
     received += 1;
@@ -20,17 +20,21 @@ socket.on('response', function(data) {
         processedImageElement.src = data.image;
 
         if (data.user_status === 1) {
-            playing_for += 1;
-            if (playing_for > 20) {
+            let now = new Date().getTime();
+            if (game_started === undefined) {
+                game_started = now;
+            }
+
+            if (now - game_started > 5000) {
                 user_status = 2;
-                playing_for = 0;
+                game_started = undefined;
             }
         }
 
         if (data.user_status > 2) {
-            win_screen_for += 1;
-
-            if (win_screen_for == 1) {
+            let now = new Date().getTime();
+            if (win_screen_started === undefined) {
+                win_screen_started = now;
                 history.push({user_gesture: user_gesture, user_status: user_status, bot_gesture: data.bot_gesture});
 
                 const winScreenTextElement = document.getElementById('win-screen-text');
@@ -40,10 +44,10 @@ socket.on('response', function(data) {
                 winScreenElement.classList.add("win-screen-show")
             }
 
-            if (win_screen_for > 30) {
+            if (now - win_screen_started > 2500) {
                 user_status = 0;
-                win_screen_for = 0;
-                playing_for = 0;
+                win_screen_started = undefined;
+                game_started = undefined;
 
                 const winScreenElement = document.getElementById('win-screen');
                 winScreenElement.classList.remove("win-screen-show")
