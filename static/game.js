@@ -29,7 +29,7 @@ socket.on('response', function(data) {
                 game_started = now;
             }
 
-            if (now - game_started > 5000) {
+            if (now - game_started > 3000) {
                 user_status = 2;
                 game_started = undefined;
             }
@@ -48,7 +48,7 @@ socket.on('response', function(data) {
                 winScreenElement.classList.add("win-screen-show")
             }
 
-            if (now - win_screen_started > 2500) {
+            if (now - win_screen_started > 1500) {
                 user_status = 0;
                 win_screen_started = undefined;
                 game_started = undefined;
