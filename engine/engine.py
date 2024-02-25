@@ -10,7 +10,7 @@ class GameEngine:
         Evaluate gestures and return user status
         """
         if gesture0 == gesture1:
-            return UserStatusEnums.TIED, UserStatusEnums.TIED
+            return UserStatusEnums.TIED
 
         valid_gestures = [GestureEnums.ROCK, GestureEnums.PAPER, GestureEnums.SCISSORS]
         if gesture0 not in valid_gestures:
