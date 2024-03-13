@@ -1,7 +1,29 @@
 
-from engine.gestureRecognition import GestureEnums, ThumbLandmark, FingerLandmark, HandLandmark, HandRecognition, GestureRecognition
-from engine.database import UserStatusEnums
+from engine.gestureRecognition import (
+    GestureEnums, ThumbLandmark, FingerLandmark, HandLandmark, 
+    HandRecognition, GestureRecognition
+)
 import random
+
+class UserStatusEnums:
+    CONNECTED = 0
+    PLAYING = 1
+    SUBMITED = 2
+    WINNER = 3
+    LOSER = 4
+    TIED = 5
+    
+    def decode(status:int) -> str:
+        """
+        Decode status enum to string
+        """
+        if status == UserStatusEnums.CONNECTED: return 'Dejte gesto "palec nahoru"'
+        elif status == UserStatusEnums.PLAYING: return "Probíhá hra..."
+        elif status == UserStatusEnums.SUBMITED: return "Vyhodnocování..."
+        elif status == UserStatusEnums.WINNER: return "Vítěz"
+        elif status == UserStatusEnums.LOSER: return "Poražen"
+        elif status == UserStatusEnums.TIED: return "Remíza"
+        raise NotImplementedError
 
 class GameEngine:
     def __evaluate_gestures(self, gesture0:int, gesture1:int) -> int:
@@ -32,7 +54,7 @@ class GameEngine:
         if history:
             if (
                 history[-1]["user_status"] == UserStatusEnums.LOSER 
-                and random.randint(0, 10) <= 8
+                and random.randint(0, 9) <= 8
             ):
                 bot_gesture = history[-1]["bot_gesture"]
                 return self.__evaluate_gestures(gesture, bot_gesture), bot_gesture

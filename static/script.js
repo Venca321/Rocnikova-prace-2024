@@ -18,12 +18,18 @@ socket.on('response', function(data) {
 
         const buttons = document.querySelectorAll('.button');
         if (data.cursor != null && loaded) {
-          cursor = [(window.innerWidth / video_res[0]) * data.cursor[0], (window.innerHeight / video_res[1]) * data.cursor[1]]
+            cursor = [
+                (window.innerWidth / video_res[0]) * data.cursor[0], 
+                (window.innerHeight / video_res[1]) * data.cursor[1]
+            ]
         }
 
         buttons.forEach(button => {
             const rect = button.getBoundingClientRect();
-            if (cursor[0] >= rect.left && cursor[0] <= rect.right && cursor[1] >= rect.top && cursor[1] <= rect.bottom) {
+            if (
+                cursor[0] >= rect.left && cursor[0] <= rect.right 
+                && cursor[1] >= rect.top && cursor[1] <= rect.bottom
+            ) {
                 button.classList.add('button_hover');
                 if (data.click){
                     const hrefValue = button.getAttribute('onclick');
@@ -49,7 +55,9 @@ function captureAndSendImage() {
     video_res = [video.videoWidth, video.videoHeight]
     canvas.getContext('2d').drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
     if (sended -1 <= received) {
-        socket.emit('image_navigation', { flip: urlParams.get("flip"), image: canvas.toDataURL('image/jpeg')});
+        socket.emit('image_navigation', {
+            flip: urlParams.get("flip"), image: canvas.toDataURL('image/jpeg')
+        });
         sended += 1;
     }
 }

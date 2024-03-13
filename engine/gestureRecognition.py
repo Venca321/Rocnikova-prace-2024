@@ -62,13 +62,15 @@ class HandLandmark:
 class HandRecognition:
     def __init__(self):
         self.mpHands = mp.solutions.hands
-        self.hands = self.mpHands.Hands(False, 1, 1, 0.5, 0.5) #mode, maxHands, modelComplex, detectionCon, trackCon
+        # mode, maxHands, modelComplex, detectionCon, trackCon
+        self.hands = self.mpHands.Hands(False, 1, 1, 0.5, 0.5) 
 
     def getLandmark(self, image) -> HandLandmark | None:
         black_image = np.zeros((image.shape[0], image.shape[1], 3), dtype=np.uint8)
         results = self.hands.process(image).multi_hand_landmarks
 
-        if not results: return HandLandmark([[None, None, None] for _ in range(21)]), black_image
+        if not results: 
+            return HandLandmark([[None, None, None] for _ in range(21)]), black_image
 
         mpDraw = mp.solutions.drawing_utils
         mpDraw.draw_landmarks(black_image, results[0], self.mpHands.HAND_CONNECTIONS)
@@ -77,7 +79,8 @@ class HandRecognition:
         hand_landmarks = []
         for hand_point in results[0].landmark:
             image_height, image_width, _ = image.shape
-            point_x, point_y = int(hand_point.x * image_width), int(hand_point.y * image_height)
+            point_x = int(hand_point.x * image_width)
+            point_y = int(hand_point.y * image_height)
             hand_landmarks.append([point_x, point_y, hand_point.z])
 
         return HandLandmark(hand_landmarks), black_image
@@ -100,7 +103,7 @@ class GestureRecognition:
             + self.__calculate_points_distance(thumb.finger_ip, thumb.finger_tip)
         )
 
-    def __is_thumb_to_index_finger_distance_shorter_than_thumb_lenght(
+    def __is_thumb_near_palm(
             self, thumb:ThumbLandmark, index_finger:FingerLandmark
         ) -> bool:
         __THUMB_DISTANCE_TO_INDEX_FINGER_RATIO = 2
@@ -163,7 +166,7 @@ class GestureRecognition:
             pinky_finger_up = self.__is_tip_to_wrist_longer_than_pip_to_wrist(
                 hand_landmark.pinky, hand_landmark.wrist
             )
-            thumb_near_palm = self.__is_thumb_to_index_finger_distance_shorter_than_thumb_lenght(
+            thumb_near_palm = self.__is_thumb_near_palm(
                 hand_landmark.thumb, hand_landmark.index_finger
             )
             
