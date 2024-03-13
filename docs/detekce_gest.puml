@@ -1,0 +1,10 @@
+@startuml
+
+participant Obrázek
+participant "Body na ruce"
+participant "Rozpoznaná gesta"
+
+Obrázek -> "Body na ruce" : MediaPipe Hands
+"Body na ruce" -> "Rozpoznaná gesta" : Rozpoznání gesta
+
+@enduml

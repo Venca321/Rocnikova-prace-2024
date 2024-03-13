@@ -1,0 +1,9 @@
+@startuml
+
+(*) --> "Je ukazováček a prostředníček pokrčený?"
+-->[Ano] "Kámen"
+"Je ukazováček a prostředníček pokrčený?" -->[Ne] "Je prsteníček a malíček pokrčený?"
+-->[Ano] "Nůžky"
+"Je prsteníček a malíček pokrčený?" -->[Ne] "Papír"
+
+@enduml

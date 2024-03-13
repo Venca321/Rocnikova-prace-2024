@@ -5,5 +5,6 @@
 
 ## Installation
 - `pip install -r requirements.txt`
+- `python -c "from engine.database import Database; db = Database(); db.push()"`
 
 ## How to use

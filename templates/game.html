@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Kámen, nůžky, papír</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+
+        <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Inter'>
+        <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+
+        <link rel="stylesheet" href="{{ url_for('static', filename='game.css') }}">
+        <script src="{{ url_for('static', filename='game.js') }}"></script>
+    </head>
+    <body>
+        <video autoplay style="display: none;"></video>
+        <div id="screen">
+            <div id="main-menu">
+                <img id="processedImage" src="" alt="Zpracovaný obraz">
+                <h1>Kámen, nůžky, papír</h1>
+            </div>
+            <div id="second-menu">
+                <div id="status-screen">
+                    <p>{</p>
+                    <p id="status-text" style="margin-left: 26px;">Stav: Načítání...</p>
+                    <p id="gesture-text" style="margin-left: 26px;">Gesto: Načítání...</p>
+                    <p>}</p>
+                </div>
+            </div>
+        </div>
+        <div id="win-screen">
+            <div>
+                <h1 id="win-screen-text">Error</h1>
+            </div>
+        </div>
+    </body>
+</html>

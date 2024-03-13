@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Kámen, nůžky, papír</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+
+        <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Inter'>
+        <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+        <script src="{{ url_for('static', filename='script.js') }}"></script>
+    </head>
+    <body>
+        <video autoplay style="display: none;"></video>
+        <img id="processedImage" src="" alt="Zpracovaný obraz">
+        <div id="background"></div>
+        <div id="menu">
+            <h1>Kámen, nůžky, papír</h1>
+            <a class="button" onclick="window.location='/game'+window.location.search;">Hrát!</a>
+            <a class="button" onclick="window.location='/settings'+window.location.search;">Nastavení</a>
+        </div>
+    </body>
+</html>
+
+<style>
+    #menu {
+        position: absolute;
+        z-index: 2;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+</style>

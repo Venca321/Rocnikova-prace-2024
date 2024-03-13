@@ -1,0 +1,14 @@
+@startuml
+
+participant Uživatel
+participant "Webová aplikace" as Web
+participant Server
+
+Uživatel -> Web : Ukáže gesto
+Web -> Web : Získání snímku z kamery
+Web -> Server : Požadavek na rozpoznání gesta
+Server -> Server : Rozpoznání gesta
+Server -> Web : Odpověď s výsledkem
+Web -> Uživatel : Zobrazení výsledku
+
+@enduml
