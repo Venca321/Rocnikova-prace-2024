@@ -3,7 +3,6 @@ from engine.gestureRecognition import GestureEnums, ThumbLandmark, FingerLandmar
 from engine.database import UserStatusEnums
 import random
 
-
 class GameEngine:
     def __evaluate_gestures(self, gesture0:int, gesture1:int) -> int:
         """
