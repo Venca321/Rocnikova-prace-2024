@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Kámen, nůžky, papír</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+
+        <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Inter'>
+        <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+        <script src="{{ url_for('static', filename='settings.js') }}"></script>
+    </head>
+    <body>
+        <video autoplay style="display: none;"></video>
+        <img id="processedImage" src="" alt="Zpracovaný obraz">
+        <div id="background"></div>
+        <div id="menu">
+            <h1>Kámen, nůžky, papír</h1>
+            <p>Zařízení kamery</p>
+            <div id="deviceList"></div>
+            <p>Překlopení obrazu</p>
+            <a id="toggle-button" class="button" onclick="toggle_flip();">Překlopení obrazu</a>
+            <a id="back-button" class="button" onclick="window.location='/'+window.location.search;">Zpět</a>
+        </div>
+    </body>
+</html>
+
+<script>
+    const toggle_button = document.getElementById("toggle-button");
+    const urlParams0 = new URLSearchParams(window.location.search);
+
+    if (urlParams0.get("flip") === "true") {
+        toggle_button.textContent = "Zapnuto";
+    } else {
+        toggle_button.textContent = "Vypnuto";
+    }
+
+    function toggle_flip() {
+        if (urlParams0.get("flip") === "true") {
+            location.href = "?camera=" + urlParams0.get("camera") + "&flip=false";
+        } else {
+            location.href = "?camera=" + urlParams0.get("camera") + "&flip=true";
+        }
+    }
+</script>
+
+<style>
+    #menu {
+        position: absolute;
+        z-index: 2;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    #deviceList {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 32px;
+    }
+
+    .underline {
+        text-decoration: underline;
+    }
+
+    p {
+        text-align: left;
+        margin-right: auto;
+        margin-bottom: -4px;
+    }
+
+    #toggle-button {
+        margin-bottom: 48px;
+    }
+</style>

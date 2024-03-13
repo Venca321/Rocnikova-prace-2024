@@ -1,7 +1,6 @@
 
-from engine.engine import HandRecognition, GestureRecognition, GestureEnums, GameEngine
-from engine.database import Database, UserStatusEnums
-from flask import Flask, render_template, request, jsonify, send_from_directory
+from engine.engine import HandRecognition, GestureRecognition, GestureEnums, UserStatusEnums, GameEngine
+from flask import Flask, render_template, send_from_directory
 from flask_socketio import SocketIO, emit
 import numpy as np
 import cv2, base64, os
@@ -13,25 +12,8 @@ socketio = SocketIO(app)
 
 hand_recognizer = HandRecognition()
 gesture_recognizer = GestureRecognition()
-db = Database()
+game_engine = GameEngine()
 
-def get_gesture_screen_info(gesture) -> (str, str):
-    if gesture == GestureEnums.ROCK: return "Kámen", "🪨"
-    elif gesture == GestureEnums.PAPER: return "Papír", "📜"
-    elif gesture == GestureEnums.SCISSORS: return "Nůžky", "✂️"
-    elif gesture == GestureEnums.LIKE: return "Like", "👍"
-    else: return "Neznámé", "❓"
-
-def get_user_status_screen_info(user_status) -> str:
-    if user_status == UserStatusEnums.WAITING: return "Čekání na protihráče..."
-    elif user_status == UserStatusEnums.CONNECTED: return "Dejte like pro spuštění hry"
-    elif user_status == UserStatusEnums.READY: return "Připraven"
-    elif user_status == UserStatusEnums.PLAYING: return "Probíhá hra..."
-    elif user_status == UserStatusEnums.SUBMITED: return "Čekání na vyhodnocení..."
-    elif user_status == UserStatusEnums.WINNER: return "Vítěz!"
-    elif user_status == UserStatusEnums.LOSER: return "Poražený"
-    elif user_status == UserStatusEnums.TIED: return "Remíza"
-    else: return "Error"
 
 @app.route('/favicon.ico')
 def favicon():
@@ -42,96 +24,76 @@ def favicon():
 def index():
     return render_template('index.html')
 
-@app.route('/register')
-def register():
-    return render_template('register.html')
+@app.route("/settings")
+def settings():
+    return render_template('settings.html')
 
-@app.route('/register', methods=['POST'])
-def register_post():
-    db.remove_old_users()
-    db.remove_old_sessions()
-    user = db.create_user(request.json['username'], GestureEnums.NONE)
-    return jsonify({"user_id": user.id})
-
-@app.route('/find-session')
-def find_session():
-    return render_template('find-session.html')
-
-@app.route('/find-random-session', methods=['POST'])
-def find_random_session_post():
-    session = db.connect_random_session(request.json['user_id'])
-    return jsonify({"session_id": session.id})
-
-@app.route('/friend-game')
-def friend_game():
-    return render_template('friend-game.html')
-
-@app.route('/create-friend-game')
-def create_friend_game():
-    return render_template('create-friend-game.html')
-
-@app.route('/create-friend-game', methods=['POST'])
-def create_friend_game_post():
-    session = db.create_session(request.json['user_id'])
-    return jsonify({"status": "ok", "session_id": session.id})
-
-@app.route('/connect-friend-game')
-def connect_friend_game():
-    return render_template('connect-friend-game.html')
-
-@app.route('/connect-friend-game', methods=['POST'])
-def connect_friend_game_post():
-    db.connect_session(request.json['user_id'], request.json['session_id'])
-    return jsonify({"status": "ok"})
-
-@app.route('/connect-bot', methods=['POST'])
-def connect_bot_post():
-    db.connect_bot_to_session(request.json["session_id"])
-    return jsonify({"status": "ok"})
-
-@app.route('/game')
+@app.route("/game")
 def game():
     return render_template('game.html')
 
-@app.route('/pick-camera-device')
-def pick_camera_device():
-    return render_template('pick-camera-device.html')
+@socketio.on('image_navigation')
+def handle_image_navigation(data):
+    flip = data['flip'] == "true"
+
+    img_data = data['image']
+    img_data = base64.b64decode(img_data.split(',')[1])
+    nparr = np.frombuffer(img_data, np.uint8)
+    input_img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+    if flip: input_img = cv2.flip(input_img, 1)
+
+    cursor, click = None, None
+    try:
+        landmark, image = hand_recognizer.getLandmark(input_img)
+        if landmark.index_finger.finger_tip[0] is not None and landmark.thumb.finger_tip[0] is not None:
+            cursor = gesture_recognizer.calculate_middle_point(landmark.index_finger.finger_tip, landmark.thumb.finger_tip)
+            click = gesture_recognizer.is_clicked(landmark)
+
+        _, buffer = cv2.imencode('.png', image)
+        img_base64 = base64.b64encode(buffer).decode('utf-8')
+        
+        emit('response', {"status": "ok", "cursor": cursor, "click": click, "image": f"data:image/png;base64,{img_base64}"})
+    except Exception as e:
+        print(e)
+        emit('response', {"status": "error"})
 
 @socketio.on('image')
 def handle_image(data):
+    flip = data['flip'] == "true"
+    user_status = int(data["user_status"])
+    gesture = int(data["gesture"])
+    history = data["history"]
+    
     img_data = data['image']
-    user_id = data['user_id']
-    status = data['status']
-
-    try: user = db.get_user(user_id)
-    except: emit('response', {"session_id": "", "opponent": "", "status": "Error", "gesture_image": "", "gesture_name": GestureEnums.NONE})
-    session = db.get_session(user.id)
-
-    if status == "submited": 
-        db.update_session(user.id, UserStatusEnums.SUBMITED)
-    elif status == "ready_to_replay":
-        db.update_session(user.id, UserStatusEnums.CONNECTED)
-
     img_data = base64.b64decode(img_data.split(',')[1])
     nparr = np.frombuffer(img_data, np.uint8)
-    img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+    input_img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+    if flip: input_img = cv2.flip(input_img, 1)
 
-    banned_status = [UserStatusEnums.SUBMITED, UserStatusEnums.WINNER, UserStatusEnums.LOSER, UserStatusEnums.TIED]
-    if (user_id == session.user1_id and session.user1_status not in banned_status) or (user_id == session.user2_id and session.user2_status not in banned_status):
-        try:
-            landmark = hand_recognizer.getLandmark(img)
+    try:
+        landmark, image = hand_recognizer.getLandmark(input_img)
+        recognition_game_status = [UserStatusEnums.CONNECTED, UserStatusEnums.PLAYING]
+        if user_status in recognition_game_status:
             gesture = gesture_recognizer.detectGesture(landmark)
-        except Exception:
-            gesture = GestureEnums.NONE
+            if (
+                user_status == UserStatusEnums.CONNECTED 
+                and gesture_recognizer.isHandLike(landmark)
+                ):
+                gesture = GestureEnums.LIKE
 
-        if gesture != GestureEnums.NONE: db.update_user(user, gesture)
+        user_status, bot_gesture = game_engine.process(gesture, user_status, history)
 
-    session, user_status, opponent = GameEngine.process(db, session, user)
-    gesture_name, gesture_image = get_gesture_screen_info(user.gesture)
-    user_status_text = get_user_status_screen_info(user_status)
-    emit('response', {"session_id": session.id, "opponent": opponent.username, "status": user_status_text, "gesture_image": gesture_image, "message": gesture_name})
+        _, buffer = cv2.imencode('.png', image)
+        img_base64 = base64.b64encode(buffer).decode('utf-8')
+        
+        emit('response', {
+            "status": "ok", "gesture": gesture, "gesture_text": GestureEnums.decode(gesture), 
+            "user_status": user_status, "user_status_text": UserStatusEnums.decode(user_status),
+            "bot_gesture": bot_gesture, "image": f"data:image/png;base64,{img_base64}"
+        })
+    except Exception as e:
+        print(e)
+        emit('response', {"status": "error"})
 
 if __name__ == '__main__':
     socketio.run(app, host="0.0.0.0")
-
-

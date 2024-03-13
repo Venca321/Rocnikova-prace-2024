@@ -59,7 +59,18 @@ function startCamera() {
     .then(() => navigator.mediaDevices.enumerateDevices())
     .then(devices => {
         const videoDevices = devices.filter(device => device.kind === 'videoinput');
-    
+        const deviceList = document.getElementById("deviceList");
+        videoDevices.forEach((device, index) => {
+            let listItem = document.createElement("a");
+            listItem.textContent = `Kamera ${index + 1}`;
+            listItem.onclick = () => location.href = `?camera=${index}&flip=${urlParams.get("flip")}`;
+            listItem.classList.add("button");
+            if (index === Number(urlParams.get('camera'))) {
+              listItem.classList.add("underline");
+            }
+            deviceList.appendChild(listItem);
+        });
+
         if (videoDevices.length <= 0){
             throw new Error('Žádná kamera nenalezena.');
         }

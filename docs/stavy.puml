@@ -1,0 +1,13 @@
+@startuml
+
+[*] --> CONNECTED
+CONNECTED --> PLAYING : Palec nahoru
+PLAYING --> SUBMITTED : Uběhl čas
+SUBMITTED --> WINNER
+SUBMITTED --> LOSER
+SUBMITTED --> TIED
+WINNER --> [*]
+LOSER --> [*]
+TIED --> [*]
+
+@enduml

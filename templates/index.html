@@ -3,85 +3,35 @@
     <head>
         <title>Kámen, nůžky, papír</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+
         <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Inter'>
+        <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+
         <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+        <script src="{{ url_for('static', filename='script.js') }}"></script>
     </head>
     <body>
-        <h1>Kámen, nůžky, papír</h1>
-        <p>Pomocí počítačového vidění</p>
-        <div>
-            <p>Vítejte v "Kámen, Nůžky, Papír" - interaktivní hře, která přenáší klasickou hru do digitálního věku pomocí pokročilé technologie počítačového vidění a&nbsp;neuronových sítí. Tato hra vám nabízí nejen skvělý způsob zábavy, ale také nahlédne do fascinujícího světa moderních technologií. Připojte se k&nbsp;nám a&nbsp;zažijte, jak vaše gesta ovládají hru v&nbsp;reálném čase!</p>
-        </div>
-        <div style="display: flex; justify-content: center;">
-            <a href="/register">Hrát</a>
+        <video autoplay style="display: none;"></video>
+        <img id="processedImage" src="" alt="Zpracovaný obraz">
+        <div id="background"></div>
+        <div id="menu">
+            <h1>Kámen, nůžky, papír</h1>
+            <a class="button" onclick="window.location='/game'+window.location.search;">Hrát!</a>
+            <a class="button" onclick="window.location='/settings'+window.location.search;">Nastavení</a>
         </div>
     </body>
 </html>
 
 <style>
-    h1 {
-        font-weight: 700;
-        font-size: 52px;
-        color: rgba(255, 255, 255, 1);
-    }
-
-    p {
-        margin-top: -20px;
-        font-weight: 400;
-        font-size: 26px;
-        color: rgba(255, 255, 255, 0.9);
-    }
-
-    div {
-        width: 46vw;
-        margin-top: 7.5vh;
-        margin-bottom: 7.5vh;
-    }
-
-    div p {
-        font-weight: 400;
-        font-size: 20px;
-    }
-
-    div a {
-        width: 260px;
-        padding: 12px 0px 12px 0px;
+    #menu {
+        position: absolute;
+        z-index: 2;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         text-align: center;
-        font-weight: 600;
-        font-size: 26px;
-        color: #000000;
-        background: #ffffff;
-        border-radius: 15px;
-        text-decoration: none;
-        transition: 0.25s;
-    }
-
-    div a:hover {
-        background: #2bdda2;
-        text-decoration: underline;
-    }
-
-    @media only screen and (max-device-width: 480px) {
-        h1 {
-            font-size: 28px;
-        }
-
-        p {
-            font-size: 18px;
-        }
-
-        div {
-            width: 80vw;
-        }
-
-        div p {
-            font-size: 16px;
-        }
-
-        div a {
-            padding: 10px 0px 10px 0px;
-            font-size: 18px;
-            width: 75vw;
-        }
     }
 </style>
