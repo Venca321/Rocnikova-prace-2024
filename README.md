@@ -4,7 +4,12 @@
 - pip
 
 ## Installation
-- `pip install -r requirements.txt`
-- `python -c "from engine.database import Database; db = Database(); db.push()"`
+```bash
+pip install -r requirements.txt
+```
 
 ## How to use
+```bash
+docker build . -t rocnikova_prace
+docker run rocnikova_prace
+```
