@@ -1,10 +1,15 @@
 @startuml
 
-participant Obrázek
-participant "Body na ruce"
-participant "Rozpoznaná gesta"
+participant "Webová kamera"
+participant "HandRecognition"
+participant "MediaPipe Hands"
+participant "GestureRecognition"
+participant "Výsledek"
 
-Obrázek -> "Body na ruce" : MediaPipe Hands
-"Body na ruce" -> "Rozpoznaná gesta" : Rozpoznání gesta
+"Webová kamera" -> "HandRecognition" : Pošle snímek
+"HandRecognition" -> "MediaPipe Hands" : Snímek
+"MediaPipe Hands" -> "HandRecognition" : HandLandmark
+"HandRecognition" -> "GestureRecognition" : HandLandmark
+"GestureRecognition" -> "Výsledek" : Rozpoznané gesto
 
 @enduml

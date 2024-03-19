@@ -100,7 +100,7 @@ class GestureRecognition:
             + self.__calculate_points_distance(thumb.finger_ip, thumb.finger_tip)
         )
 
-    def __is_thumb_to_index_finger_distance_shorter_than_thumb_lenght(
+    def __is_thumb_to_index_finger_shorter_than_thumb_lenght(
             self, thumb:ThumbLandmark, index_finger:FingerLandmark
         ) -> bool:
         __THUMB_DISTANCE_TO_INDEX_FINGER_RATIO = 2
@@ -163,7 +163,7 @@ class GestureRecognition:
             pinky_finger_up = self.__is_tip_to_wrist_longer_than_pip_to_wrist(
                 hand_landmark.pinky, hand_landmark.wrist
             )
-            thumb_near_palm = self.__is_thumb_to_index_finger_distance_shorter_than_thumb_lenght(
+            thumb_near_palm = self.__is_thumb_to_index_finger_shorter_than_thumb_lenght(
                 hand_landmark.thumb, hand_landmark.index_finger
             )
             

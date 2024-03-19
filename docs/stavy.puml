@@ -1,4 +1,5 @@
 @startuml
+left to right direction
 
 [*] --> CONNECTED
 CONNECTED --> PLAYING : Palec nahoru
