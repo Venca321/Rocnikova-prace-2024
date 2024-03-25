@@ -4,12 +4,12 @@ participant "Webová kamera"
 participant "HandRecognition"
 participant "MediaPipe Hands"
 participant "GestureRecognition"
-participant "Výsledek"
+participant "Hra"
 
 "Webová kamera" -> "HandRecognition" : Pošle snímek
 "HandRecognition" -> "MediaPipe Hands" : Snímek
-"MediaPipe Hands" -> "HandRecognition" : HandLandmark
+"MediaPipe Hands" -> "HandRecognition" : Pozice bodů
 "HandRecognition" -> "GestureRecognition" : HandLandmark
-"GestureRecognition" -> "Výsledek" : Rozpoznané gesto
+"GestureRecognition" -> "Hra" : Rozpoznané gesto
 
 @enduml

@@ -6,11 +6,17 @@ participant Server
 
 Uživatel -> Web : Ukáže gesto
 Web -> Web : Získání snímku z kamery
-Web -> Server : Požadavek na rozpoznání gesta
-Server -> Server : Rozpoznání gesta
-Server -> Web : Odpověď s výsledkem
-Web -> Web : Posune kurzor
-Web -> Web : Pokud je třeba, klikne
-Web -> Uživatel : Zobrazení výsledku
+alt nepřekročil limit
+    Web -> Server : Požadavek na rozpoznání gesta
+    Server -> Server : Rozpoznání gesta
+    Server -> Web : Odpověď s výsledkem
+    Web -> Web : Posune kurzor
+    alt je třeba kliknout
+        Web -> Web : Klikne
+    else není třeba kliknout
+        Web -> Web : Neudělá nic
+    end
+    Web -> Uživatel : Zobrazení výsledku
+end
 
 @enduml
